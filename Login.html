@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+    <div class="container" id="container">
+    <div class="form-container sign-up-container">
+    
+    <form action="">
+        <h1>Tạo tài khoản</h1>
+        <div class="social-container">
+            <a href="#" class="social"><i class="fa fa-facebook"></i></a>
+            <a href="#" class="social"><i class="fa fa-google"></i></a>
+            <a href="#" class="social"><i class="fa fa-linkedin"></i></a>
+        </div>
+        <span>Hoặc sử dụng email của bạn để đăng ký</span>
+        <input type="text" name="name" placeholder="Name">
+        <input type="email" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <button>Đăng ký</button>
+    </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form action="#">
+            <h1>Đăng nhập</h1>
+            <div class="social-container">
+            <a href="#" class="social"><i class="fa fa-facebook"></i></a>
+            <a href="#" class="social"><i class="fa fa-google"></i></a>
+            <a href="#" class="social"><i class="fa fa-linkedin"></i></a>
+        </div>
+        <span>Hoặc dùng tài khoản của bạn</span>
+        <input type="email" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <a href="#">Quên mật khẩu</a>
+    
+        <button>Đăng nhập</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1>Xin chao!</h1>
+                <p>Để giữ kết nối, vui lòng đăng nhập bằng thông tin cá nhân của bạn</p>
+                <button class="ghost" id="signIn">Đăng nhập</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Xin chào</h1>
+                <p>Nhập thông tin chi tiết của bạn và bắt đầu</p>
+                <button class="ghost" id="signUp">Đăng ký</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <script type="text/javascript">
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
+    
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+    </script>
+</html>

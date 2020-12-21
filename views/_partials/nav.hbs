@@ -1,3 +1,21 @@
+{{#section 'js'}}
+  <script>
+    $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+  if (!$(this).next().hasClass('show')) {
+    $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+  }
+  var $subMenu = $(this).next('.dropdown-menu');
+  $subMenu.toggleClass('show');
+
+
+  $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+    $('.dropdown-submenu .show').removeClass('show');
+  });
+  return false;
+});
+  </script>
+{{/section}}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow sticky-top">
     <a class="navbar-brand" href="/">
       <i class="fa fa-home fa-lg"></i>
@@ -11,25 +29,52 @@
         <li class="nav-item active">
           <a class="nav-link" href="/">Online Academy<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
+
+        <li class="nav-item dropdown dropright">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Categories
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/courses/web"/>Web</a>
-            <a class="dropdown-item" href="/courses/mobile/">Mobile</a>
-            <div class="dropdown-divider"></div>
-          </div>
-        </li>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li class="dropdown-submenu">
+              <a class="dropdown-item dropdown-toggle" href="#">IT</a>
+              <ul class="dropdown-menu">
 
+                <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">Web</a>
+                  
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                    {{#each lcCategories}}
+                    {{#if CatType}}
+                        <li><a class="dropdown-item" href="/courses/web/{{CatName}}">{{CatName}}</a></li>
+                    {{/if}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" href="#">Mobile</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                    {{#each lcCategories}}
+                    {{#unless CatType}}
+                        <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>
+                    {{/unless}}
+                    {{/each}}
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-          <i class="fa fa-search"></i>
-          Search
-        </button>
-      </form>
     </div>
+    <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search for anything" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+              <i class="fa fa-search"></i>
+              Search
+            </button>
+          </form>
   </nav>

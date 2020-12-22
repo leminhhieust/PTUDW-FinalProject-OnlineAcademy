@@ -10,7 +10,10 @@ module.exports = function (app) {
     partialsDir: 'views/_partials',
     helpers: {
       section: hbs_sections(),
-      format(val) {
+      format1(val) {
+        return numeral(val).format('$0,0.00');
+      },
+      format2(val) {
         return numeral(val).format('0,0');
       }
     }

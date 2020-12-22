@@ -40,12 +40,12 @@
               <a class="dropdown-item dropdown-toggle" href="#">IT</a>
               <ul class="dropdown-menu">
 
-                <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                <li><a class="dropdown-item" href="/courses">Tất cả</a></li>
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">Web</a>
                   
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                    <li><a class="dropdown-item" href="/courses/web">Tất cả</a></li>
                     {{#each lcCategories}}
                     {{#if CatType}}
                         <li><a class="dropdown-item" href="/courses/web/{{CatName}}">{{CatName}}</a></li>
@@ -56,7 +56,7 @@
                 <li class="dropdown-submenu">
                   <a class="dropdown-item dropdown-toggle" href="#">Mobile</a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                    <li><a class="dropdown-item" href="/courses/mobile">Tất cả</a></li>
                     {{#each lcCategories}}
                     {{#unless CatType}}
                         <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>

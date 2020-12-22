@@ -1,13 +1,92 @@
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  {{#each this.courses_new}}
+    $(function () {
+      $(`#rateYoNew{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  {{#each this.courses_view}}
+    $(function () {
+      $(`#rateYoView{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  {{#each this.courses_outstanding}}
+    $(function () {
+      $(`#rateYoOutstanding{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  $(document).ready(function(){
+  $('.CourseCarousel').slick({
+    dots: true,
+    infinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    arrows: true
+  });
+});
+</script>
+{{/section}}
+
+{{#section 'css'}}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  .slick-prev:before, .slick-next:before { 
+    color:red !important;
+    font-size: 2.5rem;
+  }
+  .slick-prev, .slick-next {
+    width: 2.5rem;
+    height: 2.5rem;
+    z-index: 2;
+  }
+  .slick-list {
+      width: 95%;
+      margin: 0 auto;
+  }
+
+  .slick-prev {
+      left: 0;
+  }
+
+  .slick-next {
+      right: 0;
+  }
+
+</style>
+{{/section}}
+
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="/public/images/fMJoXoMST5uFMZrX2XsC_online-academy-2.jpg" class="d-block w-100" alt="...">
+      <img src="/public/images/Home_carousel/fMJoXoMST5uFMZrX2XsC_online-academy-2.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="/public/images/Online-education.jpg" class="d-block w-100" alt="...">
+      <img src="/public/images/Home_carousel/Online-education.jpg" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item">
-      <img src="/public/images/school-elementary-bac-img.png" class="d-block w-100" alt="...">
+      <img src="/public/images/Home_carousel/school-elementary-bac-img.png" class="d-block w-100" alt="...">
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -20,48 +99,82 @@
   </a>
 </div>
 
-<div class="container-fluid mt-4">
-
-    <h5>Phổ biến</h5>
-
-    <div class="card-deck">
-    <div class="card">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+<div class="container-fluid mt-5">
+  <h5 class="text-danger mt-5">Outstanding Courses</h5>
+    <div class="d-flex flex-row">
+      {{#each this.courses_outstanding}}
+        <div class="card mx-5" style="width: 18rem;">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <p class="card-text">{{TeacherName}}</p>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYoOutstanding{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="#"></a>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-    </div>
-    <div class="card">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        </div>
-    </div>
+      {{/each}}
     </div>
 
-    <div class="card text-center mt-5">
-    <div class="card-header">
-        Featured
+    <h5 class="text-danger mt-5">New Courses</h5>
+    <div class="d-flex flex-row CourseCarousel">
+      {{#each this.courses_new}}
+        <div class="card mx-5" style="width: 18rem;">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <p class="card-text">{{TeacherName}}</p>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYoNew{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="#"></a>
+            </div>
+        </div>
+      {{/each}}
     </div>
-    <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+    <h5 class="text-danger mt-5">Popular Courses</h5>
+    <div class="d-flex flex-row CourseCarousel">
+      {{#each this.courses_view}}
+        <div class="card mx-5" style="width: 18rem;">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <p class="card-text">{{TeacherName}}</p>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYoView{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="#"></a>
+            </div>
+        </div>
+      {{/each}}
     </div>
-    <div class="card-footer text-muted">
-        2 days ago
+
+    <h5 class="text-danger mt-5">Top categories</h5>
+    <div class="card-columns mx-5" >
+      {{#each this.categories_top}}
+      <div class="card">
+      <img class="card-img-top h-155" src="/public/images/Categories/{{CatID}}.jpg" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{CatName}}</h5>
+          <a href="#" class="stretched-link"></a>
+        </div>
+      </div>
+      {{/each}}
     </div>
-    </div>
-</div>
+
+<footer class="bg-light text-center text-lg-start mt-4">
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    © 2020 Copyright: Online Academy
+  </div>
+</footer>

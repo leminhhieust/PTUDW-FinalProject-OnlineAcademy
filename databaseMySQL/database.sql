@@ -36,7 +36,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Angular',1),(2,'JavaScipt',1),(3,'React',1),(4,'NodeJs',1),(5,'Python',1),(6,'Kotlin',0),(7,'Swift',0),(8,'React Native',0),(9,'Android',0),(10,'IOS',0);
+INSERT INTO `categories` VALUES (1,'Angular',1),(2,'JavaScipt',1),(3,'React',1),(4,'NodeJs',1),(5,'Python',1),(6,'Kotlin',0),(7,'Swift',0),(8,'React Native',0),(9,'Android',0),(10,'Redux',0);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,11 +51,11 @@ CREATE TABLE `count` (
   `CountID` int unsigned NOT NULL AUTO_INCREMENT,
   `CourseID` int NOT NULL,
   `ViewCount` int NOT NULL,
-  `StarCount` int NOT NULL,
-  `StudentCount` int NOT NULL,
-  `AssessorCount` int NOT NULL,
+  `AvgStar` double DEFAULT NULL,
+  `StudentCount` int DEFAULT NULL,
+  `Ratings` int DEFAULT NULL,
   PRIMARY KEY (`CountID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,6 +64,7 @@ CREATE TABLE `count` (
 
 LOCK TABLES `count` WRITE;
 /*!40000 ALTER TABLE `count` DISABLE KEYS */;
+INSERT INTO `count` VALUES (1,1,1,4.7,383446,91291),(2,2,2,4.6,333194,98158),(3,3,1,4.6,445464,135252),(4,4,3,4.7,214140,53431),(5,5,1,4.6,1176620,335440),(6,6,4,4.3,26742,3920),(7,7,1,4.8,195656,54167),(8,8,2,4.6,138376,35632),(9,9,1,4.4,147881,27221),(10,10,3,4.7,216464,63721);
 /*!40000 ALTER TABLE `count` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,14 +104,13 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE `courses` (
   `CourseID` int unsigned NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) COLLATE utf8_bin NOT NULL,
-  `CatName` varchar(50) COLLATE utf8_bin NOT NULL,
+  `CatID` int NOT NULL,
   `TeacherID` int NOT NULL,
-  `Status` varchar(50) COLLATE utf8_bin NOT NULL,
+  `Status` tinyint(1) NOT NULL,
   `DateCreate` date NOT NULL,
   `Price` double NOT NULL,
-  `TinyImg` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`CourseID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,6 +119,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
+INSERT INTO `courses` VALUES (1,'The Complete JavaScript Course 2020: From Zero to Expert!',2,1,0,'2020-12-22',129.99),(2,'React - The Complete Guide (incl Hooks, React Router, Redux)',3,1,0,'2020-12-22',129.99),(3,'Angular - The Complete Guide (2020 Edition)',1,1,0,'2020-12-22',129.99),(4,'The Complete Node.js Developer Course (3rd Edition)',4,1,0,'2020-12-22',84.99),(5,'2020 Complete Python Bootcamp From Zero to Hero in Python',5,1,0,'2020-12-22',129.99),(6,'Android App Development Masterclass using Kotlin',6,1,0,'2020-12-22',99.99),(7,'iOS & Swift - The Complete iOS App Development Bootcamp',7,1,0,'2020-12-22',129.99),(8,'The Complete React Native + Hooks Course [2020 Edition]',8,1,0,'2020-12-22',94.99),(9,'The Complete Android N Developer Course',9,1,0,'2020-12-22',129.99),(10,'Modern React with Redux [2020 Update]',10,1,0,'2020-12-22',129.99);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,53 +175,55 @@ LOCK TABLES `feedback` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `oderdetails`
+-- Table structure for table `orderdetails`
 --
 
-DROP TABLE IF EXISTS `oderdetails`;
+DROP TABLE IF EXISTS `orderdetails`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oderdetails` (
+CREATE TABLE `orderdetails` (
   `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `OderID` int NOT NULL,
+  `OrderID` int NOT NULL,
   `CourseID` int NOT NULL,
   `Price` double NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `oderdetails`
+-- Dumping data for table `orderdetails`
 --
 
-LOCK TABLES `oderdetails` WRITE;
-/*!40000 ALTER TABLE `oderdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `oderdetails` ENABLE KEYS */;
+LOCK TABLES `orderdetails` WRITE;
+/*!40000 ALTER TABLE `orderdetails` DISABLE KEYS */;
+INSERT INTO `orderdetails` VALUES (1,1,1,129.99),(2,1,2,129.99),(3,1,3,129.99),(4,1,4,84.99),(5,1,5,129.99),(6,1,6,94.99),(7,1,7,129.99),(8,1,8,94.99),(9,1,9,129.99),(10,1,10,129.99);
+/*!40000 ALTER TABLE `orderdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `oders`
+-- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `oders`;
+DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oders` (
-  `OderID` int unsigned NOT NULL AUTO_INCREMENT,
-  `OderDate` date NOT NULL,
+CREATE TABLE `orders` (
+  `OrderID` int unsigned NOT NULL AUTO_INCREMENT,
+  `OrderDate` date NOT NULL,
   `UserID` int NOT NULL,
-  `Total` int NOT NULL,
-  PRIMARY KEY (`OderID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `Total` double NOT NULL,
+  PRIMARY KEY (`OrderID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `oders`
+-- Dumping data for table `orders`
 --
 
-LOCK TABLES `oders` WRITE;
-/*!40000 ALTER TABLE `oders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `oders` ENABLE KEYS */;
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,'2020-12-22',2,1184.9);
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -263,7 +266,7 @@ CREATE TABLE `users` (
   `Email` varchar(50) COLLATE utf8_bin NOT NULL,
   `Permission` int NOT NULL,
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -272,6 +275,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'teacher','teacher','Lê Minh Hiếu','leminhhieust@gmail.com',1),(2,'student','student','Trần Thanh Hiền','tranthanhhien@gmail.com',2);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -284,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-21 23:30:28
+-- Dump completed on 2020-12-22 23:39:23

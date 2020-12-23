@@ -3,8 +3,12 @@ const coursesModel = require('../models/courses.model');
 
 const router = express.Router();
 
-router.get('/', function(req, res){
-  res.send("All courses");
+router.get('/all', async function(req, res){
+  const courses_all = await coursesModel.all();
+  res.render('vwCourses/courses', {
+    courses: courses_all,
+    empty: courses_all.count === 0
+  });
 })
 
 router.get('/web', async function(req, res){

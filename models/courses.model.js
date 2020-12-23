@@ -3,7 +3,11 @@ const TBL_CATEGORIES = 'courses';
 
 module.exports = {
   all() {
-    return db.load(`select * from ${TBL_CATEGORIES}`);
+    const sql = `
+      select c.*, co.*, u.Name as TeacherName
+      from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID
+    `;
+    return db.load(sql);
   },
 
   allWithNew(){

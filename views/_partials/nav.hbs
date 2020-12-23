@@ -1,7 +1,3 @@
-{{#section 'js'}}
-
-{{/section}}
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow sticky-top">
     <a class="navbar-brand" href="/">
       <i class="fa fa-home fa-lg"></i>
@@ -16,7 +12,34 @@
           <a class="nav-link" href="/">Online Academy<span class="sr-only">(current)</span></a>
         </li>
 
-        <li class="nav-item dropdown dropright">
+        <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Categories</a>
+    <ul class="dropdown-menu">
+	  <li><a class="dropdown-item" href="/courses/all"> IT &raquo </a>
+		 <ul class="submenu dropdown-menu">
+		    <li><a class="dropdown-item" href="/courses/web"> Web &raquo </a>
+			<ul class="submenu dropdown-menu">
+        {{#each lcCategories}}
+          {{#if CatType}}
+            <li><a class="dropdown-item" href="/courses/web/{{CatName}}">{{CatName}}</a></li>
+          {{/if}}
+        {{/each}}
+			</ul>
+      <li><a class="dropdown-item" href="/courses/mobile"> Mobile &raquo </a>
+			<ul class="submenu dropdown-menu">
+			    {{#each lcCategories}}
+            {{#unless CatType}}
+              <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>
+            {{/unless}}
+          {{/each}}
+			</ul>
+		    </li>
+		 </ul>
+	  </li>
+    </ul>
+</li>
+
+        {{!-- <li class="nav-item dropdown dropright">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Categories
           </a>
@@ -53,7 +76,8 @@
               </ul>
             </li>
           </ul>
-        </li>
+        </li> --}}
+
       </ul>
     </div>
     <form class="form-inline my-2 my-lg-0">

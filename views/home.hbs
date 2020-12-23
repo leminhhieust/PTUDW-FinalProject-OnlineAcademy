@@ -167,14 +167,13 @@
       <img class="card-img-top h-155" src="/public/images/Categories/{{CatID}}.jpg" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">{{CatName}}</h5>
-          <a href="#" class="stretched-link"></a>
+          {{#if condition}}
+            <a href="/courses/web/{{CatName}}" class="stretched-link"></a>
+          {{else}}
+            <a href="/courses/mobile/{{CatName}}" class="stretched-link"></a>
+          {{/if}}
         </div>
       </div>
       {{/each}}
     </div>
-
-<footer class="bg-light text-center text-lg-start mt-4">
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-    © 2020 Copyright: Online Academy
-  </div>
-</footer>
+</div>

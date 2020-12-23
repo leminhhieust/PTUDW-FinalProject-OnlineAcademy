@@ -35,8 +35,31 @@ module.exports = {
     return db.load(sql);
   },
 
-  byCat(catId) {
-    return db.load(`select * from ${TBL_CATEGORIES} where CatID = ${catId}`);
+  allWithWeb(){
+    const sql = `
+    SELECT c.*, co.*, u.Name as TeacherName
+    from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
+    where ca.CatType = 1
+    `;
+    return db.load(sql);
+  },
+
+  allWithMobile(){
+    const sql = `
+    SELECT c.*, co.*, u.Name as TeacherName
+    from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
+    where ca.CatType = 0
+    `;
+    return db.load(sql);
+  },
+
+  byCat(categories) {
+    const sql = `
+    SELECT c.*, co.*, u.Name as TeacherName
+    from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
+    where ca.CatName = '${categories}'
+    `
+    return db.load(sql);
   },
 
   async single(id) {

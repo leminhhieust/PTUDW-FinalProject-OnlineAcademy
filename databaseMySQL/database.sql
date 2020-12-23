@@ -36,7 +36,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Angular',1),(2,'JavaScipt',1),(3,'React',1),(4,'NodeJs',1),(5,'Python',1),(6,'Kotlin',0),(7,'Swift',0),(8,'React Native',0),(9,'Android',0),(10,'Redux',0);
+INSERT INTO `categories` VALUES (1,'Angular',1),(2,'JavaScript',1),(3,'React',1),(4,'NodeJs',1),(5,'Python',1),(6,'Kotlin',0),(7,'Swift',0),(8,'React Native',0),(9,'Android',0),(10,'Redux',0);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,4 +288,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-22 23:39:23
+-- Dump completed on 2020-12-23 11:15:57

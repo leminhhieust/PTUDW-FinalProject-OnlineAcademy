@@ -1,0 +1,78 @@
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  {{#each this.courses}}
+    $(function () {
+      $(`#rateYo{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  $(document).ready(function(){
+  $('.CourseCarousel').slick({
+    dots: true,
+    infinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    arrows: true
+  });
+});
+</script>
+{{/section}}
+
+{{#section 'css'}}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  .slick-prev:before, .slick-next:before { 
+    color:red !important;
+    font-size: 2.5rem;
+  }
+  .slick-prev, .slick-next {
+    width: 2.5rem;
+    height: 2.5rem;
+    z-index: 2;
+  }
+  .slick-list {
+      width: 95%;
+      margin: 0 auto;
+  }
+
+  .slick-prev {
+      left: 0;
+  }
+
+  .slick-next {
+      right: 0;
+  }
+
+</style>
+{{/section}}
+
+
+<div class="container-fluid mt-5">
+    <div class="d-flex flex-row CourseCarousel">
+      {{#each this.courses}}
+        <div class="card mx-5" style="width: 18rem;">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <p class="card-text">{{TeacherName}}</p>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYo{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="#"></a>
+            </div>
+        </div>
+      {{/each}}
+    </div>
+</div>

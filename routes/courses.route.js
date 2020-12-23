@@ -1,5 +1,5 @@
 const express = require('express');
-const productModel = require('../models/courses.model');
+const coursesModel = require('../models/courses.model');
 
 const router = express.Router();
 
@@ -7,14 +7,47 @@ router.get('/', function(req, res){
   res.send("All courses");
 })
 
-router.get('/web', function(req, res){
-  res.send("All web courses");
+router.get('/web', async function(req, res){
+  const courses_web = await coursesModel.allWithWeb();
+  res.render('vwCourses/courses', {
+    courses: courses_web,
+    empty: courses_web.count === 0
+  });
 })
 
-router.get('/mobile', function(req, res){
-  res.send("All mobile courses");
+router.get('/web/:categories', async function (req, res) {
+  const categories = req.params.categories;
+  const courses_byCat = await coursesModel.byCat(categories);
+  if (courses_byCat === null) {
+    return res.redirect('/');
+  }
+
+  res.render('vwCourses/courses', {
+    courses: courses_byCat,
+    empty: courses_byCat.count === 0
+  });
 })
 
+router.get('/mobile', async function(req, res){
+  const courses_mobile = await coursesModel.allWithMobile();
+  res.render('vwCourses/courses', {
+    courses: courses_mobile,
+    empty: courses_mobile.count === 0
+  });
+})
+
+router.get('/mobile/:categories', async function (req, res) {
+  const categories = req.params.categories;
+  const courses_byCat = await coursesModel.byCat(categories);
+  if (courses_byCat === null) {
+    return res.redirect('/');
+  }
+
+  res.render('vwCourses/courses', {
+    courses: courses_byCat,
+    empty: courses_byCat.count === 0
+  });
+})
 // router.get('/byCat/:id', async function (req, res) {
 //   const catId = req.params.id;
 

@@ -55,15 +55,20 @@
 </style>
 {{/section}}
 
-
-<div class="container-fluid mt-5">
-    <div class="d-flex flex-row CourseCarousel">
+{{#if this.empty}}
+  <div>
+    <h4>Không có dữ liệu</h4>
+  </div>
+{{else}}
+  <div class="container-fluid mt-5">
+    <div class="card-columns mx-5" >
       {{#each this.courses}}
         <div class="card mx-5" style="width: 18rem;">
             <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
             <div class="card-body">
               <h5 class="card-title font-weight-bold">{{Name}}</h5>
-              <p class="card-text">{{TeacherName}}</p>
+              <div>{{TeacherName}}</div>
+              <div class="card-text font-weight-light">{{CatName}}</div>
               <div class="d-flex flex-row">
                 <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
                 <div id="rateYo{{CourseID}}" class="pt-1"></div>
@@ -75,4 +80,31 @@
         </div>
       {{/each}}
     </div>
+    <nav>
+      <ul class="pagination">
+        <li class="page-item {{#unless can_go_prev}}disabled{{/unless}}">
+          <a class="page-link" href="?page={{prev_value}}" tabindex="-1">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+          </a>
+        </li>
+        {{#each this.page_items}}
+        {{#if this.isActive}}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="javascript:;">{{value}}<span class="sr-only">(current)</span></a>
+          </li>
+        {{else}}
+          <li class="page-item">
+            <a class="page-link" href="?page={{value}}">{{value}}</a>
+          </li>
+        {{/if}}
+        {{/each}}
+    
+        <li class="page-item {{#unless can_go_next}}disabled{{/unless}}">
+          <a class="page-link" href="?page={{next_value}}">
+            <i class="fa fa-forward" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
 </div>
+{{/if}}

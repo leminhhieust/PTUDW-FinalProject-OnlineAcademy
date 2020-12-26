@@ -95,4 +95,8 @@ module.exports = {
 
     return rows[0];
   },
+
+  detail(){
+    
+  }
 };

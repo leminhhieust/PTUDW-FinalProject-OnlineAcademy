@@ -39,9 +39,17 @@
 </head>
 
 <body>
-  {{> nav}}
+  {{> nav}}  
+  {{#unless authUser}}
+    {{{body}}}
+  {{else}}
+    {{#if authUser.Permission}}
+      {{{body}}}
+    {{else}}
+      <h6>Admin Space</h6>
+    {{/if}}
 
-  {{{body}}}
+  {{/unless}}
 
   {{> footer}}
 

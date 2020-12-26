@@ -115,7 +115,7 @@
                 <div>({{format2 Ratings}})</div>
               </div>
               <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
-              <a class="stretched-link" href="#"></a>
+              <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
             </div>
         </div>
       {{/each}}
@@ -136,7 +136,7 @@
                 <div>({{format2 Ratings}})</div>
               </div>
               <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
-              <a class="stretched-link" href="#"></a>
+              <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
             </div>
         </div>
       {{/each}}
@@ -157,7 +157,7 @@
                 <div>({{format2 Ratings}})</div>
               </div>
               <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
-              <a class="stretched-link" href="#"></a>
+              <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
             </div>
         </div>
       {{/each}}
@@ -170,7 +170,7 @@
       <img class="card-img-top h-155" src="/public/images/Categories/{{CatID}}.jpg" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">{{CatName}}</h5>
-          {{#if condition}}
+          {{#if CatType}}
             <a href="/courses/web/{{CatName}}" class="stretched-link"></a>
           {{else}}
             <a href="/courses/mobile/{{CatName}}" class="stretched-link"></a>

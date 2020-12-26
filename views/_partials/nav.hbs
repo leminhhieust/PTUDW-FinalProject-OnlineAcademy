@@ -7,84 +7,89 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav">
         <li class="nav-item active">
           <a class="nav-link" href="/">Online Academy<span class="sr-only">(current)</span></a>
         </li>
 
         <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Categories</a>
-    <ul class="dropdown-menu">
-	  <li><a class="dropdown-item" href="/courses/all"> IT &raquo </a>
-		 <ul class="submenu dropdown-menu">
-		    <li><a class="dropdown-item" href="/courses/web"> Web &raquo </a>
-			<ul class="submenu dropdown-menu">
-        {{#each lcCategories}}
-          {{#if CatType}}
-            <li><a class="dropdown-item" href="/courses/web/{{CatName}}">{{CatName}}</a></li>
-          {{/if}}
-        {{/each}}
-			</ul>
-      <li><a class="dropdown-item" href="/courses/mobile"> Mobile &raquo </a>
-			<ul class="submenu dropdown-menu">
-			    {{#each lcCategories}}
-            {{#unless CatType}}
-              <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>
-            {{/unless}}
-          {{/each}}
-			</ul>
-		    </li>
-		 </ul>
-	  </li>
-    </ul>
-</li>
-
-        {{!-- <li class="nav-item dropdown dropright">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Categories
-          </a>
-          
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li class="dropdown-submenu">
-              <a class="dropdown-item dropdown-toggle" href="#">IT</a>
-              <ul class="dropdown-menu">
-
-                <li><a class="dropdown-item" href="/courses">Tất cả</a></li>
-                <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#">Web</a>
-                  
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/courses/web">Tất cả</a></li>
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Categories</a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="/courses/all"> IT &raquo </a>
+              <ul class="submenu dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/courses/web"> Web &raquo </a>
+                  <ul class="submenu dropdown-menu">
                     {{#each lcCategories}}
-                    {{#if CatType}}
+                      {{#if CatType}}
                         <li><a class="dropdown-item" href="/courses/web/{{CatName}}">{{CatName}}</a></li>
-                    {{/if}}
+                      {{/if}}
                     {{/each}}
                   </ul>
-                </li>
-                <li class="dropdown-submenu">
-                  <a class="dropdown-item dropdown-toggle" href="#">Mobile</a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/courses/mobile">Tất cả</a></li>
-                    {{#each lcCategories}}
-                    {{#unless CatType}}
-                        <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>
-                    {{/unless}}
-                    {{/each}}
-                  </ul>
+                  <li>
+                    <a class="dropdown-item" href="/courses/mobile"> Mobile &raquo </a>
+                    <ul class="submenu dropdown-menu">
+                        {{#each lcCategories}}
+                          {{#unless CatType}}
+                            <li><a class="dropdown-item" href="/courses/mobile/{{CatName}}">{{CatName}}</a></li>
+                          {{/unless}}
+                        {{/each}}
+                    </ul>
+                  </li>
                 </li>
               </ul>
             </li>
           </ul>
-        </li> --}}
-
+        </li>
       </ul>
-    </div>
-    <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search for anything" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-              <i class="fa fa-search"></i>
-              Search
-            </button>
-          </form>
-  </nav>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for anything" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          <i class="fa fa-search"></i>
+          Search
+        </button>
+      </form>
+      
+      <form id="frmLogout" method="POST" action="/account/logout"></form>
+      
+      <ul class="navbar-nav ml-auto">
+      {{#if isAuth}}
+      {{!-- <li class="nav-item">
+        <a class="nav-link" href="/cart">Shopping Cart ({{cartSummary}} items)</span></a>
+      </li> --}}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          Welcome, <b>{{authUser.Name}}</b>!
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/account/profile">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript: $('#frmLogout').submit();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            Sign Out
+          </a>
+        </div>
+      </li>
+      {{else}}
+      <li class="nav-item">
+        <a class="nav-link" href="/account/login">
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          Sign In
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/account/register">
+          <i class="fa fa-user-plus" aria-hidden="true"></i>
+          Register
+        </a>
+      </li>
+      {{/if}}
+    </ul>
+  </div>
+</nav>

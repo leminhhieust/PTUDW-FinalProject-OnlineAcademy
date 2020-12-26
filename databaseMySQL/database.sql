@@ -265,8 +265,9 @@ CREATE TABLE `users` (
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
   `Email` varchar(50) COLLATE utf8_bin NOT NULL,
   `Permission` int NOT NULL,
+  `DOB` date NOT NULL,
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,7 +276,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'teacher','teacher','Lê Minh Hiếu','leminhhieust@gmail.com',1),(2,'student','student','Trần Thanh Hiền','tranthanhhien@gmail.com',2);
+INSERT INTO `users` VALUES (1,'teacher','teacher','Lê Minh Hiếu','leminhhieu@gmail.com',1,'0000-00-00'),(2,'student','student','Trần Thanh Hiền','tranthanhhien@gmail.com',2,'0000-00-00'),(3,'admin','$2a$10$y255tnLYzrUk4i5CAQngcObkp3zfdFvlYlkpSBAfAzTM3hp6cwfg.','Administrator','leminhhieust@gmail.com',0,'2020-12-26');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -288,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-23 11:15:57
+-- Dump completed on 2020-12-26 23:42:32

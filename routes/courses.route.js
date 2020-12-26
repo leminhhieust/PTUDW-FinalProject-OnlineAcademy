@@ -164,4 +164,16 @@ router.get('/mobile/:categories', async function (req, res) {
   });
 })
 
+router.get('/detail/:id', async function (req, res) {
+  const id = req.params.id;
+  const course = await coursesModel.single(id);
+  if (course === null) {
+    return res.redirect('/');
+  }
+
+  res.render('vwCourses/detail', {
+    course: course
+  })
+})
+
 module.exports = router;

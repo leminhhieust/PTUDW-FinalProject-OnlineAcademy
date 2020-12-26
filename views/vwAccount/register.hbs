@@ -1,0 +1,128 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+<style>
+  .divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;   
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+</style>
+
+{{/section}}
+
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+<script>
+  $('#frmRegister').on('submit', function (e) {
+    e.preventDefault();
+
+    const Username = $('#txtUsername').val();
+    const Email = $('#txtEmail').val();
+    const Password = $('#txtPassword').val();
+    const Confirm = $('#txtConfirm').val();
+
+    if (Username.length === 0) {
+      alert('Invalid username.');
+      return;
+    }
+
+    if (Password !== Confirm){
+      alert('Invalid confirm.');
+      return;
+    }
+
+    $.getJSON(`/account/is-available-username?user=${Username}`, function (data) {
+      if (data === false) {
+        alert('Username already used!');
+        return;
+      }
+    })
+
+    $.getJSON(`/account/is-available-email?email=${Email}`, function (data) {
+     if (data === false) {
+        alert('Invalid email.');
+        return;
+      }
+    })
+
+    $('#frmRegister').off('submit').submit();
+  });
+
+  $('#txtDOB').datetimepicker({
+    format: 'd/m/Y',
+    timepicker: false,
+    mask: true,
+  });
+</script>
+{{/section}}
+
+<div class="card bg-light mb-5">
+  <article class="card-body mx-auto" style="max-width: 400px;">
+    <h4 class="card-title mt-3 text-center">Create Account</h4>
+    <p class="text-center">Get started with your free account</p>
+    <form action="" method="post" id="frmRegister">
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"> <i class="fa fa-male"></i> </span>
+        </div>
+        <input type="text" class="form-control" id="txtName" name="Name" placeholder="Full name" autofocus required>
+      </div> <!-- form-group// -->
+
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+        </div>
+        <input type="text" class="form-control" id="txtEmail" name="Email" placeholder="Email address" required>
+      </div> <!-- form-group// -->
+
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+        </div>
+        <input type="text" class="form-control" id="txtDOB" name="DOB" placeholder="Date of birth" required>
+      </div> <!-- form-group// -->
+
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+        </div>
+        <input type="text" class="form-control" id="txtUsername" name="Username" placeholder="Username" required>
+      </div> <!-- form-group// -->
+
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+        </div>
+        <input type="password" class="form-control" id="txtPassword" name="Password" placeholder="Create password" required>
+      </div> <!-- form-group// -->
+
+      <div class="form-group input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+        </div>
+        <input type="password" class="form-control" id="txtConfirm" placeholder="Repeat password" required>
+      </div> <!-- form-group// --> 
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+      </div> <!-- form-group// -->      
+      <p class="text-center">Have an account? <a href="/account/login">Log In</a> </p>                                                                 
+    </form>
+  </article>
+</div> <!-- card.// -->

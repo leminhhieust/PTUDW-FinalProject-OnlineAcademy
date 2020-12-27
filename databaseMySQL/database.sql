@@ -26,7 +26,8 @@ CREATE TABLE `categories` (
   `CatID` int unsigned NOT NULL AUTO_INCREMENT,
   `CatName` varchar(50) COLLATE utf8_bin NOT NULL,
   `CatType` tinyint(1) NOT NULL,
-  PRIMARY KEY (`CatID`)
+  PRIMARY KEY (`CatID`),
+  FULLTEXT KEY `ftx_categories` (`CatName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,14 +104,16 @@ DROP TABLE IF EXISTS `courses`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `courses` (
   `CourseID` int unsigned NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8_bin NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `CatID` int NOT NULL,
   `TeacherID` int NOT NULL,
   `Status` tinyint(1) NOT NULL,
   `DateCreate` date NOT NULL,
   `Price` double NOT NULL,
-  PRIMARY KEY (`CourseID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `BadgeType` int NOT NULL,
+  PRIMARY KEY (`CourseID`),
+  FULLTEXT KEY `ftx_courses` (`Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +122,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'The Complete JavaScript Course 2020: From Zero to Expert!',2,1,0,'2020-12-22',129.99),(2,'React - The Complete Guide (incl Hooks, React Router, Redux)',3,1,0,'2020-12-22',129.99),(3,'Angular - The Complete Guide (2020 Edition)',1,1,0,'2020-12-22',129.99),(4,'The Complete Node.js Developer Course (3rd Edition)',4,1,0,'2020-12-22',84.99),(5,'2020 Complete Python Bootcamp From Zero to Hero in Python',5,1,0,'2020-12-22',129.99),(6,'Android App Development Masterclass using Kotlin',6,1,0,'2020-12-22',99.99),(7,'iOS & Swift - The Complete iOS App Development Bootcamp',7,1,0,'2020-12-22',129.99),(8,'The Complete React Native + Hooks Course [2020 Edition]',8,1,0,'2020-12-22',94.99),(9,'The Complete Android N Developer Course',9,1,0,'2020-12-22',129.99),(10,'Modern React with Redux [2020 Update]',10,1,0,'2020-12-22',129.99);
+INSERT INTO `courses` VALUES (1,'The Complete JavaScript Course 2020: From Zero to Expert!',2,1,0,'2020-12-22',129.99,0),(2,'React - The Complete Guide (incl Hooks, React Router, Redux)',3,1,0,'2020-12-22',129.99,0),(3,'Angular - The Complete Guide (2020 Edition)',1,1,0,'2020-12-22',129.99,0),(4,'The Complete Node.js Developer Course (3rd Edition)',4,1,0,'2020-12-22',84.99,0),(5,'2020 Complete Python Bootcamp From Zero to Hero in Python',5,1,0,'2020-12-22',129.99,0),(6,'Android App Development Masterclass using Kotlin',6,1,0,'2020-12-22',99.99,0),(7,'iOS & Swift - The Complete iOS App Development Bootcamp',7,1,0,'2020-12-22',129.99,0),(8,'The Complete React Native + Hooks Course [2020 Edition]',8,1,0,'2020-12-22',94.99,0),(9,'The Complete Android N Developer Course',9,1,0,'2020-12-22',129.99,0),(10,'Modern React with Redux [2020 Update]',10,1,0,'2020-12-22',129.99,0);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,28 +230,28 @@ INSERT INTO `orders` VALUES (1,'2020-12-22',2,1184.9);
 UNLOCK TABLES;
 
 --
--- Table structure for table `registeredcourses`
+-- Table structure for table `sessions`
 --
 
-DROP TABLE IF EXISTS `registeredcourses`;
+DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `registeredcourses` (
-  `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `StudentID` int NOT NULL,
-  `CourseID` int NOT NULL,
-  `IsFav` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int unsigned NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `registeredcourses`
+-- Dumping data for table `sessions`
 --
 
-LOCK TABLES `registeredcourses` WRITE;
-/*!40000 ALTER TABLE `registeredcourses` DISABLE KEYS */;
-/*!40000 ALTER TABLE `registeredcourses` ENABLE KEYS */;
+LOCK TABLES `sessions` WRITE;
+/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES ('TuPCZ7TYtNeL84nYTjaxZHS5u_2JJlDC',1609176338,'{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"isAuth\":false,\"authUser\":null,\"retUrl\":\"http://localhost:3000/courses/search?key=app%20swi&page=1\"}'),('_MGWKvR_q5bzwoWnMO82cQYy3NnGK1_H',1609088003,'{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"isAuth\":true,\"authUser\":{\"UserID\":3,\"Username\":\"admin\",\"Password\":\"$2a$10$y255tnLYzrUk4i5CAQngcObkp3zfdFvlYlkpSBAfAzTM3hp6cwfg.\",\"Name\":\"Administrator\",\"Email\":\"leminhhieust@gmail.com\",\"Permission\":0,\"DOB\":\"2020-12-25T17:00:00.000Z\"},\"retUrl\":\"http://localhost:3000/\"}');
+/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -289,4 +292,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-26 23:42:32
+-- Dump completed on 2020-12-28  0:27:12

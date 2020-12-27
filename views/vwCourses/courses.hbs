@@ -56,11 +56,24 @@
 {{/section}}
 
 {{#if this.empty}}
-  <div>
-    <h4>Không có dữ liệu</h4>
+  <div class="mt-5 mx-5">
+    <h3>Không có dữ liệu</h3>
   </div>
 {{else}}
   <div class="container-fluid mt-5">
+    {{#if this.all}}
+      <h2 class="mx-5 mb-5">All Courses</h2>
+    {{else}}
+      {{#if this.web}}
+        <h2 class="mx-5 mb-5">All Web Courses</h2>
+      {{else}}
+        {{#if this.mobile}}
+          <h2 class="mx-5 mb-5">All Mobile Courses</h2>
+        {{else}}
+          <h2 class="mx-5 mb-5">All {{this.catName}} Courses</h2>
+        {{/if}}
+      {{/if}}
+    {{/if}}
     <div class="card-columns mx-5" >
       {{#each this.courses}}
         <div class="card mx-5" style="width: 18rem;">

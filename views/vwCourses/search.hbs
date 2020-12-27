@@ -1,0 +1,109 @@
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  {{#each this.courses}}
+    $(function () {
+      $(`#rateYo{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  {{#each this.url_infor}}
+     $('#select-sort').on('change',function(e){
+      const value = this.value;
+      $('#filter-form').attr('action', `/courses/search?key={{this.key}}&page={{this.current_page}}&sort=${value}`).submit();
+    })
+  {{/each}}
+ 
+
+</script>
+{{/section}}  
+
+{{#section 'css'}}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{/section}}
+
+{{#if this.empty}}
+  <div class="mt-5 mx-5 mb-5">
+    <h1>Sorry, we couldn't find any results for</h1>
+    <h1>"{{this.key}}"</h1>
+    <br>
+    <h2>Try adjusting your search. Here are some ideas:</h2>
+    <ul>
+      <li>Make sure all words are spelled correctly</li>
+      <li>Try different search terms</li>
+      <li>Try more general search terms</li>
+    </ul>
+  </div>
+{{else}}
+  <div class="container-fluid mt-5">
+    <h1 class="text-center mb-5">{{this.res_count}} results for "{{this.key}}"</h1>
+    <form id="filter-form" method="POST"></form>
+    <select id="select-sort" class="custom-select mb-5" style="width: 10rem;" form="filter-form">
+      <option value disabled>Sort</option>
+      <option selected value="most-relevant">Most Relevant</option>
+      <option value="highest-rated">Highest Rated</option>
+      <option value="lowest-price">Lowest Price</option>
+    </select>
+      {{#each this.courses}}
+      <div class="card mb-3 mx-auto" style="width: 60rem;">
+        <a class="stretched-link" href="#"></a>
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+                    <div>{{TeacherName}}</div>
+                    <div class="card-text font-weight-light">{{CatName}}</div>
+                    <div class="d-flex flex-row">
+                      <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                      <div id="rateYo{{CourseID}}" class="pt-1"></div>
+                      <div>({{format2 Ratings}})</div>
+                    </div>
+                    <div class="card-text text-danger font-weight-bold">{{format1 Price}}</div>
+                    
+                    <span class="badge badge-warning">Warning</span>
+                    <span class="badge badge-danger">Danger</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+  </div>
+    <nav>
+      <ul class="pagination d-flex justify-content-center">
+        <li class="page-item {{#unless can_go_prev}}disabled{{/unless}}">
+          <a class="page-link" href="?key={{this.key}}&page={{prev_value}}&sort={{this.sort_type}}" tabindex="-1">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+          </a>
+        </li>
+        {{#each this.page_items}}
+        {{#if this.isActive}}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="javascript:;">{{value}}<span class="sr-only">(current)</span></a>
+          </li>
+        {{else}}
+          <li class="page-item">
+            <a class="page-link" href="?key=keyword?page={{value}}">{{value}}</a>
+          </li>
+        {{/if}}
+        {{/each}}
+    
+        <li class="page-item {{#unless can_go_next}}disabled{{/unless}}">
+          <a class="page-link" href="?key={{this.key}}&page={{next_value}}&sort={{this.sort_type}}">
+            <i class="fa fa-forward" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+</div>
+{{/if}}

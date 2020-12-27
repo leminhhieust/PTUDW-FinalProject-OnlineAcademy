@@ -43,9 +43,10 @@
           </ul>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search for anything" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+
+      <form id="formSearch" class="form-inline my-2 my-lg-0" method="POST" action="/courses/search/redirect">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search for anything" aria-label="Search" id="SearchContent">
+        <button id="buttonSearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">
           <i class="fa fa-search"></i>
           Search
         </button>

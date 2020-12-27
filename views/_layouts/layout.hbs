@@ -39,11 +39,12 @@
 </head>
 
 <body>
-  {{> nav}}  
   {{#unless authUser}}
+    {{> nav}}  
     {{{body}}}
   {{else}}
     {{#if authUser.Permission}}
+        {{> nav}}  
       {{{body}}}
     {{else}}
       {{> admin_nav}}
@@ -75,6 +76,11 @@
     })
     });
   }
+
+  $('#buttonSearch').click(function(){
+    const content = $('#SearchContent').val();
+    $('#formSearch').attr('action', `/courses/search?key=${content}&page=1&sort=most-relevant`).submit();
+  })
   </script>
   {{{_sections.js}}}
 </body>

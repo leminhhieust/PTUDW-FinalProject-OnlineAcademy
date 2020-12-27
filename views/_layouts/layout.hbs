@@ -46,8 +46,8 @@
     {{#if authUser.Permission}}
       {{{body}}}
     {{else}}
-      <h6>Admin Space</h6>
       {{> admin_nav}}
+      {{{body}}}
     {{/if}}
 
   {{/unless}}

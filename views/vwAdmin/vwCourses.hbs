@@ -1,0 +1,62 @@
+<div class="card">
+    <div class="card-body">
+        <div class="container px-4">
+        <h3>Mobile Courses</h3>
+        <div class="row gx-5">
+            {{#each  courses_mobile}}
+            <div class="col">
+            <div class="p-3 border bg-light">
+                <div class="card mx-5" style="width: 18rem;">
+                    <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="../../public/images/Courses/{{CourseID}}/tiny.jpg" alt="Image Courses">
+                        <div class="card-body">
+                            <h5 class="card-title">{{Name}}</h5>
+                            {{!-- <a  class="btn btn-outline-danger" href="#" role="button">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                Delete
+                            </a> --}}
+                            <a   name="" id=""
+                             class="btn btn-primary"  role="button"
+                              href="/admin/courses/detail/{{CourseID}}">
+                               <i class="fa fa-eye" aria-hidden="true"></i>
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            {{/each}}
+        </div>
+        </div>
+        <div class="container px-4">
+        <h3>Web Courses</h3>
+        <div class="row gx-5">
+            {{#each  courses_web}}
+            <div class="col">
+            <div class="p-3 border bg-light">
+                <div class="card mx-5" style="width: 18rem;">
+                    <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="../../public/images/Courses/{{CourseID}}/tiny.jpg" alt="Image Courses">
+                        <div class="card-body">
+                            <h5 class="card-title">{{Name}}</h5>
+                            {{!-- <a  class="btn btn-outline-danger" href="#" role="button">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                Delete
+                            </a> --}}
+                            <a   name="" id=""
+                             class="btn btn-primary"  role="button"
+                             href="/admin/courses/detail/{{CourseID}}">
+                               <i class="fa fa-eye" aria-hidden="true"></i>
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            {{/each}}
+        </div>
+        </div>
+    </div>
+</div>

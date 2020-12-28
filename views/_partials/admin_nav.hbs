@@ -10,10 +10,10 @@
         <a class="nav-link" href="/admin/categories">Quản lý các lĩnh vực <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="#">Quản lí các khóa học<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/admin/courses">Quản lí các khóa học<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="#">Quản lí tài khoản<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/admin/users">Quản lí tài khoản<span class="sr-only">(current)</span></a>
       </li>
       {{!-- <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
@@ -30,4 +30,33 @@
         </div>
       </li> --}}
   </div>
+  <form id="frmLogout" method="POST" action="/account/logout"></form>
+      
+      <ul class="navbar-nav ml-auto">
+  {{#if isAuth}}
+      {{!-- <li class="nav-item">
+        <a class="nav-link" href="/cart">Shopping Cart ({{cartSummary}} items)</span></a>
+      </li> --}}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          Welcome, <b>{{authUser.Name}}</b>!
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="javascript: $('#frmLogout').submit();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            Sign Out
+          </a>
+        </div>
+      </li>
+      {{else}}
+      <li class="nav-item">
+        <a class="nav-link" href="/account/login">
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          Sign In
+        </a>
+      </li>
+      {{/if}}
 </nav>

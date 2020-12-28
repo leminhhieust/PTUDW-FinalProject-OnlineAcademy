@@ -1,0 +1,189 @@
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+<script>
+  $('#txtDOB').datetimepicker({
+    format: 'd/m/Y',
+    timepicker: false,
+    mask: true,
+  });
+</script>
+<script>
+  $('.removeItem').on('click', function () {
+    const UserID = $(this).data('id');
+    $('#txtProId').val(UserID);
+    $('#frmRemoveItem').submit();
+  });
+
+$('.updateItem').on('click', function () {
+    const UserID = $(this).data('id_update');
+    $('#txtProId_update').val(UserID);
+    $('#txtUsername_update').val();
+    $('#txtPassword_update').val();
+    $('#txtName_update').val();
+    $('#Email_update').val();
+    $('#txtDOB_update').val();
+    $('#frmUpdateItem_update').submit();
+  });
+</script>
+{{/section}}
+
+<div class="card">
+  <h5 class="card-header">
+    Quản lý Account
+  </h5>
+  <form id="frmRemoveItem" action="/admin/users/remove" method="POST">
+    <input type="hidden" name="UserID" id="txtProId">
+  </form>
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Username</th>
+          <th scope="col">Password</th>
+          <th scope="col"> Name</th>
+          <th scope="col">Email</th>
+           <th scope="col">DOB</th>
+          <th scope="col">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+         <h3>Students</h3>
+        {{#each this.students}}
+            <tr>
+          <td>
+            <a >{{Username}}</a>
+          </td>
+          <td>{{Password}}</td>
+          <td>{{Name}}</td>
+          <td>{{Email}}</td>
+          <td>{{DOB}}</td>
+
+        </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tfoot>
+    </table>
+  </div>
+
+<div class="card-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Username</th>
+          <th scope="col">Password</th>
+          <th scope="col"> Name</th>
+          <th scope="col">Email</th>
+           <th scope="col">DOB</th>
+          <th scope="col">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+          <h3>Teacher</h3>
+        {{#each this.teachers}}
+            <tr>
+          <td>
+            <a >{{Username}}</a>
+          </td>
+          <td>{{Password}}</td>
+          <td>{{Name}}</td>
+          <td>{{Email}}</td>
+          <td>{{DOB}}</td>
+          
+        
+          <td class="text-right">
+              <a data-id_update="{{UserID}}"
+               class="btn btn-sm btn-outline-primary updateItem" href="javascript:;" role="button">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+            <a data-id="{{UserID}}" class="btn btn-sm btn-outline-danger removeItem" href="javascript:;" role="button"
+              title="Remove Item">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+        {{/each}}
+        <form action="/admin/users/add" method="POST">
+        <td>
+           <input type="text" class="form-control" id="txtUsername" name="Username" placeholder="Username" required>
+          </td>
+          <td>
+              <input type="password" class="form-control" id="txtPassword" name="Password" placeholder="Create password" required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtName" name="Name" placeholder="Full name" autofocus required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtEmail" name="Email" placeholder="Email address" required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtDOB" name="DOB" placeholder="Date of birth" required>
+          </td>
+          <td>
+            <button type="submit" class="btn btn-outline-primary float-right">
+               <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+          </td>
+          </form>
+      </tbody>
+      <tfoot>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tfoot>
+    </table>
+  </div>
+<h3>Box Update User</h3>
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> Username</th>
+          <th scope="col">Password</th>
+          <th scope="col"> Name</th>
+          <th scope="col">Email</th>
+           <th scope="col">DOB</th>
+          <th scope="col">&nbsp;</th>
+        </tr>
+      </thead>
+      <form action="/admin/users/update" method="POST" id="frmUpdateItem_update">
+        <input type="hidden" name="UserID" id="txtProId_update">
+        <td>
+           <input type="text" class="form-control" id="txtUsername_update" name="Username" placeholder="Username" required>
+          </td>
+          <td>
+              <input type="password" class="form-control" id="txtPassword_update" name="Password" placeholder="Create password" required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtName_update" name="Name" placeholder="Full name" autofocus required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtEmail_update" name="Email" placeholder="Email address" required>
+          </td>
+          <td>
+              <input type="text" class="form-control" id="txtDOB_update" name="DOB" placeholder="Date of birth" required>
+          </td>
+          <td>
+           &nbsp;
+          </td>
+          </form>
+     <tfoot>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tfoot>
+    </table>
+  </div>    
+</div>

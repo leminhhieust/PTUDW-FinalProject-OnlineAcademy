@@ -1,0 +1,30 @@
+
+{{#with courses}}
+<div class="card">
+  <h5 class="card-header">
+    {{Name}}
+  </h5>
+  <div class="card-body">
+    <img src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+    <p class="card-text mt-3">Price:: <span class="text-danger font-weight-bold">{{ Price}}</span></p>
+
+    <form  method="POST" action="/admin/courses/del">
+      <div class="row form-group">
+        <div class="col-sm-4">
+          <div class="input-group mb-3">
+            {{!-- <input type="text"  name="CourseID" id="#txtID" value="{{CourseID}}"> --}}
+            <a class="btn btn-primary" href="/admin/courses" role="button">
+                 <i class="fa fa-backward" aria-hidden="true"></i>
+                    Back to List
+            </a>
+             <button type="submit" class="btn btn-outline-danger">
+               <i class="fa fa-trash" aria-hidden="true"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{{/with}}

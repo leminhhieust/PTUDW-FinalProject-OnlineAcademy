@@ -100,44 +100,60 @@ module.exports = {
         return rows[0];
     },
 
-    detail(){
-      
+    detail() {
+
     },
 
-  bySearch(key, cat, sort_type, offset){
-    var sql;
-    if(sort_type == "most-relevant"){
-      sql = `
+    bySearch(key, cat, sort_type, offset) {
+        var sql;
+        if (sort_type == "most-relevant") {
+            sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
         WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
         limit ${config.pagination.limit} offset ${offset}
       `;
-    }
-    else if(sort_type == "highest-rated"){
-      sql = `
+        } else if (sort_type == "highest-rated") {
+            sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
         WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
         order by co.AvgStar DESC
         limit ${config.pagination.limit} offset ${offset}
       `;
-    }
-    else if(sort_type == "lowest-price"){
-      sql = `
+        } else if (sort_type == "lowest-price") {
+            sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
         WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
         order by c.Price ASC
         limit ${config.pagination.limit} offset ${offset}
       `;
-    }
-    return db.load(sql);
-  },
+        }
+        return db.load(sql);
+    },
 
-  async countWithSearch(key,cat) {
-    const rows = await db.load(`select count(*) as total FROM courses c left join categories ca on c.CatID = ca.CatID
+    async countWithSearch(key, cat) {
+        const rows = await db.load(`select count(*) as total FROM courses c left join categories ca on c.CatID = ca.CatID
     WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)`);
-    return rows[0].total;
-  },
+        return rows[0].total;
+    },
+
+    allwithmobile_admin() {
+        sql = `select cour.*
+    from categories cate join courses cour on cate.CatID=cour.CatID
+    where cate.CatType=0`
+        return db.load(sql);
+    },
+    allwithweb_admin() {
+        sql = `select cour.*
+    from categories cate join courses cour on cate.CatID=cour.CatID
+    where cate.CatType=1`
+        return db.load(sql);
+    },
+
+    del(entity) {
+        const condition = { CourseID: entity.CourseID };
+        return db.del(condition, TBL_CATEGORIES);
+    },
 };

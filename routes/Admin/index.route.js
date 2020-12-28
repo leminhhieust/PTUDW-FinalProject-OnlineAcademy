@@ -4,6 +4,7 @@ const userModel = require('../../models/user.model')
 const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 const multer = require('multer');
 var fs = require('fs');
 // GET home page.
@@ -113,11 +114,20 @@ router.post('/categories', async function(req, res) {
 })
 
 router.get('/categories/delete/:id', async function(req, res) {
-    console.log(req.params.id);
+    // console.log(req.params.id);
+
 
     const id = req.params.id;
     const entity = await categoryModel.single(id);
-    await categoryModel.del(entity);
+    const count = await coursesModel.countWithByCat(entity.CatName);
+    console.log(count);
+    if (count === 0) {
+        await categoryModel.del(entity);
+    } else {
+        return res.render('vwAdmin/vwCategories', {
+            err_message: 'Không thể xóa lĩnh vực có khóa học'
+        });
+    }
 
     fs.unlink(`./public/Images/Categories/${id}.jpg`, function(err) {
         if (err) throw err;
@@ -133,4 +143,94 @@ router.post('/categories/update', async function(req, res) {
     res.redirect('/admin/categories');
 })
 
+router.get('/courses', async function(req, res) {
+    const courses_mobile = await coursesModel.allwithmobile_admin();
+    const courses_web = await coursesModel.allwithweb_admin();
+
+    if (req.session.isAuth === true) {
+        res.render('vwAdmin/vwCourses', {
+            courses_mobile: courses_mobile,
+            courses_web: courses_web
+        });
+    } else {
+        res.render('vwAccount/login', {
+            layout: false
+        });
+    }
+
+})
+
+router.get('/courses/detail/:id', async function(req, res) {
+    const id = req.params.id;
+    const courses = await coursesModel.single(id);
+    res.render('vwAdmin/vwdetailCourses', {
+        courses: courses
+    });
+})
+
+router.post('/courses/del', async function(req, res) {
+    const CourseID = req.body.CourseID;
+    const courses = await coursesModel.single(CourseID);
+    await coursesModel.del(courses);
+
+    res.redirect('/admin/courses')
+})
+
+router.get('/users', async function(req, res) {
+    //const users = await userModel.all();
+    const teachers = await userModel.allteacher();
+    const students = await userModel.allstudent();
+    if (req.session.isAuth === true) {
+        res.render('vwAdmin/vwUsers', {
+            teachers: teachers,
+            students: students
+        });
+    } else {
+        res.render('vwAccount/login', {
+            layout: false
+        });
+    }
+
+})
+
+router.post('/users/add', async function(req, res) {
+    const hash = bcrypt.hashSync(req.body.Password, 10);
+    const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    const new_teacher = {
+        Username: req.body.Username,
+        Password: hash,
+        Name: req.body.Name,
+        Email: req.body.Email,
+        Permission: 1,
+        DOB: dob
+    }
+
+    await userModel.add(new_teacher);
+    res.redirect('/admin/users');
+})
+
+router.post('/users/remove', async function(req, res) {
+    const UserID = req.body.UserID;
+    const User = await userModel.single(UserID);
+    await userModel.del(User);
+
+    res.redirect('/admin/users')
+})
+router.post('/users/update', async function(req, res) {
+    const hash = bcrypt.hashSync(req.body.Password, 10);
+    const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    const update_teacher = {
+        UserID: +req.body.UserID,
+        Username: req.body.Username,
+        Password: hash,
+        Name: req.body.Name,
+        Email: req.body.Email,
+        Permission: 1,
+        DOB: dob
+    };
+    //console.log(update_teacher);
+    await userModel.patch(update_teacher);
+
+    res.redirect('/admin/users')
+})
 module.exports = router;

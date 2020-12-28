@@ -25,7 +25,14 @@
 </script>
 {{/section}}
 
-
+{{#if err_message}}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{err_message}}
+        </div>
+{{/if}}
 <div class="card" >
     <div class="card-body">
          <a name="" id="" class="btn btn-primary addItem"  role="button"
@@ -51,7 +58,11 @@
                             <select class="custom-select" name="CatType">
                                 <option selected>Chọn lĩnh vực</option>
                                 {{#each CatTypes}}
-                                  <option value="{{CatType}}">{{CatType}}</option>
+                                   {{#if CatType}}
+                                        <option value="{{CatType}}">Web Category</option>
+                                   {{else}}
+                                        <option value="{{CatType}}">Mobile Category</option>
+                                   {{/if}}
                                 {{/each}}
                             </select>
                         <div class="card-footer">
@@ -73,8 +84,12 @@
                          </div>
                             <select class="custom-select" name="CatType" id="txtCatType">
                                 <option selected>Chọn lĩnh vực</option>
-                                {{#each CatTypes}}
-                                  <option value="{{CatType}}">{{CatType}}</option>
+                               {{#each CatTypes}}
+                                   {{#if CatType}}
+                                        <option value="{{CatType}}">Web Category</option>
+                                   {{else}}
+                                        <option value="{{CatType}}">Mobile Category</option>
+                                   {{/if}}
                                 {{/each}}
                             </select>
                         <div class="card-footer">
@@ -82,7 +97,7 @@
           {{!-- </div> --}}
      <form>
        <div class="container-fluid mt-5">
-            <div class="card-columns mx-5" >
+            <div class="card-columns mx-5  " >
             {{#each categories}}
                 <div class="card mx-5" style="width: 18rem;">
                     <div class="card" style="width: 18rem;">

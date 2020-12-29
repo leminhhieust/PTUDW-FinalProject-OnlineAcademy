@@ -119,9 +119,9 @@ module.exports = {
 
     allOfFeedback(id){
         const sql = `
-        SELECT * 
-        FROM orders o join orderdetails od on o.OrderID = od.OrderID join users u on u.UserID = o.UserID join feedback fb on fb.CourseID = od.CourseID
-        WHere od.CourseID = ${id}
+        SELECT fb.*, u.Name
+        FROM feedback fb join courses c on fb.CourseID = c.CourseID join users u on u.UserID = fb.StudentID
+        Where c.CourseID = ${id}
         `;
         return db.load(sql)
     },
@@ -136,11 +136,11 @@ module.exports = {
     },
 
     async withRelateCourse(id){
-        const rows = await db.load(`select * from courses c join categories ca on c.CatID = c.CatID where CourseID = ${id}`);
+        const rows = await db.load(`select * from courses c join categories ca on c.CatID = ca.CatID where CourseID = ${id}`);
         const sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
-        WHERE ca.CatType = ${rows[0].CatType}
+        WHERE ca.CatType = ${rows[0].CatType} and c.CourseID != ${id}
         order by co.StudentCount DESC
         `;
         return db.load(sql);

@@ -5,7 +5,7 @@ const options = {
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '123456',
+    password: '02042000',
     database: 'qlkh',
     charset: 'utf8',
     schema: {

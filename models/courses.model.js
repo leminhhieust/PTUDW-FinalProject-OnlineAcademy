@@ -93,15 +93,57 @@ module.exports = {
     },
 
     async single(id) {
-        const rows = await db.load(`select * from ${TBL_CATEGORIES} where CourseID = ${id}`);
-        if (rows.length === 0) {
-            return null;
-        }
-        return rows[0];
+      const sql = `
+        SELECT c.*, co.*
+        from courses c join count co on co.CourseID = c.CourseID
+        where c.CourseID = ${id}
+      `;
+      const rows = await db.load(sql);
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
     },
 
-    detail() {
+    async allOfTeacher(CourseID){
+        const rows = await db.load(`select * from courses where CourseID = ${CourseID}`);
+        const teacherID = rows[0].TeacherID;
+        const sql = `
+        SELECT u.*, AVG(co.AvgStar) as Rating, SUM(StudentCount) as Students, SUM(Ratings) as Reviews, Count(c.CourseID) Courses 
+        from users u join courses c on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID
+        where u.UserID = ${teacherID}
+        `;
+        const rowteacher = await db.load(sql);
+        return rowteacher[0];
+    },
 
+    allOfFeedback(id){
+        const sql = `
+        SELECT * 
+        FROM orders o join orderdetails od on o.OrderID = od.OrderID join users u on u.UserID = o.UserID join feedback fb on fb.CourseID = od.CourseID
+        WHere od.CourseID = ${id}
+        `;
+        return db.load(sql)
+    },
+
+    withCourseContent(id){
+        const sql = `
+        SELECT cc.*
+        from courses c join coursecontent cc on c.CourseID = cc.CourseID
+        where c.CourseID = ${id}
+        `;
+        return db.load(sql);
+    },
+
+    async withRelateCourse(id){
+        const rows = await db.load(`select * from courses c join categories ca on c.CatID = c.CatID where CourseID = ${id}`);
+        const sql = `
+        SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
+        FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
+        WHERE ca.CatType = ${rows[0].CatType}
+        order by co.StudentCount DESC
+        `;
+        return db.load(sql);
     },
 
     bySearch(key, cat, sort_type, offset) {

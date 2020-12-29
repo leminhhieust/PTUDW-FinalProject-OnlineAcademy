@@ -1,35 +1,161 @@
-{{!-- {{#with product}}
-<div class="card">
-  <h5 class="card-header">
-    {{ProName}}
-  </h5>
-  <div class="card-body">
-    <img src="/public/imgs/sp/{{ProID}}/main.jpg" alt="{{ProName}}" title="{{ProName}}">
-    <p class="card-text mt-3">Giá: <span class="text-danger font-weight-bold">{{format Price}}</span></p>
-    <p class="card-text">Tồn kho: {{Quantity}}</p>
-    <p class="card-text">
-      {{{FullDes}}}
-    </p>
-    {{#if ../isAuth}}
-    <form action="/cart/add" method="POST">
-      <div class="row form-group">
-        <div class="col-sm-4">
-          <div class="input-group mb-3">
-            <input type="hidden" value="{{ProID}}" name="id">
-            <input type="text" class="form-control" placeholder="Quantity" value="1" name="quantity">
-            <div class="input-group-append">
-              <button class="btn btn-outline-primary" type="submit">
-                <i class="fa fa-plus" aria-hidden="true"></i>
-              </button>
-            </div>
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script>
+  {{#with course}}
+    $(function () {
+      $(`#rateYo1`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+      $(`#rateYo2`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "20px",
+        spacing: "3px"
+      });
+    });
+  {{/with}}
+  {{#each feedback}}
+   $(function () {
+      $(`#rateYoFb{{FeedbackID}}`).rateYo({
+        rating: {{Star}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+   });
+  {{/each}}
+  {{#each this.courseRelate}}
+  $(function () {
+      $(`#rateYoRl{{CourseID}}`).rateYo({
+        rating: {{Star}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+   });
+  {{/each}}
+</script>
+{{/section}}  
+
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+{{/section}}
+
+
+<div class="bg-dark d-flex flex-row p-5" style="width: 100%">
+  {{#with firstcourse}}
+  <div class="mr-5">
+    <h4 class="text-center text-light">Preview this course</h4>
+    <iframe width="560" height="315" src="{{Video}}" frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+    </iframe>
+  </div>
+  {{/with}}
+  {{#with course}}
+  <div class="pt-4">
+    <h2 class="text-white font-weight-bold">{{Name}}</h2>
+    <h5 class="text-light font-weight-normal" >{{TinyDes}}</h5>
+    <div class="d-flex flex-row">
+      <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+      <div id="rateYo1" class="pt-1"></div>
+      <div class="text-light">({{format2 Ratings}} ratings)</div>
+      <div class="text-light ml-1">{{format2 StudentCount}} students</div>
+    </div>
+    <p class="text-light">
+      <i class="fa fa-exclamation-circle"></i>
+      Last updated {{formatDate DateUpdate}}
+      </p>
+    <h3 class="card-text text-danger font-weight-bold">{{format1 Price}}</h3>
+    <div class="d-flex flex-row">
+      <a data-id="{{CourseID}}" class="btn btn-md btn-success addItem" href="javascript:;" role="button">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        Add to cart
+      </a>
+      <a class="btn btn-md btn-danger addItem ml-2" role="button">
+        <i class="fa fa-heart-o" aria-hidden="true"></i>
+        Watchlist
+      </a>
+    </div>
+  </div>
+  {{/with}}
+</div>
+
+{{#with course}}
+<div class="border m-5" >
+  <h3 class="p-3">Description</h3>
+  <div class="p-3">{{{FullDes}}}</div>
+</div>
+{{/with}}
+
+<h3 class="ml-5">Course content</h3>
+<div class="mx-5">
+  {{#each coursecontent}}
+    <a class="card card-body ml-4 d-flex flex-row mt-3" href="{{Video}}" role="button">
+      <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+      {{Title}}
+    </a>
+  {{/each}}
+</div>
+
+<h3 class="ml-5 mt-5"> Instructor</h3>
+<div class="mx-5 border p-3">
+  {{#with courseOfTeacher}}
+    <h4 class="text-success">{{Name}}</h4>
+    <div class="d-flex flex-row">
+      <p class="mr-3"><i class="fa fa-star mr-1" aria-hidden="true"></i>{{format3 Rating}} Rating</p>
+      <p class="mr-3"><i class="fa fa-trophy mr-1" aria-hidden="true"></i>{{format2 Reviews}} Reviews</p>
+      <p class="mr-3"><i class="fa fa-users mr-1" aria-hidden="true"></i>{{format2 Students}} Students</p>
+      <p class="mr-3"><i class="fa fa-play-circle mr-1" aria-hidden="true"></i>{{format2 Courses}} Courses</p>
+    </div>
+    <p>{{Des}}</p>    
+  {{/with}}
+</div>
+
+<h3 class="mx-5 mt-5">Student feedback</h3>
+<div class="border mx-5 p-3">
+  {{#with course}}
+<div>
+  <h1 class="display-3 font-weight-bold" style="color:#be5a0e;">{{AvgStar}}</h1>
+  <div id="rateYo2" class="pb-1"></div>
+  <h5 style="color:#be5a0e;">Course Rating</h5>
+</div>
+{{/with}}
+</div>
+
+<h3 class="mx-5 mt-5">Reviews</h3>
+
+{{#each feedback}}
+<div class="mx-5 border p-3 mt-3">
+  <h6>{{Name}}</h6>
+  <div id="rateYoFb{{FeedbackID}}" class="pb-1"></div>
+  <p>{{Comment}}</p>
+</div>
+{{/each}}
+
+<h3 class="mx-5 mt-5">Student also bought</h3>
+{{#each this.courseRelate}}
+  <div class="card mb-3 mx-auto" style="width: 60rem;">
+    <a class="stretched-link" href="#"></a>
+    <div class="row no-gutters">
+      <div class="col-md-4">
+        <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title font-weight-bold">{{Name}}</h5>
+          <div>{{TeacherName}}</div>
+          <div class="card-text font-weight-light">{{CatName}}</div>
+          <div class="d-flex flex-row">
+            <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+            <div id="rateYoRl{{CourseID}}" class="pt-1"></div>
+            <div>({{format2 Ratings}})</div>
           </div>
+          <div class="card-text text-danger font-weight-bold">{{format1 Price}}</div>
         </div>
       </div>
-    </form>
-    {{/if}}
+    </div>
   </div>
-  <div class="card-footer text-muted">
-    Footer
-  </div>
-</div>
-{{/with}} --}}
+{{/each}}

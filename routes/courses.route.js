@@ -171,12 +171,21 @@ router.get('/mobile/:categories', async function (req, res) {
 router.get('/detail/:id', async function (req, res) {
   const id = req.params.id;
   const course = await coursesModel.single(id);
+  const coursecontent = await coursesModel.withCourseContent(id);
+  const courseOfTeacher = await coursesModel.allOfTeacher(id);
+  const feedback = await coursesModel.allOfFeedback(id);
+  const courseRelate = await coursesModel.withRelateCourse(id);
   if (course === null) {
     return res.redirect('/');
   }
 
   res.render('vwCourses/detail', {
-    course: course
+    course: course,
+    coursecontent: coursecontent,
+    firstcourse: coursecontent[0],
+    courseOfTeacher: courseOfTeacher,
+    feedback: feedback,
+    courseRelate: courseRelate
   })
 })
 
@@ -286,6 +295,5 @@ router.get('/search',async function(req,res){
     });
   }
 })
-
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const exphbs = require('express-handlebars');
 const hbs_sections = require('express-handlebars-sections');
+const moment = require('moment');
 const numeral = require('numeral');
 
 module.exports = function (app) {
@@ -15,6 +16,12 @@ module.exports = function (app) {
       },
       format2(val) {
         return numeral(val).format('0,0');
+      },
+      format3(val) {
+        return numeral(val).format('0,0.00');
+      },
+      formatDate(val){
+        return moment(val).format('DD/MM/YYYY');
       }
     }
   }));

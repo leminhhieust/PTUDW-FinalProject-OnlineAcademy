@@ -170,6 +170,7 @@ router.get('/mobile/:categories', async function (req, res) {
 
 router.get('/detail/:id', async function (req, res) {
   const id = req.params.id;
+  await coursesModel.updateViewCount(id);
   const course = await coursesModel.single(id);
   const coursecontent = await coursesModel.withCourseContent(id);
   const courseOfTeacher = await coursesModel.allOfTeacher(id);

@@ -17,6 +17,16 @@ module.exports = {
         return db.load(sql);
     },
 
+    allWithOld() {
+        return db.load(`select * from courses where Datediff(CURRENT_DATE(), DateCreate) > 31`);
+    },
+
+    updateOldCourses(entity){
+        entity.BadgeNew = 0;
+        const condition = {CourseID: entity.CourseID};
+        return db.patch(entity,condition,'courses');
+    },
+
     allWithView() {
         const sql = `
       select c.*, co.*, u.Name as TeacherName, ca.CatName
@@ -101,6 +111,9 @@ module.exports = {
       const rows = await db.load(sql);
       if (rows.length === 0) {
         return null;
+      }
+      else{
+
       }
       return rows[0];
     },
@@ -198,4 +211,11 @@ module.exports = {
         const condition = { CourseID: entity.CourseID };
         return db.del(condition, TBL_CATEGORIES);
     },
+
+    async updateViewCount(id){
+        const rows = await db.load(`select * from count where CourseID = ${id}`);
+        rows[0].ViewCount += 1;
+        const condition = {CourseID: id};
+        return db.patch(rows[0],condition,'count');
+    }
 };

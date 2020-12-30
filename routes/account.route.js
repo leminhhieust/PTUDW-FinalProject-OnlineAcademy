@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
+const nodemailer = require('nodemailer');
 
 const userModel = require('../models/user.model');
 const auth = require('../middlewares/auth.mdw');
@@ -17,7 +18,7 @@ router.get('/login', async function(req, res) {
 
 router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
-    if (user === null) {
+    if (user === null || user.Permission !== 2) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });
@@ -30,10 +31,19 @@ router.post('/login', async function(req, res) {
         });
     }
 
+    if (user.Permission !== 2){
+        return res.render('vwAccount/login', {
+            err_message: 'Invalid username or password.'
+        });
+    }
+
     req.session.isAuth = true;
     req.session.authUser = user;
     // req.session.cart = [];
     let url = req.session.retUrl || '/';
+    if(url === "http://localhost:3000/account/register"){
+        url = '/';
+    }
     res.redirect(url);
 })
 
@@ -45,7 +55,13 @@ router.post('/logout', async function(req, res) {
 })
 
 router.get('/register', async function(req, res) {
-    res.render('vwAccount/register');
+    if (req.headers.referer) {
+        req.session.retUrl = req.headers.referer;
+    }
+
+    res.render('vwAccount/register',{
+        verification: false
+    });
 })
 
 router.post('/register', async function(req, res) {
@@ -59,9 +75,55 @@ router.post('/register', async function(req, res) {
         Email: req.body.Email,
         Permission: 2
     }
+    req.session.authUser = user;
+    res.redirect('/account/verification');
+})
 
-    await userModel.add(user);
-    res.render('vwAccount/register');
+router.get('/verification', async function(req, res){
+    const code = Math.floor(Math.random() * (999999 - 100000) ) + 100000;
+
+    var transporter =  nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'onlineacademyvn@gmail.com',
+            pass: 'admin@1234'
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    var mainOptions = {
+        from: 'onlineacademyvn@gmail.com',
+        to: req.session.authUser.Email,
+        subject: 'Verification your email',
+        text: 'Your code is: ' + code
+    }
+
+    transporter.sendMail(mainOptions, function(err, info){
+        if (err) {
+            console.log(err);
+            // res.redirect('/');
+        } else {
+            console.log('Message sent: ' +  info.response);
+            // res.redirect('/');
+        }
+    });
+
+    res.render('vwAccount/register',{
+        verification: true,
+        verifycode: code
+    });
+})
+
+router.post('/verification', async function(req, res){
+    await userModel.add(req.session.authUser);
+    req.session.isAuth = true;
+    let url = req.session.retUrl || '/';
+    if(url === "http://localhost:3000/account/login"){
+        url = '/';
+    }
+    res.redirect(url);
 })
 
 router.get('/is-available-username', async function(req, res) {

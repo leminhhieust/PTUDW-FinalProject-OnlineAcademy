@@ -9,6 +9,12 @@ router.get('/', async function(req, res) {
   const courses_view = await coursesModel.allWithView();
   const courses_outstanding = await coursesModel.allWithOutstanding();
   const categories_top = await categoryModel.allWithTop();
+
+  const old_courses = await coursesModel.allWithOld();
+  for(i = 0; i < old_courses.length; ++i){
+    await coursesModel.updateOldCourses(old_courses[i]);
+  }
+
   res.render('home', {
     courses_new: courses_new,
     courses_view: courses_view,

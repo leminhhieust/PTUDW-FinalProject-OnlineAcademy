@@ -103,22 +103,19 @@ module.exports = {
     },
 
     async single(id) {
-      const sql = `
+        const sql = `
         SELECT c.*, co.*
         from courses c join count co on co.CourseID = c.CourseID
         where c.CourseID = ${id}
       `;
-      const rows = await db.load(sql);
-      if (rows.length === 0) {
-        return null;
-      }
-      else{
-
-      }
-      return rows[0];
+        const rows = await db.load(sql);
+        if (rows.length === 0) {
+            return null;
+        }
+        return rows[0];
     },
 
-    async allOfTeacher(CourseID){
+    async allOfTeacher(CourseID) {
         const rows = await db.load(`select * from courses where CourseID = ${CourseID}`);
         const teacherID = rows[0].TeacherID;
         const sql = `
@@ -130,7 +127,7 @@ module.exports = {
         return rowteacher[0];
     },
 
-    allOfFeedback(id){
+    allOfFeedback(id) {
         const sql = `
         SELECT fb.*, u.Name
         FROM feedback fb join courses c on fb.CourseID = c.CourseID join users u on u.UserID = fb.StudentID
@@ -139,7 +136,7 @@ module.exports = {
         return db.load(sql)
     },
 
-    withCourseContent(id){
+    withCourseContent(id) {
         const sql = `
         SELECT cc.*
         from courses c join coursecontent cc on c.CourseID = cc.CourseID
@@ -148,7 +145,7 @@ module.exports = {
         return db.load(sql);
     },
 
-    async withRelateCourse(id){
+    async withRelateCourse(id) {
         const rows = await db.load(`select * from courses c join categories ca on c.CatID = ca.CatID where CourseID = ${id}`);
         const sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
@@ -217,5 +214,27 @@ module.exports = {
         rows[0].ViewCount += 1;
         const condition = {CourseID: id};
         return db.patch(rows[0],condition,'count');
-    }
+    },
+    
+    all() {
+        return db.load(`select * from ${TBL_CATEGORIES}`);
+    },
+
+    add(entity) {
+        return db.add(entity, TBL_CATEGORIES)
+    },
+
+    async singleid(id) {
+        const rows = await db.load(`select * from ${TBL_CATEGORIES} where CourseID = ${id}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
+    patch(entity) {
+        const condition = { CourseID: entity.CourseID };
+        delete entity.CourseID;
+        return db.patch(entity, condition, TBL_CATEGORIES);
+    },
 };

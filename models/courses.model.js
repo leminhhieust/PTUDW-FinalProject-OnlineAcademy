@@ -93,19 +93,19 @@ module.exports = {
     },
 
     async single(id) {
-      const sql = `
+        const sql = `
         SELECT c.*, co.*
         from courses c join count co on co.CourseID = c.CourseID
         where c.CourseID = ${id}
       `;
-      const rows = await db.load(sql);
-      if (rows.length === 0) {
-        return null;
-      }
-      return rows[0];
+        const rows = await db.load(sql);
+        if (rows.length === 0) {
+            return null;
+        }
+        return rows[0];
     },
 
-    async allOfTeacher(CourseID){
+    async allOfTeacher(CourseID) {
         const rows = await db.load(`select * from courses where CourseID = ${CourseID}`);
         const teacherID = rows[0].TeacherID;
         const sql = `
@@ -117,7 +117,7 @@ module.exports = {
         return rowteacher[0];
     },
 
-    allOfFeedback(id){
+    allOfFeedback(id) {
         const sql = `
         SELECT * 
         FROM orders o join orderdetails od on o.OrderID = od.OrderID join users u on u.UserID = o.UserID join feedback fb on fb.CourseID = od.CourseID
@@ -126,7 +126,7 @@ module.exports = {
         return db.load(sql)
     },
 
-    withCourseContent(id){
+    withCourseContent(id) {
         const sql = `
         SELECT cc.*
         from courses c join coursecontent cc on c.CourseID = cc.CourseID
@@ -135,7 +135,7 @@ module.exports = {
         return db.load(sql);
     },
 
-    async withRelateCourse(id){
+    async withRelateCourse(id) {
         const rows = await db.load(`select * from courses c join categories ca on c.CatID = c.CatID where CourseID = ${id}`);
         const sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
@@ -197,5 +197,13 @@ module.exports = {
     del(entity) {
         const condition = { CourseID: entity.CourseID };
         return db.del(condition, TBL_CATEGORIES);
+    },
+
+    all() {
+        return db.load(`select * from ${TBL_CATEGORIES}`);
+    },
+
+    add(entity) {
+        return db.add(entity, TBL_CATEGORIES)
     },
 };

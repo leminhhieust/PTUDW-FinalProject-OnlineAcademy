@@ -103,5 +103,62 @@ router.post('/createcourses', async function(req, res) {
     });
 })
 
+router.get('/updatecourses/:id', async function(req, res) {
+    const id = req.params.id;
+    console.log(id);
+    const courses = await coursesModel.singleid(id);
+    console.log(courses);
+    const documents = await cousecontentsModel.singleid(courses.CourseID);
+    console.log(documents);
+    let CatName_curr = '';
+    const categories = await categoryModel.all();
+    for (let i = 0; i < categories.length; i++) {
+        if (courses.CatID === categories[i].CatID) {
+            CatName_curr = categories[i].CatName;
+        }
+    }
+    console.log(CatName_curr);
+    res.render('viewTeacher/vwCourses/updatecourses', {
+        categories: categories,
+        courses: courses,
+        documents: documents,
+        CatName_curr: CatName_curr
+    });
+})
+
+router.post('/updatecourses/:id', async function(req, res) {
+    console.log(req.body);
+    const id = req.params.id;
+    const courses = await coursesModel.singleid(id);
+    console.log(courses);
+
+    courses.Name = req.body.Name;
+    courses.CatID = +req.body.CatType;
+    if (req.body.Status === "Hoàn thành") {
+        courses.Status = 1;
+    } else {
+        courses.Status = 0;
+    }
+    const dob = moment(new Date(), 'MM/DD/YYYY').format('YYYY-MM-DD');
+    courses.DateUpdate = dob;
+    courses.Price = req.body.Price;
+    courses.TinyDes = req.body.TinyDes;
+    courses.FullDes = req.body.FullDes;
+
+    var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
+    var arr = req.body.NewVideo;
+    for (let index = 0; index < arr.length; index++) {
+
+        Courcontent[index].CourseID = courses.CourseID;
+        Courcontent[index].Title = index + 1;
+        Courcontent[index].Video = arr[index]
+        cousecontentsModel.patch(Courcontent[index]);
+    }
+    console.log(courses);
+    console.log(Courcontent);
+    coursesModel.patch(courses);
+
+    res.redirect(`/teacher/updatecourses/${id}`);
+})
 
 module.exports = router;

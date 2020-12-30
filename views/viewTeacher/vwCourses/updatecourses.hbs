@@ -1,0 +1,149 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/css/fileinput.min.css">
+{{/section}}
+
+{{#section 'js'}}
+
+<script src="https://cdn.tiny.cloud/1/xl78rqw7ih94d0odz4ree7sh6qulso9vdkv9d2ry4dnkqsr9/tinymce/5/tinymce.min.js"
+  referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+    selector: '#txtFullDes',
+    height: 300,
+    plugins: 'paste image link autolink lists table media',
+    menubar: true,
+    toolbar: [
+      'undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright | forecolor backcolor | table link image media',
+    ],
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/themes/fa/theme.min.js"></script>
+<script>
+  $('#fuMain').fileinput({
+    theme: 'fa',
+    dropZoneEnabled: false,
+    allowedFileExtensions: ['png', 'jpg', 'gif'],
+  });
+</script>
+
+
+
+<script>
+    {{!-- let doc= [];
+    $('.AddChapter').on('click',function(){
+        //let element ='';
+        let test= $('#txtquantity').val();
+        console.log(test);
+        $('#txtstatus').val('Hoàn thành');
+        if(doc[test-1] !=null)
+        {
+          doc[test-1]=$('#txtDocChapter').val();
+        }
+        else{
+           // element=$('#txtDocChapter').val();
+           doc.push($('#txtDocChapter').val());
+          // doc.push(element);
+        }
+        for(let i=0;i<doc.length;i++)
+        {
+          if(doc[i].length===0)
+          {
+               $('#txtstatus').val('Chưa hoàn thành');
+               break;
+          }
+        }
+        $('#txtquantity').val(+test + 1);
+        $('#txtDocChapter').val('');
+    }) --}}
+    {{!-- $('.updatecourses').on('click',function(){
+        console.log(doc);
+        $('#DocChapters').val(doc);
+        $('#txtstatus').val();
+        $('#txtname').val();
+        $('#txtCatType').val();
+        $('#TinyDes').val();
+        $('#txtFullDes').val();
+        $('#txtprice').val();
+        $('#fromCreatecourses').submit();
+  }) --}}
+  $('.updatecourses').on('click',function(){
+      $('#fromCreatecourses').submit();
+  })
+</script>
+{{/section}}
+
+<div class="card">
+    <div class="card-header">
+        Thông tin khóa học:
+    </div>
+    <div class="card-body">
+        <form action="/teacher/updatecourses/{{courses.CourseID}}" method="POST"  id="fromCreatecourses">
+        {{!-- <form action="/teacher/updatecourses/{{courses.CourseID}}" enctype="multipart/form-data" method="POST" id="fromCreatecourses"> --}}
+        {{#if courses.Status}}
+          <input type="text" class="form-control badge-danger" id="txtstatus" name="Status" value="Hoàn thành" >
+        {{else}}
+          <input type="text" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
+        {{/if}}
+        <input type="hidden" id="DocChapters" name="Video">
+            <div class="card-body">
+                        <div class="card">
+                            <h3>Ảnh đại diện cho khóa học</h3>
+                            <div class="card-body">
+                            <img src="../../../public/images/Courses/{{courses.CourseID}}/tiny.jpg" alt="" srcset="" width="500" height="350">
+                            {{!-- <div class="form-group">
+                                <input id="fuMain" name="fuMain" type="file" class="file">
+                            </div> --}}
+                            </div>
+                        </div> 
+            <div class="card">
+                    <label for="">Tên khóa học</label>
+                    <input type="text" id="txtname" name="Name"  value="{{courses.Name}}">
+                    <label for="">Lĩnh vực</label>
+                    <select class="custom-select" name="CatType" id="txtCatType">
+                        <option value="{{courses.CatID}}"> {{CatName_curr}}</option>
+                        {{#each categories}}
+                        <option value="{{CatID}}">{{CatName}}</option>
+                        {{/each}}
+                    </select>
+                    <label for="">Mô tả ngắn gọn khóa học</label>
+                    <input type="text" id="txttinydes" name="TinyDes"  value="{{courses.TinyDes}}">
+                    <div class="form-group">
+                        <label for="txtFullDes">Mô tả chi tiết khóa học</label>
+                        <textarea class="form-control" name="FullDes" id="txtFullDes" cols="30" rows="10">{{courses.FullDes}}</textarea>
+                    </div>
+                    <label for="">Học phí</label>
+                    <input type="text" id="txtprice" name="Price" value="{{courses.Price}}" >
+                    <label for="">Tài liệu</label>
+                    {{#each documents}}
+                        <div class="input-group mb-3">
+                            <label for="">Tài liệu chương {{Title}}</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input name="NewVideo" id="txtvideo" value="{{Video}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
+                        </div>
+                    {{/each}}
+                    {{!-- <label for="">Tài liệu chương</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Số chương" id="txtquantity" value="1" name="quantity">
+                    </div>
+                    <label for="">Link bài giảng</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">
+                        <a data-index="1" id="txtindex" class="btn btn-outline-primary AddChapter" href="javascript:;" role="button">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </a>
+                    </div> --}}
+                
+            </div> 
+            </div>
+            <div class="card-footer">
+                            <a name="" id="" class="btn btn-primary updatecourses" href="#" role="button">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            Save
+                            </a>
+            </div>
+        </form>
+    </div>
+</div>

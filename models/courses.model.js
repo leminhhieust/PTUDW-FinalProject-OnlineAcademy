@@ -206,4 +206,18 @@ module.exports = {
     add(entity) {
         return db.add(entity, TBL_CATEGORIES)
     },
+
+    async singleid(id) {
+        const rows = await db.load(`select * from ${TBL_CATEGORIES} where CourseID = ${id}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
+    patch(entity) {
+        const condition = { CourseID: entity.CourseID };
+        delete entity.CourseID;
+        return db.patch(entity, condition, TBL_CATEGORIES);
+    },
 };

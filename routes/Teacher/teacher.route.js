@@ -3,7 +3,7 @@ const router = express.Router();
 const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
 const cousecontentsModel = require('../../models/cousecontents.model');
-
+const userModel = require('../../models/user.model')
 
 
 const moment = require('moment');
@@ -12,6 +12,10 @@ var fs = require('fs');
 const { patch } = require('../../models/category.model');
 
 router.get('/createcourses', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+
     const categories = await categoryModel.all();
     res.render('viewTeacher/vwCourses/createcourses', {
         categories: categories
@@ -104,6 +108,10 @@ router.post('/createcourses', async function(req, res) {
 })
 
 router.get('/updatecourses/:id', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+
     const id = req.params.id;
     console.log(id);
     const courses = await coursesModel.singleid(id);
@@ -154,11 +162,44 @@ router.post('/updatecourses/:id', async function(req, res) {
         Courcontent[index].Video = arr[index]
         cousecontentsModel.patch(Courcontent[index]);
     }
-    console.log(courses);
-    console.log(Courcontent);
+    // console.log(courses);
+    // console.log(Courcontent);
     coursesModel.patch(courses);
 
     res.redirect(`/teacher/updatecourses/${id}`);
+})
+
+router.get('/profile', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+
+
+    const users = await userModel.single(req.session.authUser.UserID);
+    courses = await coursesModel.allcoursesofteacher(users.UserID);
+    const DOB = moment(users.DOB, 'YYYY-MM-DD').format('MM/DD/YYYY');
+    res.render('viewTeacher/vwprofile', {
+        users: users,
+        DOB: DOB,
+        courses: courses
+    });
+
+})
+
+router.post('/profile', async function(req, res) {
+
+    const users = await userModel.single(req.body.UserID);
+    users.Name = req.body.Name;
+    users.Email = req.body.Email;
+    const dob = moment(req.body.DOB, 'MM/DD/YYYY').format('YYYY-MM-DD');
+    users.DOB = dob;
+    users.Des = req.body.Des;
+
+    await userModel.patch(users);
+
+
+    res.redirect('/teacher/profile');
+
 })
 
 module.exports = router;

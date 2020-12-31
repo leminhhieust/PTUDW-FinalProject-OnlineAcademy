@@ -1,0 +1,46 @@
+{{#section 'js'}}
+<script>
+    $('.updateprofile').on('click',function(){
+    const id = $(this).data('id');
+    $('#txtUserID').val(id);
+    $('#updateprofileteacher').submit();
+  })
+</script>
+{{/section}}
+
+
+<div class="card">
+    <div class="card-header">
+        Thông tin cá nhân giáo viên
+    </div>
+    <div class="card-body">
+        <form action="/teacher/profile" id="updateprofileteacher" method="POST" >
+        <input type="hidden" name="UserID" id="txtUserID">
+            <div class="card">
+                <label for="">Họ và tên giáo viên</label>
+                <input type="text" name="Name" id="txtName" value="{{users.Name}}">
+                <label for="">Thông tin liên lạc (Email) </label>
+                <input type="email" name="Email" id="txtEmail" value="{{users.Email}}">
+                <label for="">Sinh nhật</label>
+                <input type="text" name="DOB"  id="txtDOB" value="{{DOB}}">
+                <label for="">Giới thiệu bản thân</label>
+             <textarea type="text"  name="Des" id="txtDes">{{users.Des}}</textarea>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div>Danh sách khóa học đã đăng</div>
+        {{#each courses}}
+           <div class="card">
+                <div>Tên khóa học</div>
+                <div>{{Name}}</div>
+           </div>
+        {{/each}}
+    </div>
+</div>
+<div class="card-footer">
+                    <a data-id="{{users.UserID}}" class="btn btn-primary updateprofile" href="#" role="button">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                       Save
+                    </a>
+    </div>

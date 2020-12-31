@@ -18,7 +18,7 @@ router.get('/login', async function(req, res) {
 
 router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
-    if (user === null || user.Permission !== 2) {
+    if (user === null || user.Permission === 0) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });
@@ -31,7 +31,7 @@ router.post('/login', async function(req, res) {
         });
     }
 
-    if (user.Permission !== 2){
+    if (user.Permission === 0) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });
@@ -41,7 +41,7 @@ router.post('/login', async function(req, res) {
     req.session.authUser = user;
     // req.session.cart = [];
     let url = req.session.retUrl || '/';
-    if(url === "http://localhost:3000/account/register"){
+    if (url === "http://localhost:3000/account/register") {
         url = '/';
     }
     res.redirect(url);
@@ -59,7 +59,7 @@ router.get('/register', async function(req, res) {
         req.session.retUrl = req.headers.referer;
     }
 
-    res.render('vwAccount/register',{
+    res.render('vwAccount/register', {
         verification: false
     });
 })
@@ -79,10 +79,10 @@ router.post('/register', async function(req, res) {
     res.redirect('/account/verification');
 })
 
-router.get('/verification', async function(req, res){
-    const code = Math.floor(Math.random() * (999999 - 100000) ) + 100000;
+router.get('/verification', async function(req, res) {
+    const code = Math.floor(Math.random() * (999999 - 100000)) + 100000;
 
-    var transporter =  nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: 'onlineacademyvn@gmail.com',
@@ -100,27 +100,27 @@ router.get('/verification', async function(req, res){
         text: 'Your code is: ' + code
     }
 
-    transporter.sendMail(mainOptions, function(err, info){
+    transporter.sendMail(mainOptions, function(err, info) {
         if (err) {
             console.log(err);
             // res.redirect('/');
         } else {
-            console.log('Message sent: ' +  info.response);
+            console.log('Message sent: ' + info.response);
             // res.redirect('/');
         }
     });
 
-    res.render('vwAccount/register',{
+    res.render('vwAccount/register', {
         verification: true,
         verifycode: code
     });
 })
 
-router.post('/verification', async function(req, res){
+router.post('/verification', async function(req, res) {
     await userModel.add(req.session.authUser);
     req.session.isAuth = true;
     let url = req.session.retUrl || '/';
-    if(url === "http://localhost:3000/account/login"){
+    if (url === "http://localhost:3000/account/login") {
         url = '/';
     }
     res.redirect(url);

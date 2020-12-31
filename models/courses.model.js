@@ -21,10 +21,10 @@ module.exports = {
         return db.load(`select * from courses where Datediff(CURRENT_DATE(), DateCreate) > 31`);
     },
 
-    updateOldCourses(entity){
+    updateOldCourses(entity) {
         entity.BadgeNew = 0;
-        const condition = {CourseID: entity.CourseID};
-        return db.patch(entity,condition,'courses');
+        const condition = { CourseID: entity.CourseID };
+        return db.patch(entity, condition, 'courses');
     },
 
     allWithView() {
@@ -209,13 +209,13 @@ module.exports = {
         return db.del(condition, TBL_CATEGORIES);
     },
 
-    async updateViewCount(id){
+    async updateViewCount(id) {
         const rows = await db.load(`select * from count where CourseID = ${id}`);
         rows[0].ViewCount += 1;
-        const condition = {CourseID: id};
-        return db.patch(rows[0],condition,'count');
+        const condition = { CourseID: id };
+        return db.patch(rows[0], condition, 'count');
     },
-    
+
     all() {
         return db.load(`select * from ${TBL_CATEGORIES}`);
     },
@@ -237,4 +237,10 @@ module.exports = {
         delete entity.CourseID;
         return db.patch(entity, condition, TBL_CATEGORIES);
     },
+
+    allcoursesofteacher(UserID) {
+        return db.load(`select *
+        from ${TBL_CATEGORIES} c 
+        where  c.CourseID=${UserID}`);
+    }
 };

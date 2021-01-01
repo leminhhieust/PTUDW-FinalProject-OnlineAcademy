@@ -9,10 +9,10 @@ const multer = require('multer');
 var fs = require('fs');
 // GET home page.
 router.get('/', async function(req, res) {
-    if (req.session.isAuth === true) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         res.render('vwAdmin/vwCategories')
     } else {
-        res.redirect('/admin/login');
+        res.redirect('/');
     }
 })
 
@@ -56,6 +56,9 @@ router.post('/login', async function(req, res) {
 })
 
 router.get('/categories', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+        res.redirect('/');
+    }
     const categories = await categoryModel.all();
     const details = [];
     for (let index = 0; index < categories.length; index++) {
@@ -73,15 +76,13 @@ router.get('/categories', async function(req, res) {
     }
     const CatTypes = await coursesModel.allCatType();
 
-    if (req.session.isAuth === true) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         res.render('vwAdmin/vwCategories', {
             categories: details,
             CatTypes: CatTypes
         });
     } else {
-        res.render('vwAdmin/login', {
-            layout: false
-        });
+        res.redirect('/');
     }
 })
 
@@ -115,7 +116,9 @@ router.post('/categories', async function(req, res) {
 
 router.get('/categories/delete/:id', async function(req, res) {
     // console.log(req.params.id);
-
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+        res.redirect('/');
+    }
 
     const id = req.params.id;
     const entity = await categoryModel.single(id);
@@ -144,6 +147,11 @@ router.post('/categories/update', async function(req, res) {
 })
 
 router.get('/courses', async function(req, res) {
+
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+        res.redirect('/');
+    }
+
     const courses_mobile = await coursesModel.allwithmobile_admin();
     const courses_web = await coursesModel.allwithweb_admin();
 
@@ -161,6 +169,11 @@ router.get('/courses', async function(req, res) {
 })
 
 router.get('/courses/detail/:id', async function(req, res) {
+
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+        res.redirect('/');
+    }
+
     const id = req.params.id;
     const courses = await coursesModel.single(id);
     res.render('vwAdmin/vwdetailCourses', {
@@ -177,6 +190,10 @@ router.post('/courses/del', async function(req, res) {
 })
 
 router.get('/users', async function(req, res) {
+
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+        res.redirect('/');
+    }
     //const users = await userModel.all();
     const teachers = await userModel.allteacher();
     const students = await userModel.allstudent();

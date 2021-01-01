@@ -18,20 +18,9 @@ router.get('/login', async function(req, res) {
 
 router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
-    if (user === null || user.Permission !== 2) {
-        return res.render('vwAccount/login', {
-            err_message: 'Invalid username or password.'
-        });
-    }
-
     const ret = bcrypt.compareSync(req.body.password, user.Password);
-    if (ret === false) {
-        return res.render('vwAccount/login', {
-            err_message: 'Invalid username or password.'
-        });
-    }
 
-    if (user.Permission !== 2){
+    if (user === null || user.Permission === 0 || ret === false) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });
@@ -39,7 +28,6 @@ router.post('/login', async function(req, res) {
 
     req.session.isAuth = true;
     req.session.authUser = user;
-    // req.session.cart = [];
     let url = req.session.retUrl || '/';
     if(url === "http://localhost:3000/account/register"){
         url = '/';
@@ -50,7 +38,7 @@ router.post('/login', async function(req, res) {
 router.post('/logout', async function(req, res) {
     req.session.isAuth = false;
     req.session.authUser = null;
-    //   req.session.cart = [];
+    req.session.cart = [];
     res.redirect(req.headers.referer);
 })
 

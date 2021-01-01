@@ -1,9 +1,9 @@
-// const db = require('../utils/db');
+const db = require('../utils/db');
 
-// const TBL_ORDERDETAILS = 'orderdetails';
+const TBL_ORDERDETAILS = 'orderdetails';
 
-// module.exports = {
-//   add(entity) {
-//     return db.add(entity, TBL_ORDERDETAILS);
-//   }
-// };
+module.exports = {
+  add(entity) {
+    return db.add(entity, TBL_ORDERDETAILS);
+  }
+};

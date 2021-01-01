@@ -1,6 +1,8 @@
 const express = require('express');
 const coursesModel = require('../models/courses.model');
 const config = require('../config/default.json')
+const cartModel = require('../models/cart.model');
+
 const router = express.Router();
 
 router.get('/all', async function(req, res){
@@ -169,13 +171,25 @@ router.get('/mobile/:categories', async function (req, res) {
 })
 
 router.get('/detail/:id', async function (req, res) {
-  const id = req.params.id;
+  const id = +req.params.id;
   await coursesModel.updateViewCount(id);
   const course = await coursesModel.single(id);
   const coursecontent = await coursesModel.withCourseContent(id);
   const courseOfTeacher = await coursesModel.allOfTeacher(id);
   const feedback = await coursesModel.allOfFeedback(id);
   const courseRelate = await coursesModel.withRelateCourse(id);
+
+  var isRegister;
+  if(req.session.isAuth){
+    const check = await coursesModel.checkRegister(id,req.session.authUser.UserID);
+    if(check === null){
+      isRegister = false;
+    }
+    else{
+      isRegister = true;
+    }
+  }
+
   if (course === null) {
     return res.redirect('/');
   }
@@ -186,7 +200,9 @@ router.get('/detail/:id', async function (req, res) {
     firstcourse: coursecontent[0],
     courseOfTeacher: courseOfTeacher,
     feedback: feedback,
-    courseRelate: courseRelate
+    courseRelate: courseRelate,
+    isRegister,
+    isAddCart: req.session.cart.includes(id)
   })
 })
 

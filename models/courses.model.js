@@ -156,6 +156,14 @@ module.exports = {
         return db.load(sql);
     },
 
+    async checkRegister(courseID, userID) {
+        const rows = await db.load(`select * from feedback where CourseID = ${courseID} and StudentID = ${userID}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
     bySearch(key, cat, sort_type, offset) {
         var sql;
         if (sort_type == "most-relevant") {
@@ -197,6 +205,7 @@ module.exports = {
     where cate.CatType=0`
         return db.load(sql);
     },
+    
     allwithweb_admin() {
         sql = `select cour.*
     from categories cate join courses cour on cate.CatID=cour.CatID

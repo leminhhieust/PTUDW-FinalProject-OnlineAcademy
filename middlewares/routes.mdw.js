@@ -1,4 +1,4 @@
-// const auth = require('./auth.mdw');
+const auth = require('./auth.mdw');
 
 module.exports = function(app) {
     app.use('/', require('../routes/index.route'));
@@ -10,4 +10,6 @@ module.exports = function(app) {
     app.use('/admin', require('../routes/Admin/index.route'));
 
     app.use('/teacher', require('../routes/Teacher/teacher.route'));
+
+    app.use('/cart', auth, require('../routes/cart.route'));
 }

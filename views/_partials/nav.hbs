@@ -56,9 +56,14 @@
       
       <ul class="navbar-nav ml-auto">
       {{#if isAuth}}
-      {{!-- <li class="nav-item">
-        <a class="nav-link" href="/cart">Shopping Cart ({{cartSummary}} items)</span></a>
-      </li> --}}
+      <li class="nav-item mr-3">
+        <a class="nav-link" href="/cart">
+          <i style="font-size:24px" class="fa fa-shopping-cart" aria-hidden="true"></i>
+          {{#if cartSummary}}
+            <span id='lblCartCount' class="badge badge-danger">{{cartSummary}}</span>
+          {{/if}}
+        </a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">

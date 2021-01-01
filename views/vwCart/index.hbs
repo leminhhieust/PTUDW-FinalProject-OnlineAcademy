@@ -1,0 +1,73 @@
+{{#section 'js'}}
+<script>
+  $('.removeItem').on('click', function () {
+    const id = $(this).data('id');
+    console.log(id);
+    $('#txtCourseID').val(id);
+    $('#frmRemoveItem').submit();
+  });
+</script>
+{{/section}}
+
+<div class="bg-dark p-5 d-flex flex-row">
+  <h1 class="text-light mt-3 mr-3">Shopping Cart</h1>
+  <i class="fa fa-shopping-cart" style="font-size: 80px;" aria-hidden="true"></i>                        
+</div>
+{{#if this.empty}}
+  <div class="text-center">
+    <i class="fa fa-shopping-cart text-muted" style="font-size: 200px;" aria-hidden="true"></i>                        
+    <h3 class="my-3">Sorry, your cart is empty. Keep shopping to find a course!</h3>
+    <a class="btn btn-md btn-danger" href="/" role="button"><strong>Keep shopping</strong></a>
+  </div>
+{{else}}
+  <div class="container-fluid mt-5">
+    <h1 class="text-center mb-5">{{cartSummary}} Courses in Cart</h1>
+    {{#each this.courses}}
+    <form id="frmRemoveItem" action="/cart/remove" method="POST">
+      <input type="hidden" name="id" id="txtCourseID">
+    </form>
+
+    <div class="card mb-3 mx-auto" style="width: 65rem;">
+      <div class="row no-gutters">
+        
+        <div class="col-md-2">
+          <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+          <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
+        </div>
+
+        <div class="col-md-7">
+          <div class="card-body">
+            <h5 class="card-title font-weight-bold">{{Name}}</h5>
+            <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <div class="card-text text-danger font-weight-bold mt-4 ml-4">
+            {{format1 Price}}
+            <i class="fa fa-credit-card" aria-hidden="true"></i>                        
+          </div>
+        </div>
+
+        <div class="col-sm">
+          <a data-id="{{CourseID}}" class="btn btn-sm btn-outline-danger removeItem mt-3" href="javascript:;" role="button" title="Remove Item">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+      {{/each}}
+    <div class="mt-5 ml-5 pl-5 d-flex flex-row">
+      <h2 class="mx-5">Total: <strong>{{format1 total}}</strong></h2>
+      <form action="/cart/checkout" method="POST">
+        <button type="submit" class="btn btn-outline-success">
+          <i class="fa fa-check" aria-hidden="true"></i>
+          Check Out
+        </button>
+      </form>
+    </div>
+  </div>
+  
+    
+{{/if}}

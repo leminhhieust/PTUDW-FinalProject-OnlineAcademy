@@ -1,30 +1,27 @@
-// module.exports = {
-//   add(cart, item) {
-//     for (ci of cart) {
-//       if (ci.id === item.id) {
-//         ci.quantity += item.quantity;
-//         return;
-//       }
-//     }
+module.exports = {
+  add(cart, id) {
+    cart.push(id);
+  },
 
-//     cart.push(item);
-//   },
+  check(cart, id){
+    return cart.includes(id);
+  },
 
-//   del(cart, id) {
-//     for (let i = cart.length - 1; i >= 0; i--) {
-//       if (id === cart[i].id) {
-//         cart.splice(i, 1);
-//         return;
-//       }
-//     }
-//   },
+  del(cart, id) {
+    for (let i = cart.length - 1; i >= 0; i--) {
+      if (id === cart[i]) {
+        cart.splice(i, 1);
+        return;
+      }
+    }
+  },
 
-//   getNumberOfItems(cart) {
-//     let ret = 0;
-//     for (ci of cart) {
-//       ret += ci.quantity;
-//     }
+  getNumberOfItems(cart) {
+    let ret = 0;
+    for (ci of cart) {
+      ret += 1;
+    }
 
-//     return ret;
-//   }
-// };
+    return ret;
+  }
+};

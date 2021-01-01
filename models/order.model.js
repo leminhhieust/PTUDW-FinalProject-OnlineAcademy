@@ -1,10 +1,10 @@
-// const db = require('../utils/db');
+const db = require('../utils/db');
 
-// const TBL_ORDERS = 'orders';
+const TBL_ORDERS = 'orders';
 
-// module.exports = {
-//   async add(entity) {
-//     const ret = await db.add(entity, TBL_ORDERS);
-//     entity.OrderID = ret.insertId;
-//   }
-// };
+module.exports = {
+  async add(entity) {
+    const ret = await db.add(entity, TBL_ORDERS);
+    entity.OrderID = ret.insertId;
+  }
+};

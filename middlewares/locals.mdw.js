@@ -1,4 +1,4 @@
-// const cartModel = require('../models/cart.model');
+const cartModel = require('../models/cart.model');
 const categoryModel = require('../models/category.model');
 
  module.exports = function (app) {
@@ -6,12 +6,12 @@ const categoryModel = require('../models/category.model');
     if (typeof (req.session.isAuth) === 'undefined') {
       req.session.isAuth = false;
       req.session.authUser = null;
-      // req.session.cart = [];
+      req.session.cart = [];
     }
-
+   
     res.locals.isAuth = req.session.isAuth;
     res.locals.authUser = req.session.authUser;
-    // res.locals.cartSummary = cartModel.getNumberOfItems(req.session.cart)
+    res.locals.cartSummary = cartModel.getNumberOfItems(req.session.cart)
     next();
   })
 

@@ -104,8 +104,8 @@
     </iframe>
   </div>
   {{/with}}
-  {{#with course}}
   <div class="pt-4">
+    {{#with course}}
     <h2 class="text-white font-weight-bold">{{Name}}</h2>
     <h5 class="text-light font-weight-normal" >{{TinyDes}}</h5>
     <div class="d-flex flex-row">
@@ -119,18 +119,50 @@
       Last updated {{formatDate DateUpdate}}
       </p>
     <h3 class="card-text text-danger font-weight-bold">{{format1 Price}}</h3>
+    {{/with}}
     <div class="d-flex flex-row">
-      <a data-id="{{CourseID}}" class="btn btn-md btn-success addItem" href="javascript:;" role="button">
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-        Add to cart
-      </a>
-      <a class="btn btn-md btn-danger addItem ml-2" role="button">
-        <i class="fa fa-heart-o" aria-hidden="true"></i>
-        Watchlist
-      </a>
+      {{#if isAuth}}
+        {{#if this.isRegister}}
+          <a class="btn btn-md btn-success addItem" href="#" role="button">
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+            Enroll Course
+          </a>
+        {{else}}
+          {{#if this.isAddCart}}
+            <a class="btn btn-md btn-success addItem" href="#" role="button">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            Go to cart
+            </a>
+          {{else}}
+            <form action="/cart/add" method="POST">
+            {{#with this.course}}
+            <input type="hidden" value="{{CourseID}}" name="ID">
+            {{/with}}
+            <button type="submit" class="btn btn-md btn-success addItem">
+              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+              Add to cart
+            </button>
+          </form>
+          {{/if}}
+        {{/if}}
+        
+        {{#if condition}}
+          
+        {{else}}
+          
+        {{/if}}
+      {{else}}
+        <a class="btn btn-md btn-success addItem" href="/account/login" role="button">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          Add to cart
+        </a>
+        <a class="btn btn-md btn-danger addItem ml-2" href="/account/login" role="button">
+          <i class="fa fa-heart-o" aria-hidden="true"></i>
+          Watchlist
+        </a>
+      {{/if}}
     </div>
   </div>
-  {{/with}}
 </div>
 
 {{#with course}}

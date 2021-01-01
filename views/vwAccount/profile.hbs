@@ -1,34 +1,142 @@
-{{!-- <div class="card">
-  <h5 class="card-header">Profile</h5>
-  <div class="card-body">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div> --}}
+{{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  {{#each this.courseRegister}}
+    $(function () {
+      $(`#rateYo{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  {{#each this.courseRegister}}
+    $(function () {
+      $(`#rateYoFav{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  $(document).ready(function(){
+  $('.CourseCarousel').slick({
+    dots: true,
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    arrows: true
+  });
+});
+</script>
+{{/section}}
+
+{{#section 'css'}}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+  .slick-prev:before, .slick-next:before { 
+    color:red !important;
+    font-size: 2.5rem;
+  }
+  .slick-prev, .slick-next {
+    width: 2.5rem;
+    height: 2.5rem;
+    z-index: 2;
+  }
+  .slick-list {
+      width: 90%;
+      margin: 0 auto;
+  }
+
+  .slick-prev {
+      left: 0;
+  }
+
+  .slick-next {
+      right: 0;
+  }
+
+</style>
+{{/section}}
+
+<div class="bg-dark p-4 d-flex flex-row">
+  <h1 class="mt-4 mr-3 text-success">Your Profile</h1>
+  <i class="fa fa-address-book-o text-success mr-5 mt-3" style="font-size: 80px;" aria-hidden="true"></i>
+  {{#with user}}
+    <div class="text-center" style="width: 60rem">
+      <h1 class="mb-3 text-info">
+        {{Name}}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </h1>
+      <h5 class="text-primary">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        {{formatDate DOB}}
+      </h5>
+      <h5 class="mb-3 text-primary">
+        <i class="fa fa-envelope" aria-hidden="true"></i>        
+        {{Email}}
+      </h5>
+    </div>
+  {{/with}}
+</div>
+  
+<div class="container-fluid mt-5">
+    <h5 class="text-danger text-center mb-3">Courses you're enrolled in</h5>
+    {{#if this.emptyRegister}}
+      <h6 class="text-center"><i>Sorry, there is no course to display</i></h6>  
+    {{else}}
+      <div class="CourseCarousel">
+      {{#each this.courseRegister}}
+        <div class="card mx-3">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <div>{{TeacherName}}</div>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYo{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
+            </div>
+        </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    
+
+    <h5 class="text-danger text-center mb-3 mt-5">Your Watch List</h5>
+    {{#if this.emptyFav}}
+      <h6 class="text-center"><i>Sorry, there is no course to display</i></h6>  
+    {{else}}
+      <div class="CourseCarousel">
+      {{#each this.courseFav}}
+        <div class="card mx-3">
+            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="card-body">
+              <h5 class="card-title font-weight-bold">{{Name}}</h5>
+              <div>{{TeacherName}}</div>
+              <div class="d-flex flex-row">
+                <div style="color: #be5a0e;" class="font-weight-bold">{{AvgStar}}</div>
+                <div id="rateYoFav{{CourseID}}" class="pt-1"></div>
+                <div>({{format2 Ratings}})</div>
+              </div>
+              <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
+              <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
+            </div>
+        </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    
+</div>

@@ -115,6 +115,16 @@ module.exports = {
         return rows[0];
     },
 
+    async singleByUser(courseID, userID){
+        const sql = `
+        SELECT *
+        FROM orders o join orderdetails od on o.OrderID = od.OrderID
+        where CourseID = ${courseID} and UserID = ${userID}
+        `;
+        const rows = await db.load(sql);
+        return rows[0];
+    },
+
     async allOfTeacher(CourseID) {
         const rows = await db.load(`select * from courses where CourseID = ${CourseID}`);
         const teacherID = rows[0].TeacherID;
@@ -156,12 +166,17 @@ module.exports = {
         return db.load(sql);
     },
 
-    async checkRegister(courseID, userID) {
-        const rows = await db.load(`select * from feedback where CourseID = ${courseID} and StudentID = ${userID}`);
+    async singleRegister(courseID, userID) {
+        const rows = await db.load(`SELECT * FROM orders o join orderdetails od on o.OrderID = od.OrderID where CourseID = ${courseID} and UserID = ${userID}`);
         if (rows.length === 0)
             return null;
 
         return rows[0];
+    },
+
+    allRegister(userID) {
+        return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
     },
 
     bySearch(key, cat, sort_type, offset) {
@@ -223,6 +238,17 @@ module.exports = {
         rows[0].ViewCount += 1;
         const condition = { CourseID: id };
         return db.patch(rows[0], condition, 'count');
+    },
+
+    async updateFav(entity, isFav){
+        const rows = await db.load(`select * from orderdetails where OrderID = ${entity.OrderID} and CourseID = ${entity.CourseID}`);
+        rows[0].IsFav = isFav;
+        
+        const condition = {
+            ID: rows[0].ID
+        }
+
+        return db.patch(rows[0],condition, 'orderdetails');
     },
 
     all() {

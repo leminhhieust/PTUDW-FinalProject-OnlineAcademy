@@ -162,8 +162,7 @@ router.post('/updatecourses/:id', async function(req, res) {
         Courcontent[index].Video = arr[index]
         cousecontentsModel.patch(Courcontent[index]);
     }
-    // console.log(courses);
-    // console.log(Courcontent);
+
     coursesModel.patch(courses);
 
     res.redirect(`/teacher/updatecourses/${id}`);

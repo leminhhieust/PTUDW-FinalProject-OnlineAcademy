@@ -178,15 +178,26 @@ router.get('/detail/:id', async function (req, res) {
   const courseOfTeacher = await coursesModel.allOfTeacher(id);
   const feedback = await coursesModel.allOfFeedback(id);
   const courseRelate = await coursesModel.withRelateCourse(id);
+  const courseRegister = await coursesModel.singleByUser(id, req.session.authUser.UserID);
 
   var isRegister;
   if(req.session.isAuth){
-    const check = await coursesModel.checkRegister(id,req.session.authUser.UserID);
+    const check = await coursesModel.singleRegister(id,req.session.authUser.UserID);
     if(check === null){
       isRegister = false;
     }
     else{
       isRegister = true;
+    }
+  }
+
+  var isFav;
+  if(isRegister){
+    if(courseRegister.IsFav){
+      isFav = 1;
+    }
+    else{
+      isFav = 0;
     }
   }
 
@@ -202,8 +213,19 @@ router.get('/detail/:id', async function (req, res) {
     feedback: feedback,
     courseRelate: courseRelate,
     isRegister,
+    isFav,
     isAddCart: req.session.cart.includes(id)
   })
+})
+
+router.get('/changeFav', async function(req,res){
+  const isFav = +req.query.isFav;
+  const courseID = +req.query.id;
+  const courseRegister = await coursesModel.singleByUser(courseID, req.session.authUser.UserID);
+
+  await coursesModel.updateFav(courseRegister, isFav);
+
+  res.redirect(req.headers.referer);
 })
 
 router.post('/search',async function(req,res){

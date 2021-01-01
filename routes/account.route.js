@@ -5,10 +5,12 @@ const nodemailer = require('nodemailer');
 
 const userModel = require('../models/user.model');
 const auth = require('../middlewares/auth.mdw');
+const unAuth = require('../middlewares/unAuth.mdw');
+const coursesModel = require('../models/courses.model');
 
 const router = express.Router();
 
-router.get('/login', async function(req, res) {
+router.get('/login',unAuth, async function(req, res) {
     if (req.headers.referer) {
         req.session.retUrl = req.headers.referer;
     }
@@ -42,7 +44,7 @@ router.post('/logout', async function(req, res) {
     res.redirect(req.headers.referer);
 })
 
-router.get('/register', async function(req, res) {
+router.get('/register',unAuth, async function(req, res) {
     if (req.headers.referer) {
         req.session.retUrl = req.headers.referer;
     }
@@ -136,8 +138,26 @@ router.get('/is-available-email', async function(req, res) {
 
 router.get('/profile', auth, async function(req, res) {
     if (req.session.authUser.Permission) {
-        res.render('vwAccount/profile');
-    } else {
+        const userID = req.session.authUser.UserID;
+        const user = await userModel.single(userID);
+        const courseRegister = await coursesModel.allRegister(userID);
+        const courseFav = [];
+
+        for(const course of courseRegister){
+            if(course.IsFav){
+                courseFav.push(course);
+            }
+        }
+
+        res.render('vwAccount/profile', {
+            user: user,
+            courseRegister,
+            emptyRegister: courseRegister.length ===0,
+            emptyFav: courseFav.length ===0,
+            courseFav: courseFav
+        });
+    }
+    else {
         res.render('Admin/vwAccount/profile');
     }
 })

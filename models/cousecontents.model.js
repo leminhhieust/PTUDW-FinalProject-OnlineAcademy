@@ -1,7 +1,13 @@
 const db = require('../utils/db');
-const TBL_CATEGORIES = 'cousecontents';
+const TBL_CATEGORIES = 'coursecontent';
 const config = require('../config/default.json')
 module.exports = {
+    async countCourID(CourseID) {
+        const rows = await db.load(`select count(*) as total from ${TBL_CATEGORIES} cc
+                                   where cc.CourseID= ${CourseID}`);
+        return rows[0].total;
+    },
+
     add(entity) {
         return db.add(entity, TBL_CATEGORIES)
     },

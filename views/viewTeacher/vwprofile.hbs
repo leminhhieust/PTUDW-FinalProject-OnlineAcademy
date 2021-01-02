@@ -34,6 +34,11 @@
            <div class="card">
                 <div>Tên khóa học</div>
                 <div>{{Name}}</div>
+                {{#if Status}}
+                    <div class="form-control badge-danger">Hoàn thành</div>
+                {{else}}
+                    <div class="form-control badge-danger">Chưa hoàn thành</div>
+                {{/if}}
            </div>
         {{/each}}
     </div>

@@ -118,10 +118,10 @@
                     <label for="">Tài liệu</label>
                     {{#each documents}}
                         <div class="input-group mb-3">
-                            <label for="">Tài liệu chương {{Title}}</label>
+                            <label for="">Tài liệu chương {{Index}}</label>
                         </div>
                         <div class="input-group mb-3">
-                            <input name="NewVideo" id="txtvideo" value="{{Video}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
+                            <input name="NewVideo" id="txtvideo" value="{{Title}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
                         </div>
                     {{/each}}
                     {{!-- <label for="">Tài liệu chương</label>
@@ -139,6 +139,10 @@
             </div> 
             </div>
             <div class="card-footer">
+              <a name="" id="" class="btn btn-primary updatecourses" href="/teacher/uploadvideo_increate/{{courses.CourseID}}" role="button">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                    Thêm chương mới
+                </a>
                             <a name="" id="" class="btn btn-primary updatecourses" href="#" role="button">
                             <i class="fa fa-check" aria-hidden="true"></i>
                             Save

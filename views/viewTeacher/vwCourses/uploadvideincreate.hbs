@@ -1,0 +1,83 @@
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/css/fileinput.min.css">
+{{/section}}
+
+{{#section 'js'}}
+
+<script src="https://cdn.tiny.cloud/1/xl78rqw7ih94d0odz4ree7sh6qulso9vdkv9d2ry4dnkqsr9/tinymce/5/tinymce.min.js"
+  referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+    selector: '#txtFullDes',
+    height: 300,
+    plugins: 'paste image link autolink lists table media',
+    menubar: true,
+    toolbar: [
+      'undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright | forecolor backcolor | table link image media',
+    ],
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.1.3/themes/fa/theme.min.js"></script>
+<script>
+  $('#fuMain').fileinput({
+    theme: 'fa',
+    dropZoneEnabled: false,
+    allowedFileExtensions: ['png', 'jpg', 'gif'],
+  });
+</script>
+
+<script>
+  $('#fuVideo').fileinput({
+    theme: 'fa',
+    dropZoneEnabled: false,
+    allowedFileExtensions: ['mp4'],
+  });
+</script>
+
+{{!-- <script>
+   $('.check').on('click',function(){
+      const curindex=$('#txtcurindex').val();
+      const total=$('#txtTotalcontent').val();
+      curindex+=1;
+       console.log(curindex);
+       console.log(total);
+      if(curindex===total)
+      {
+        console.log('Đủ chương học');
+      }
+      else{
+        console.log('Chưa đủ chương học');
+      }
+      })
+</script> --}}
+
+{{/section}}
+
+<div class="card">
+    <div class="card-header">
+        Tải video khóa học
+    </div>
+    <div class="card-body">
+        <form  action="/teacher/uploadvideo_increate" method="POST" enctype="multipart/form-data" id="fromVideo">
+            <input type="hidden" id="txtcourID" name="CourseID" value="{{courses}}">
+            <input type="hidden" id="txtTotalcontent" name="Totalcontent" value="{{Totalcontent}}">
+            <input type="hidden" id="txtcurindex" name="Curindex" value="{{CurIndex}}">
+                <div class="form-group">
+                    <input id="fuVideo" name="fuVideo" type="file" class="file">
+                </div>
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+       <div class="card-footer">
+                    <a name="" id="" class="btn btn-primary check" href="javascript:;" role="button">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                      Hoàn tất
+                    </a>
+    </div>
+    </div>
+</div>
+
+
+

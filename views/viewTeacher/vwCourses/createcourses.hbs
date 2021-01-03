@@ -29,6 +29,15 @@
 </script>
 
 <script>
+  $('#fuVideo').fileinput({
+    theme: 'fa',
+    dropZoneEnabled: false,
+    allowedFileExtensions: ['mp4'],
+  });
+</script>
+
+
+<script>
     let doc= [];
     $('.AddChapter').on('click',function(){
         //let element ='';
@@ -107,7 +116,11 @@
             </div>
             <label for="">Học phí</label>
             <input type="text" id="txtprice" name="Price" >
-            <label for="">Tài liệu chương</label>
+             <label for="">Tổng số chương</label>
+             <div class="input-group mb-3">
+                <input type="text" class="form-control"  id="txtTotal"name="Totalcontent">
+            </div>
+            {{!-- <label for="">Tài liệu chương</label>
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="Số chương" id="txtquantity" value="1" name="quantity">
             </div>
@@ -117,15 +130,15 @@
                 <a data-index="1" id="txtindex" class="btn btn-outline-primary AddChapter" href="javascript:;" role="button">
                      <i class="fa fa-plus" aria-hidden="true"></i>
                 </a>
-           </div>
-        
+           </div> --}}
+           
       </div> 
     </div>
+</form>
      <div class="card-footer">
                     <a name="" id="" class="btn btn-primary createcourses" href="#" role="button">
                       <i class="fa fa-check" aria-hidden="true"></i>
-                       Save
+                       Next
                     </a>
     </div>
-</form>
 </div>

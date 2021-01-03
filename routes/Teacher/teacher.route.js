@@ -37,7 +37,8 @@ router.post('/createcourses', async function(req, res) {
         FullDes: '',
         IsFav: 0,
         BadgeNew: 0,
-        BadgeBestSeller: 0
+        BadgeBestSeller: 0,
+        Totalcontent: 0
     };
 
 
@@ -86,23 +87,28 @@ router.post('/createcourses', async function(req, res) {
         Cour.BadgeNew = 0;
         Cour.BadgeBestSeller = 0;
 
-        const k = req.body.Video;
-        var arr = k.split(",");
+        Cour.Totalcontent = req.body.Totalcontent;
+        // const k = req.body.Video;
+        // var arr = k.split(",");
 
-        for (let index = 0; index < arr.length; index++) {
-            var Courcontent = {
-                CourseID: '',
-                Title: '',
-                Video: ''
-            }
-            Courcontent.CourseID = Cour.CourseID;
-            Courcontent.Title = index + 1;
-            Courcontent.Video = arr[index]
-            cousecontentsModel.add(Courcontent);
-        }
+        // for (let index = 0; index < arr.length; index++) {
+        //     var Courcontent = {
+        //         CourseID: '',
+        //         Title: '',
+        //         Video: ''
+        //     }
+        //     Courcontent.CourseID = Cour.CourseID;
+        //     Courcontent.Title = index + 1;
+        //     Courcontent.Video = arr[index]
+        //     cousecontentsModel.add(Courcontent);
+        // }
         coursesModel.add(Cour);
         if (err) {} else {
-            res.redirect('/teacher/createcourses');
+            res.render('viewTeacher/vwCourses/uploadvideincreate', {
+                courses: Cour.CourseID,
+                Totalcontent: Cour.Totalcontent,
+                CurIndex: 0
+            });
         }
     });
 })
@@ -111,13 +117,9 @@ router.get('/updatecourses/:id', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
         res.redirect('/');
     }
-
     const id = req.params.id;
-    console.log(id);
     const courses = await coursesModel.singleid(id);
-    console.log(courses);
     const documents = await cousecontentsModel.singleid(courses.CourseID);
-    console.log(documents);
     let CatName_curr = '';
     const categories = await categoryModel.all();
     for (let i = 0; i < categories.length; i++) {
@@ -125,7 +127,12 @@ router.get('/updatecourses/:id', async function(req, res) {
             CatName_curr = categories[i].CatName;
         }
     }
-    console.log(CatName_curr);
+    let index = await cousecontentsModel.countCourID(courses.CourseID);
+    if (index === courses.Totalcontent) {
+        courses.Status = 1;
+    } else {
+        courses.Status = 0;
+    }
     res.render('viewTeacher/vwCourses/updatecourses', {
         categories: categories,
         courses: courses,
@@ -156,10 +163,8 @@ router.post('/updatecourses/:id', async function(req, res) {
     var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
     var arr = req.body.NewVideo;
     for (let index = 0; index < arr.length; index++) {
-
         Courcontent[index].CourseID = courses.CourseID;
-        Courcontent[index].Title = index + 1;
-        Courcontent[index].Video = arr[index]
+        Courcontent[index].Title = req.body.NewVideo[index];
         cousecontentsModel.patch(Courcontent[index]);
     }
 
@@ -172,10 +177,17 @@ router.get('/profile', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
         res.redirect('/');
     }
-
-
     const users = await userModel.single(req.session.authUser.UserID);
+    console.log(users);
     courses = await coursesModel.allcoursesofteacher(users.UserID);
+    for (let i = 0; i < courses.length; i++) {
+        const index = await cousecontentsModel.countCourID(courses[i].CourseID);
+        if (index >= courses[i].Totalcontent) {
+            courses[i].Status = 1;
+        } else {
+            courses[i].Status = 0;
+        }
+    }
     const DOB = moment(users.DOB, 'YYYY-MM-DD').format('MM/DD/YYYY');
     res.render('viewTeacher/vwprofile', {
         users: users,
@@ -197,8 +209,57 @@ router.post('/profile', async function(req, res) {
     await userModel.patch(users);
 
 
-    res.redirect('/teacher/profile');
+    res.render('/teacher/uploadvideo_increate');
 
 })
 
+router.get('/uploadvideo_increate/:id', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+
+    const id = req.params.id;
+    const courses = await coursesModel.singleid(id);
+    res.render('viewTeacher/vwCourses/uploadvideincreate', {
+        courses: id,
+        Totalcontent: courses.Totalcontent
+    });
+})
+
+router.post('/uploadvideo_increate', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+    var Courcontent = {
+        CourseID: '',
+        Index: 1,
+        Title: '',
+        Video: ''
+    }
+    const storage = multer.diskStorage({
+        destination: function(req, file, cb) {
+            cb(null, `./public/video`)
+        },
+        filename: function(req, file, cb) {
+            cb(null, file.filename + '-' + Date.now() + file.originalname)
+            Courcontent.Title = file.originalname;
+            Courcontent.Video = file.filename + '-' + Date.now() + file.originalname;
+        }
+    });
+
+    const upload = multer({ storage });
+    upload.single('fuVideo')(req, res, async function(err) {
+        let index = await cousecontentsModel.countCourID(req.body.CourseID);
+        Courcontent.CourseID = req.body.CourseID;
+        Courcontent.Index = index + 1;
+        cousecontentsModel.add(Courcontent);
+        if (err) {} else {
+            res.render('viewTeacher/vwCourses/uploadvideincreate', {
+                courses: req.body.CourseID,
+                Totalcontent: req.body.Totalcontent,
+                CurIndex: index
+            });
+        }
+    });
+})
 module.exports = router;

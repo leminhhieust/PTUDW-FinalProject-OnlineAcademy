@@ -1,5 +1,6 @@
 {{#section 'js'}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script>
   {{#each this.courseRegister}}
@@ -25,18 +26,59 @@
   {{/each}}
 
   $(document).ready(function(){
-  $('.CourseCarousel').slick({
-    dots: true,
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    arrows: true
+    $('.CourseCarousel').slick({
+      dots: true,
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      arrows: true
+    });
   });
-});
+
+  $('#txtDOB').datetimepicker({
+    format: 'd/m/Y',
+    timepicker: false,
+    mask: true,
+  });
+
+  $('#formEdit').on('submit', function (e) {
+    e.preventDefault();
+    const Email = $('#txtEmail').val();
+    $.getJSON(`/account/is-available-email?email=${Email}`, function (data) {
+      if (data === false) {
+        alert('Email already used!');
+      }
+      else{
+      $('#formEdit').off('submit').submit();
+      }
+    });
+  });
+
+  $('#formChange').on('submit', function (e) {
+    e.preventDefault();
+    const password = $('#txtOldPassword').val();
+    
+    $.getJSON(`/account/is-available-password?password=${password}`, function (data) {
+      if (data === false) {
+        alert('Wrong Password!');
+      }
+      else{
+        const NewPassword = $('#txtNewPassword').val();
+        const Confirm = $('#txtConfirm').val();
+        if (NewPassword !== Confirm){
+          alert('Invalid confirm.');
+        }
+        else{
+          $('#formChange').off('submit').submit();
+        }
+      }
+    });
+  });
 </script>
 {{/section}}
 
 {{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
@@ -63,6 +105,27 @@
       right: 0;
   }
 
+  .container {
+  position: relative;
+  width: 100%;
+  }
+
+  .container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  }
+
+  .container .btn {
+  position: absolute;
+  top: 13%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  font-size: 20px;
+  z-index: 2;
+}
+
 </style>
 {{/section}}
 
@@ -70,12 +133,74 @@
   <h1 class="mt-4 mr-3 text-success">Your Profile</h1>
   <i class="fa fa-address-book-o text-success mr-5 mt-3" style="font-size: 80px;" aria-hidden="true"></i>
   {{#with user}}
+    <div class="modal fade" id="EditProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Your Profile</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/account/profile/edit" method="POST" id="formEdit">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Name:</label>
+                <input type="text" value="{{Name}}" class="form-control" name="Name" id="Name" required>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Email:</label>
+                <input type="text" value="{{Email}}" class="form-control" name="Email" id="txtEmail" required>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Date of Birth:</label>
+                <input type="text" value="{{formatDate DOB}}" class="form-control" id="txtDOB" name="DOB" required>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Save</button>
+               </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="ChangePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change Your Password</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/account/profile/change" method="POST" id="formChange">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Enter your current password:</label>
+                <input type="password" class="form-control" name="oldPassword" id="txtOldPassword" required>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Enter your new password:</label>
+                <input type="password" class="form-control" name="newPassword" id="txtNewPassword" required>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Repeat your new password</label>
+                <input type="password" class="form-control" id="txtConfirm" required>              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Save</button>
+               </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="text-center" style="width: 60rem">
       <h1 class="mb-3 text-info">
         {{Name}}
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
       </h1>
       <h5 class="text-primary">
         <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -85,6 +210,17 @@
         <i class="fa fa-envelope" aria-hidden="true"></i>        
         {{Email}}
       </h5>
+      <div class="d-flex flex-row justify-content-center">
+        <button type="button" class="btn btn-primary mr-3" data-toggle="modal" data-target="#EditProfileModal">
+          Edit your profile
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ChangePasswordModal">
+          Change your password
+          <i class="fa fa-key" aria-hidden="true"></i>
+        </button> 
+      </div>
+        
     </div>
   {{/with}}
 </div>
@@ -122,7 +258,12 @@
       <div class="CourseCarousel">
       {{#each this.courseFav}}
         <div class="card mx-3">
-            <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+            <div class="container">
+              <img class="card-img-top" src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
+              <a class="btn btn-sm btn-danger addItem" href="/courses/changeFav?id={{CourseID}}&isFav=0" role="button">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </a>
+            </div>
             <div class="card-body">
               <h5 class="card-title font-weight-bold">{{Name}}</h5>
               <div>{{TeacherName}}</div>

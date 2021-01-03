@@ -79,13 +79,40 @@
         spacing: "3px"
       });
   });
-    $(function () {
+  $(function () {
       $(`#rateYoRate5`).rateYo({
         rating: 5,
         readOnly: true,
         starWidth: "15px",
         spacing: "3px"
       });
+  });
+
+  $('#formAdd').on('submit', function (e) {
+    e.preventDefault();
+    const star = $("#rateYoRate").rateYo("option", "rating");
+    $('#txtStar').val(star);
+    $('#formAdd').off('submit').submit();
+    
+  });
+
+  $('#formEdit').on('submit', function (e) {
+    e.preventDefault();
+    const FeedbackID = $('#txtFbID').val();
+    const star = $(`#rateYoFb${FeedbackID}`).rateYo("option", "rating");
+    $('#txtStarEdit').val(star);
+    $('#formEdit').off('submit').submit();
+  });
+
+  $('#btnEdit').click( function () {
+    const FeedbackID = $('#txtFbID').val();
+    console.log(FeedbackID);
+    $(`#rateYoFb${FeedbackID}`).rateYo("option", "readOnly", false);
+    $(`#rateYoFb${FeedbackID}`).rateYo("option", "fullStar", true);
+    $(`#rateYoFb${FeedbackID}`).rateYo("option", "starWidth", "30px");
+    $('#newReview').removeAttr('hidden');
+    $('#btnSubmit').removeAttr('hidden');
+    $('#oldReview').attr("hidden", "hidden");
   });
 </script>
 {{/section}}  
@@ -251,20 +278,56 @@
 </div>
 
 <h3 class="mx-5 mt-5">Reviews</h3>
-<div id="rateYoRate" class="pb-1 mx-auto"></div>
-<form action="" class="mx-5">
-  <div class="form-group">
-    <label for="exampleFormControlTextarea1">Type your review here:</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Send</button>
-</form>
+{{#if isAuth}}
+  {{#if this.isRegister}}
+    {{#unless FeedbackID}}
+    <div id="rateYoRate" class="pb-1 mx-auto"></div>
+    <form action="/courses/feedback/add/" method="POST" class="mx-5" id="formAdd">
+      <div class="form-group">
+        <label for="txtReview">Type your review here:</label>
+        <textarea class="form-control" name="Review" id="txtReview" rows="3" required></textarea>
+      </div>
+      <input type="hidden" class="form-control" name="Star" id="txtStar">
+      {{#with course}}
+      <input type="hidden" class="form-control" value="{{CourseID}}" name="CourseID">
+      {{/with}}
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    {{/unless}}
+  {{/if}}
+{{/if}}
+
 {{#each feedback}}
-<div class="mx-5 border p-3 mt-3">
-  <h6>{{Name}}</h6>
-  <div id="rateYoFb{{FeedbackID}}" class="pb-1"></div>
-  <p>{{Comment}}</p>
-</div>
+ {{#if (equal this.FeedbackID ../FeedbackID)}}
+  <div class="mx-5 border p-3 mt-3">
+      <div class="d-flex flex-row">
+        <h6 class="mr-auto">{{Name}}</h6>
+        <button class="btn btn-sm btn-primary mr-3" id="btnEdit" type="button">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+        <a class="btn btn-sm btn-danger" href="/courses/feedback/delete?id={{FeedbackID}}" role="button">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+      </div>
+    
+    <form action="/courses/feedback/edit/" method="POST" id="formEdit">
+      <div id="rateYoFb{{FeedbackID}}" class="pb-1"></div>
+      <p class="ml-1" id="oldReview">{{Comment}}</p>
+
+      <textarea class="form-control my-3" name="Review" id="newReview" rows="3" hidden>{{Comment}}</textarea>
+      
+      <input type="hidden" class="form-control" name="Star" id="txtStarEdit">
+      <input type="hidden" class="form-control" value="{{FeedbackID}}" name="FeedbackID" id="txtFbID">
+      <button class="btn btn-primary" type="submit" id="btnSubmit" hidden>Save</button>
+    </form>
+  </div>
+  {{else}}
+  <div class="mx-5 border p-3 mt-3">
+    <h6 class="mr-auto">{{Name}}</h6>
+    <div id="rateYoFb{{FeedbackID}}" class="pb-1"></div>
+    <p class="ml-1">{{Comment}}</p>
+  </div>
+  {{/if}}
 {{/each}}
 
 <h3 class="m-5">Student also bought</h3>

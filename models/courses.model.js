@@ -137,15 +137,6 @@ module.exports = {
         return rowteacher[0];
     },
 
-    allOfFeedback(id) {
-        const sql = `
-        SELECT fb.*, u.Name
-        FROM feedback fb join courses c on fb.CourseID = c.CourseID join users u on u.UserID = fb.StudentID
-        Where c.CourseID = ${id}
-        `;
-        return db.load(sql)
-    },
-
     withCourseContent(id) {
         const sql = `
         SELECT cc.*

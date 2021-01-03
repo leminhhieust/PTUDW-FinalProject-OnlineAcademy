@@ -22,6 +22,9 @@ module.exports = function (app) {
       },
       formatDate(val){
         return moment(val).format('DD/MM/YYYY');
+      },
+      equal(val1, val2){
+        return (val1 === val2);
       }
     }
   }));

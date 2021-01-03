@@ -129,7 +129,22 @@ router.get('/is-available-username', async function(req, res) {
 router.get('/is-available-email', async function(req, res) {
     const email = req.query.email;
     const user = await userModel.singleByEmail(email);
-    if (user === null) {
+
+    if (req.session.isAuth && email === req.session.authUser.Email){
+        return res.json(true);
+    }
+    else if (user === null) {
+        return res.json(true);
+    }
+
+    res.json(false);
+})
+
+router.get('/is-available-password', async function(req, res) {
+    const password = req.query.password;
+    const ret = bcrypt.compareSync(password, req.session.authUser.Password);
+
+    if (ret){
         return res.json(true);
     }
 
@@ -160,6 +175,26 @@ router.get('/profile', auth, async function(req, res) {
     else {
         res.render('Admin/vwAccount/profile');
     }
+})
+
+router.post('/profile/edit', async function(req,res){
+    const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    const user = req.session.authUser;
+    user.DOB = dob;
+    user.Name = req.body.Name;
+    user.Email = req.body.Email;
+
+    await userModel.updateUser(user);
+    res.redirect('/account/profile');
+})
+
+router.post('/profile/change', async function(req,res){
+    const user = req.session.authUser;
+    const hash = bcrypt.hashSync(req.body.newPassword, 10);
+    user.Password = hash;
+
+    await userModel.updateUser(user);
+    res.redirect('/account/profile');
 })
 
 module.exports = router;

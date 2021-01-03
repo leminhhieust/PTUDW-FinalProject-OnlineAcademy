@@ -12,4 +12,7 @@ module.exports = function(app) {
     app.use('/teacher', require('../routes/Teacher/teacher.route'));
 
     app.use('/cart', auth, require('../routes/cart.route'));
+
+    app.use('/courses/feedback', require('../routes/feedback.route'));
+
 }

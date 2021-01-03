@@ -60,4 +60,9 @@ module.exports = {
         delete entity.UserID;
         return db.patch(entity, condition, TBL_USERS);
     },
+
+    updateUser(entity){
+        const condition = { UserID: entity.UserID };
+        return db.patch(entity, condition, TBL_USERS);
+    }
 };

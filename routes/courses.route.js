@@ -1,7 +1,8 @@
 const express = require('express');
 const coursesModel = require('../models/courses.model');
-const config = require('../config/default.json')
-const cartModel = require('../models/cart.model');
+const config = require('../config/default.json');
+const feedbackModel = require('../models/feedback.model');
+const session = require('express-session');
 
 const router = express.Router();
 
@@ -176,28 +177,33 @@ router.get('/detail/:id', async function (req, res) {
   const course = await coursesModel.single(id);
   const coursecontent = await coursesModel.withCourseContent(id);
   const courseOfTeacher = await coursesModel.allOfTeacher(id);
-  const feedback = await coursesModel.allOfFeedback(id);
+  const feedback = await feedbackModel.allOfFeedback(id);
   const courseRelate = await coursesModel.withRelateCourse(id);
-  const courseRegister = await coursesModel.singleByUser(id, req.session.authUser.UserID);
 
-  var isRegister;
+  var isRegister, isFav, FeedbackID;
+
   if(req.session.isAuth){
-    const check = await coursesModel.singleRegister(id,req.session.authUser.UserID);
-    if(check === null){
+    const courseRegister = await coursesModel.singleByUser(id, req.session.authUser.UserID);
+    const checkRegister = await coursesModel.singleRegister(id,req.session.authUser.UserID);
+    if(checkRegister === null){
       isRegister = false;
     }
     else{
       isRegister = true;
-    }
-  }
-
-  var isFav;
-  if(isRegister){
-    if(courseRegister.IsFav){
-      isFav = 1;
-    }
-    else{
-      isFav = 0;
+      if(courseRegister.IsFav){
+        isFav = 1;
+      }
+      else{
+        isFav = 0;
+      }
+      
+      const checkFb = await feedbackModel.singleFeedback(id, req.session.authUser.UserID);
+      if(checkFb){
+        FeedbackID = checkFb.FeedbackID;
+      }
+      else{
+        FeedbackID = 0;
+      }
     }
   }
 
@@ -214,6 +220,7 @@ router.get('/detail/:id', async function (req, res) {
     courseRelate: courseRelate,
     isRegister,
     isFav,
+    FeedbackID,
     isAddCart: req.session.cart.includes(id)
   })
 })

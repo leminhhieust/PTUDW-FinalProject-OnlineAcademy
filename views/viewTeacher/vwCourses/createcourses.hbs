@@ -81,15 +81,15 @@
 
 <div class="card">
     <div class="card-header">
-        <h4>Tạo khóa học</h4>
-        
+        <h2 class="d-flex justify-content-center">Tạo khóa học</h2>
+          <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
     </div>
 <form action="/teacher/createcourses" method="POST" enctype="multipart/form-data" id="fromCreatecourses">
 
 {{!-- <form action="" method="POST" id="fromCreatecourses"> --}}
-  <input type="text" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
+  <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
   <input type="hidden" id="DocChapters" name="Video">
-    <div class="card-body">
+    <div class="card-body" style="font-size: x-large;">
                 <div class="card">
                      <h3>Chọn hình ảnh đại diện cho khóa học</h3>
                     <div class="card-body">

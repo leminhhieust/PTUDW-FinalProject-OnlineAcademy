@@ -75,26 +75,37 @@
 {{/section}}
 
 <div class="card">
-    <div class="card-header">
-        Thông tin khóa học:
+    <div class="card-header ">
+      <h2 class=" d-flex justify-content-center"> Thông tin khóa học</h2>
+      {{#if courses.Status}}
+          <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Hoàn thành</span>
+        {{else}}
+          <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
+        {{/if}}
     </div>
-    <div class="card-body">
+    <div class="card-body" style="font-size:x-large;">
         <form action="/teacher/updatecourses/{{courses.CourseID}}" method="POST"  id="fromCreatecourses">
         {{!-- <form action="/teacher/updatecourses/{{courses.CourseID}}" enctype="multipart/form-data" method="POST" id="fromCreatecourses"> --}}
         {{#if courses.Status}}
-          <input type="text" class="form-control badge-danger" id="txtstatus" name="Status" value="Hoàn thành" >
+          <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Hoàn thành" >
+          {{!-- <span class="badge badge-pill badge-danger float-right">Hoàn thành</span> --}}
         {{else}}
-          <input type="text" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
+          <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
+          {{!-- <span class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span> --}}
         {{/if}}
         <input type="hidden" id="DocChapters" name="Video">
             <div class="card-body">
-                        <div class="card">
+                        <div class="card" style="background:wheat;" >
+                          <div class=" d-flex justify-content-center">
                             <h3>Ảnh đại diện cho khóa học</h3>
+                          </div> 
                             <div class="card-body">
+                              <div class=" d-flex justify-content-center">
                             <img src="../../../public/images/Courses/{{courses.CourseID}}/tiny.jpg" alt="" srcset="" width="500" height="350">
                             {{!-- <div class="form-group">
                                 <input id="fuMain" name="fuMain" type="file" class="file">
                             </div> --}}
+                            </div>
                             </div>
                         </div> 
             <div class="card">
@@ -115,7 +126,8 @@
                     </div>
                     <label for="">Học phí</label>
                     <input type="text" id="txtprice" name="Price" value="{{courses.Price}}" >
-                    <label for="">Tài liệu</label>
+                    <div style="background: whitesmoke;"  >
+                    <label for="" >Tài liệu</label>
                     {{#each documents}}
                         <div class="input-group mb-3">
                             <label for="">Tài liệu chương {{Index}}</label>
@@ -124,6 +136,7 @@
                             <input name="NewVideo" id="txtvideo" value="{{Title}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
                         </div>
                     {{/each}}
+                    </div>
                     {{!-- <label for="">Tài liệu chương</label>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Số chương" id="txtquantity" value="1" name="quantity">

@@ -1,18 +1,35 @@
 
-{{#with courses}}
-<div class="card">
+<div class="card" class="">
+  <div class="d-flex justify-content-between" style="font-size:x-large;">
   <h5 class="card-header">
-    {{Name}}
+    {{courses.Name}}
   </h5>
-  <div class="card-body">
-    <img src="/public/images/Courses/{{CourseID}}/tiny.jpg" alt="{{Name}}" title="{{Name}}">
-    <p class="card-text mt-3">Price:: <span class="text-danger font-weight-bold">{{ Price}}</span></p>
-
+   {{#if courses.Status}}
+      <span class="badge badge-pill badge-danger float-right">Hoàn thành</span>
+    {{else}}
+         <span class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
+   {{/if}}
+   </div>
+  <div class="card-body" style="font-size: x-large;" >
+    <div class="d-flex justify-content-center">
+    <img  width="350" height="200" src="/public/images/Courses/{{courses.CourseID}}/tiny.jpg" alt="{{courses.Name}}" title="{{courses.Name}}">
+    </div>
+    <div class="d-flex justify-content-center">
+    <div for="">Tên giáo viên:&nbsp;</div>
+    <div>{{teacher.Name}}</div>
+    </div>
+    <div <div class="d-flex justify-content-center">
+     <div for="">Mô tả ngắn khóa học:&nbsp;</div>
+    <div>{{courses.TinyDes}}</div>
+    </div>
+     <div <div class="d-flex justify-content-center">
+    <p class="card-text mt-3">Price:&nbsp; <span class="text-danger font-weight-bold">{{courses.Price}}</span></p>
+    </div>
     <form  method="POST" action="/admin/courses/del">
+    <input type="hidden"  name="CourseID" id="#txtID" value="{{courses.CourseID}}">
       <div class="row form-group">
         <div class="col-sm-4">
           <div class="input-group mb-3">
-            {{!-- <input type="text"  name="CourseID" id="#txtID" value="{{CourseID}}"> --}}
             <a class="btn btn-primary" href="/admin/courses" role="button">
                  <i class="fa fa-backward" aria-hidden="true"></i>
                     Back to List
@@ -27,4 +44,3 @@
     </form>
   </div>
 </div>
-{{/with}}

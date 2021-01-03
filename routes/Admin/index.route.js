@@ -10,9 +10,9 @@ var fs = require('fs');
 // GET home page.
 router.get('/', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        res.render('vwAdmin/vwCategories')
+        res.render('vwAdmin/vwAdmin')
     } else {
-        res.redirect('/');
+        res.redirect('/admin/login');
     }
 })
 
@@ -176,8 +176,10 @@ router.get('/courses/detail/:id', async function(req, res) {
 
     const id = req.params.id;
     const courses = await coursesModel.single(id);
+    const teacher = await userModel.single(courses.TeacherID);
     res.render('vwAdmin/vwdetailCourses', {
-        courses: courses
+        courses: courses,
+        teacher: teacher
     });
 })
 

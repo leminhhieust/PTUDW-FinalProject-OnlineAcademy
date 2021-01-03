@@ -75,6 +75,13 @@
                 </form>
                 </div>
              </div>
+        <a name="" id="" class="btn btn-primary addItem"  role="button"
+         data-toggle="collapse" data-target="#boxupdate">
+             <i class="fa fa-plus" aria-hidden="true">
+                Add Category
+             </i>
+         </a>
+    <div id="boxupdate" class="card collapse mt-4" style="width: 18rem;">
         <form action="/admin/categories/update" id="frmUpdate" method="POST">
             <input type="hidden" name="CatID" id="txtID">
           {{!-- <div id="boxupdate" class="card collapse mt-4" style="width: 18rem;"> --}}
@@ -96,6 +103,7 @@
                 </div>
           {{!-- </div> --}}
      <form>
+         </div>
        <div class="container-fluid mt-5">
             <div class="card-columns mx-5  " >
             {{#each categories}}

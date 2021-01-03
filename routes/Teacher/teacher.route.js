@@ -11,6 +11,13 @@ const multer = require('multer');
 var fs = require('fs');
 const { patch } = require('../../models/category.model');
 
+router.get('/', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+        res.redirect('/');
+    }
+    res.render('viewTeacher/vwteacher');
+})
+
 router.get('/createcourses', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
         res.redirect('/');
@@ -128,7 +135,7 @@ router.get('/updatecourses/:id', async function(req, res) {
         }
     }
     let index = await cousecontentsModel.countCourID(courses.CourseID);
-    if (index === courses.Totalcontent) {
+    if (index >= courses.Totalcontent) {
         courses.Status = 1;
     } else {
         courses.Status = 0;

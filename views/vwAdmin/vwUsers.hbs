@@ -57,7 +57,12 @@ $('.updateItem').on('click', function () {
           <td>{{Name}}</td>
           <td>{{Email}}</td>
           <td>{{DOB}}</td>
-
+          <td class="text-right">
+            <a data-id="{{UserID}}" class="btn btn-sm btn-outline-danger removeItem" href="javascript:;" role="button"
+              title="Remove Item">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+          </td>
         </tr>
         {{/each}}
       </tbody>

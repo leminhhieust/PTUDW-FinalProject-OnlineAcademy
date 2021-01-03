@@ -4,16 +4,55 @@ const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
 const cousecontentsModel = require('../../models/cousecontents.model');
 const userModel = require('../../models/user.model')
-
+const bcrypt = require('bcryptjs');
 
 const moment = require('moment');
 const multer = require('multer');
 var fs = require('fs');
 const { patch } = require('../../models/category.model');
 
+
+router.get('/login', async function(req, res) {
+    if (req.session.isAuth === true) {
+        res.redirect('/teacher');
+    } else {
+        res.render('vwAdmin/login', {
+            layout: false
+        });
+    }
+})
+
+router.post('/login', async function(req, res) {
+    const user = await userModel.singleByUserName(req.body.username);
+    if (user === null) {
+        return res.render('vwAdmin/login', {
+            err_message: 'Invalid username or password.'
+        });
+    }
+    const ret = bcrypt.compareSync(req.body.password, user.Password);
+    if (ret === false) {
+        return res.render('vwAdmin/login', {
+            err_message: 'Invalid username or password.'
+        });
+    }
+
+    if (user.Permission != 1) {
+        return res.render('vwAdmin/login', {
+            err_message: 'Invalid username or password.'
+        });
+    }
+
+    req.session.isAuth = true;
+    req.session.authUser = user;
+
+
+    let url = '/teacher';
+    res.redirect(url);
+})
+
 router.get('/', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
-        res.redirect('/');
+        res.redirect('/teacher/login');
     }
     res.render('viewTeacher/vwteacher');
 })

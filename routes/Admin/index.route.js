@@ -3,9 +3,12 @@ const router = express.Router();
 const userModel = require('../../models/user.model')
 const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
+const cousecontentsModel = require('../../models/cousecontents.model');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const multer = require('multer');
+var rimraf = require("rimraf");
+
 var fs = require('fs');
 // GET home page.
 router.get('/', async function(req, res) {
@@ -189,8 +192,21 @@ router.post('/courses/del', async function(req, res) {
     console.log(req.body.CourseID);
     const CourseID = req.body.CourseID;
     const courses = await coursesModel.singleid(CourseID);
+
     await coursesModel.del(courses);
 
+    const coursescontents = await cousecontentsModel.allwithcourseID(CourseID);
+    //console.log(coursescontents);
+
+    for (let index = 0; index < coursescontents.length; index++) {
+        await cousecontentsModel.del(coursescontents[index]);
+
+        // fs.unlink(`./public/Videos/Content${CourseID}.mp4`, function(err) {
+        //     if (err) throw err;
+        //     console.log('File deleted!');
+        // });
+    }
+    rimraf(`./public/Videos/${CourseID}`, function() { console.log("done"); });
     res.redirect('/admin/courses')
 })
 

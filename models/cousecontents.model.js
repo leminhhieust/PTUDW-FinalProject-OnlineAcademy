@@ -22,4 +22,15 @@ module.exports = {
         delete entity.ContentID;
         return db.patch(entity, condition, TBL_CATEGORIES);
     },
+
+    allwithcourseID(id) {
+        return db.load(`select *
+         from ${TBL_CATEGORIES} cc 
+         where cc.CourseID=${id} `);
+    },
+
+    del(entity) {
+        const condition = { ContentID: entity.ContentID };
+        return db.del(condition, TBL_CATEGORIES);
+    },
 }

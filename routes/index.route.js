@@ -15,6 +15,11 @@ router.get('/', async function(req, res) {
     await coursesModel.updateOldCourses(old_courses[i]);
   }
 
+  const course_bestseller = await coursesModel.bestseller();
+  for(i = 0; i < course_bestseller.length; ++i){
+    await coursesModel.updateBestSeller(course_bestseller[i]);
+  }
+
   res.render('home', {
     courses_new: courses_new,
     courses_view: courses_view,

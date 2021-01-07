@@ -71,8 +71,12 @@
                     </div>
                     <div class="card-text text-danger font-weight-bold">{{format1 Price}}</div>
                     
-                    <span class="badge badge-warning">Warning</span>
-                    <span class="badge badge-danger">Danger</span>
+                    {{#if BadgeNew}}
+                    <span class="badge badge-warning">New</span>
+                    {{/if}}
+                    {{#if BadgeBestSeller}}
+                    <span class="badge badge-danger">Best Seller</span>
+                    {{/if}}
             </div>
           </div>
         </div>
@@ -93,7 +97,7 @@
           </li>
         {{else}}
           <li class="page-item">
-            <a class="page-link" href="?key=keyword?page={{value}}">{{value}}</a>
+            <a class="page-link" href="?key={{key}}&page={{value}}&sort={{sort_type}}">{{value}}</a>
           </li>
         {{/if}}
         {{/each}}

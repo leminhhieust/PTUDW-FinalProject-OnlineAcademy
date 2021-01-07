@@ -10,8 +10,8 @@ const router = express.Router();
 router.get('/', async function (req, res) {
   const courses = [];
   var total = 0;
-  for (const item of req.session.cart) {
-    const course = await courseModel.single(item);
+  for (const courseID of req.session.cart) {
+    const course = await courseModel.single(courseID);
     courses.push(course);
     total += course.Price;
   }
@@ -37,8 +37,9 @@ router.post('/remove', function (req, res) {
 router.post('/checkout', async function (req, res) {
   const details = [];
   let total = 0;
-  for (const item of req.session.cart) {
-    const course = await courseModel.single(item); 
+  for (const courseID of req.session.cart) {
+    const course = await courseModel.single(courseID);
+    await courseModel.updateStudentCount(courseID);
     total += course.Price;
 
     details.push({
@@ -46,6 +47,11 @@ router.post('/checkout', async function (req, res) {
       Price: course.Price,
       IsFav: 0
     });
+  }
+
+  const course_bestseller = await coursesModel.bestseller();
+  for(i = 0; i < course_bestseller.length; ++i){
+    await coursesModel.updateBestSeller(course_bestseller[i]);
   }
 
   const order = {

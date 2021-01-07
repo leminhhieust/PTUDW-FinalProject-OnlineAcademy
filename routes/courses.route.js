@@ -207,6 +207,12 @@ router.get('/detail/:id', async function (req, res) {
     }
   }
 
+  const Stars = [];
+  for(i = 5; i >= 1; --i){
+    const star = await feedbackModel.percentByIDandStar(id, i);
+    Stars.push({Star: star});
+  }
+
   if (course === null) {
     return res.redirect('/');
   }
@@ -221,7 +227,8 @@ router.get('/detail/:id', async function (req, res) {
     isRegister,
     isFav,
     FeedbackID,
-    isAddCart: req.session.cart.includes(id)
+    isAddCart: req.session.cart.includes(id),
+    Stars
   })
 })
 
@@ -235,7 +242,7 @@ router.get('/changeFav', async function(req,res){
   res.redirect(req.headers.referer);
 })
 
-router.post('/search',async function(req,res){
+router.post('/search', async function(req,res){
   const keyword = req.query.key || " ";
   const sort_type = req.query.sort || "most-relevant";
   if(keyword == " "){
@@ -262,7 +269,9 @@ router.post('/search',async function(req,res){
     for(i = 1; i <= nPages; ++i){
       const item = {
         value: i,
-        isActive: i === page
+        isActive: i === page,
+        key: keyword,
+        sort_type: sort_type
       }
       page_items.push(item);
     }
@@ -288,7 +297,7 @@ router.post('/search',async function(req,res){
   }
 })
 
-router.get('/search',async function(req,res){
+router.get('/search', async function(req,res){
   const keyword = req.query.key || " ";
   const sort_type = req.query.sort || "most-relevant";
   if(keyword == " "){
@@ -315,7 +324,9 @@ router.get('/search',async function(req,res){
     for(i = 1; i <= nPages; ++i){
       const item = {
         value: i,
-        isActive: i === page
+        isActive: i === page,
+        key: keyword,
+        sort_type: sort_type
       }
       page_items.push(item);
     }
@@ -325,7 +336,6 @@ router.get('/search',async function(req,res){
       key: keyword 
     }
     url_infor.push(item);
-
     res.render('vwCourses/search', {
       courses: courses_search,
       res_count: total,
@@ -341,5 +351,9 @@ router.get('/search',async function(req,res){
     });
   }
 })
+
+router.get('/learn', async function(req,res){
+  
+} )
 
 module.exports = router;

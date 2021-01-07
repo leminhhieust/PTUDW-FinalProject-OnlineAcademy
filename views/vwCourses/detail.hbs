@@ -115,11 +115,6 @@
     $('#btnSubmit').removeAttr('hidden');
     $('#oldReview').attr("hidden", "hidden");
   });
-
-  $('#videoBtn').on('click', function () {
-    
-  });
-
 </script>
 {{/section}}  
 
@@ -185,7 +180,7 @@
           {{/if}} 
         {{else}}
           {{#if this.isAddCart}}
-            <a class="btn btn-md btn-success addItem" href="#" role="button">
+            <a class="btn btn-md btn-success addItem" href="/cart" role="button">
             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
             Go to cart
             </a>
@@ -224,65 +219,61 @@
 
 <h3 class="ml-5">Course content</h3>
 <div class="mx-5">
-
-  {{!-- <div class="modal fade" id="VideoModal" tabindex="-1" role="dialog" aria-labelledby="VideoLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            {{#with course}}
-            <h5 class="modal-title" id="VideoModalLabel">{{Name}}</h5>
-            {{/with}}
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body d-flex justify-content-center">
-            <video id="my-video" class="video-js" controls preload="auto" width="560" height="315"
-            poster="/public/images/Courses/1/Contents/Content1.webp" data-setup="{}">
-              <source src="/public/videos/1/Content1.mp4" type="video/mp4"/>
-              <p class="vjs-no-js">
-                To view this video please enable JavaScript, and consider upgrading to a
-                web browser that
-              <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-              </p>
-            </video>
-            <h5 id="videoTitle"></h5>
-          </div>
-        </div>
-      </div>
-    </div> --}}
-    
   {{#each coursecontent}} 
-
-<div class="modal fade" id="VideoModal{{Index}}" tabindex="-1" role="dialog" aria-labelledby="VideoLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="VideoModalLabel">{{Title}}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body d-flex justify-content-center">
-            <video id="my-video" class="video-js" controls preload="auto" width="560" height="315"
-            poster="/public/images/Courses/{{Index}}/Contents/Content{{Index}}.webp" data-setup="{}">
-              <source src="/public/videos/{{Index}}/Content{{Index}}.mp4" type="video/mp4"/>
-              <p class="vjs-no-js">
-                To view this video please enable JavaScript, and consider upgrading to a
-                web browser that
-              <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-              </p>
-            </video>
+  <div class="modal fade" id="VideoModal{{Index}}" tabindex="-1" role="dialog" aria-labelledby="VideoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="VideoModalLabel">{{Title}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+              <video id="my-video" class="video-js" controls preload="auto" width="560" height="315"
+              poster="/public/images/Courses/{{Index}}/Contents/Content{{Index}}.webp" data-setup="{}">
+                <source src="/public/videos/{{Index}}/Content{{Index}}.mp4" type="video/mp4"/>
+                <p class="vjs-no-js">
+                  To view this video please enable JavaScript, and consider upgrading to a
+                  web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+              </video>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
+  {{/each}}
+{{#if this.isRegister}}
+  {{#each coursecontent}} 
     <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
       <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
       {{Title}}
     </a>
   {{/each}}
+{{else}}
+  {{#each coursecontent}}
+    {{#if (equal this.Index 1)}}
+      <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
+        <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+        {{Title}}
+      </a>
+    {{else}}
+      {{#if (equal this.Index 2)}}
+        <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
+          <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+          {{Title}}
+        </a>
+      {{else}}
+        <p class="card card-body ml-4 d-flex flex-row mt-3">
+          <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+          {{Title}}
+        </a>
+      {{/if}}
+    {{/if}}
+  {{/each}}
+{{/if}} 
+  
 </div>
 
 <h3 class="ml-5 mt-5"> Instructor</h3>
@@ -310,21 +301,11 @@
   {{/with}}
 
   <div style="width: 50%">
+    {{#each Stars}}
     <div class="progress mb-3">
-      <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar" role="progressbar" style="width: {{Star}}%" aria-valuenow="{{Star}}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
-    <div class="progress mb-3">
-      <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    <div class="progress mb-3">
-      <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    <div class="progress mb-3">
-      <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    <div class="progress">
-      <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
+    {{/each}}
   </div>
 
   <div class="mx-3">
@@ -336,11 +317,9 @@
   </div>
 
   <div>
-    <div class="mb-1">25%</div>
-    <div class="mb-2">25%</div>
-    <div class="mb-1">25%</div>
-    <div class="mb-2">25%</div>
-    <div>25%</div>
+    {{#each Stars}}
+    <div class="mb-1">{{Star}}%</div>
+    {{/each}}
   </div>
 </div>
 

@@ -1,5 +1,5 @@
 const db = require('../utils/db');
-const TBL_CATEGORIES = 'courses';
+const TBL_COURSES = 'courses';
 const config = require('../config/default.json')
 module.exports = {
 
@@ -221,7 +221,7 @@ module.exports = {
 
     del(entity) {
         const condition = { CourseID: entity.CourseID };
-        return db.del(condition, TBL_CATEGORIES);
+        return db.del(condition, TBL_COURSES);
     },
 
     async updateViewCount(id) {
@@ -243,15 +243,15 @@ module.exports = {
     },
 
     all() {
-        return db.load(`select * from ${TBL_CATEGORIES}`);
+        return db.load(`select * from ${TBL_COURSES}`);
     },
 
     add(entity) {
-        return db.add(entity, TBL_CATEGORIES)
+        return db.add(entity, TBL_COURSES)
     },
 
     async singleid(id) {
-        const rows = await db.load(`select * from ${TBL_CATEGORIES} where CourseID = ${id}`);
+        const rows = await db.load(`select * from ${TBL_COURSES} where CourseID = ${id}`);
         if (rows.length === 0)
             return null;
 
@@ -261,12 +261,46 @@ module.exports = {
     patch(entity) {
         const condition = { CourseID: entity.CourseID };
         delete entity.CourseID;
-        return db.patch(entity, condition, TBL_CATEGORIES);
+        return db.patch(entity, condition, TBL_COURSES);
     },
 
     allcoursesofteacher(UserID) {
         return db.load(`select *
-        from ${TBL_CATEGORIES} c 
+        from ${TBL_COURSES} c 
         where  c.CourseID=${UserID}`);
-    }
+    },
+
+    bestseller() {
+        sql = `SELECT c.*
+        FROM count co join courses c on co.CourseID = c.CourseID
+        order by StudentCount DESC
+        limit 5`
+        return db.load(sql);
+    },
+
+    updateBestSeller(entity) {
+        entity.BadgeBestSeller = 1;
+        const condition = { CourseID: entity.CourseID };
+        return db.patch(entity, condition, 'courses');
+    },
+
+    async updateStudentCount(id) {
+        const rows = await db.load(`select * from count where CourseID = ${id}`);
+        rows[0].StudentCount += 1;
+        const condition = { CourseID: id };
+        return db.patch(rows[0], condition, 'count');
+    },
+
+    async singleByCount(id) {
+        const rows = await db.load(`select * from count where CourseID = ${id}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
+    UpdateStarRating(entity) {
+        const condition = { CourseID: entity.CourseID };
+        return db.patch(entity, condition, 'count');
+    },
 };

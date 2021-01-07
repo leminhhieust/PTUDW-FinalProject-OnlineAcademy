@@ -83,7 +83,7 @@ router.post('/createcourses', async function(req, res) {
         TinyDes: '',
         FullDes: '',
         IsFav: 0,
-        BadgeNew: 0,
+        BadgeNew: 1,
         BadgeBestSeller: 0,
         Totalcontent: 0
     };

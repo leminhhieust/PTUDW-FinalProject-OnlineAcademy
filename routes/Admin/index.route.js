@@ -175,7 +175,9 @@ router.get('/courses/detail/:id', async function(req, res) {
     }
 
     const id = req.params.id;
-    const courses = await coursesModel.single(id);
+    console.log(id);
+    const courses = await coursesModel.singleid(id);
+    console.log(courses);
     const teacher = await userModel.single(courses.TeacherID);
     res.render('vwAdmin/vwdetailCourses', {
         courses: courses,
@@ -184,8 +186,9 @@ router.get('/courses/detail/:id', async function(req, res) {
 })
 
 router.post('/courses/del', async function(req, res) {
+    console.log(req.body.CourseID);
     const CourseID = req.body.CourseID;
-    const courses = await coursesModel.single(CourseID);
+    const courses = await coursesModel.singleid(CourseID);
     await coursesModel.del(courses);
 
     res.redirect('/admin/courses')

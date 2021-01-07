@@ -4,6 +4,7 @@ const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
 const cousecontentsModel = require('../../models/cousecontents.model');
 const userModel = require('../../models/user.model')
+
 const bcrypt = require('bcryptjs');
 
 const moment = require('moment');
@@ -149,6 +150,14 @@ router.post('/createcourses', async function(req, res) {
         //     cousecontentsModel.add(Courcontent);
         // }
         coursesModel.add(Cour);
+        const count = {
+            CourseID: Cour.CourseID,
+            ViewCount: 0,
+            AvgStar: 0,
+            StudentCount: 0,
+            Ratings: 0
+        }
+        coursesModel.add_count(count);
         if (err) {} else {
             res.render('viewTeacher/vwCourses/uploadvideincreate', {
                 courses: Cour.CourseID,
@@ -266,8 +275,16 @@ router.get('/uploadvideo_increate/:id', async function(req, res) {
 
     const id = req.params.id;
     const courses = await coursesModel.singleid(id);
+    console.log(courses);
+    // const index = await cousecontentsModel.countCourID(courses.CourseID);
+    // if (index >= courses.Totalcontent) {
+    //     courses.Status = 1;
+    // } else {
+    //     courses.Status = 0;
+    // }
     res.render('viewTeacher/vwCourses/uploadvideincreate', {
         courses: id,
+        Status: courses.Status,
         Totalcontent: courses.Totalcontent
     });
 })

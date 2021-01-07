@@ -4,6 +4,7 @@ const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
 const cousecontentsModel = require('../../models/cousecontents.model');
 const userModel = require('../../models/user.model')
+
 const bcrypt = require('bcryptjs');
 
 const moment = require('moment');
@@ -82,7 +83,7 @@ router.post('/createcourses', async function(req, res) {
         TinyDes: '',
         FullDes: '',
         IsFav: 0,
-        BadgeNew: 0,
+        BadgeNew: 1,
         BadgeBestSeller: 0,
         Totalcontent: 0
     };
@@ -100,6 +101,13 @@ router.post('/createcourses', async function(req, res) {
         console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
     });
 
+    const dir_video = `./public/videos/${Cour.CourseID}`;
+    fs.access(dir_video, (err) => {
+        fs.mkdirSync(dir_video, {
+            recursive: true
+        });
+        console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
+    });
 
     const storage = multer.diskStorage({
         destination: function(req, file, cb) {
@@ -149,6 +157,14 @@ router.post('/createcourses', async function(req, res) {
         //     cousecontentsModel.add(Courcontent);
         // }
         coursesModel.add(Cour);
+        const count = {
+            CourseID: Cour.CourseID,
+            ViewCount: 0,
+            AvgStar: 0,
+            StudentCount: 0,
+            Ratings: 0
+        }
+        coursesModel.add_count(count);
         if (err) {} else {
             res.render('viewTeacher/vwCourses/uploadvideincreate', {
                 courses: Cour.CourseID,
@@ -266,13 +282,21 @@ router.get('/uploadvideo_increate/:id', async function(req, res) {
 
     const id = req.params.id;
     const courses = await coursesModel.singleid(id);
+    //console.log(courses);
+    // const index = await cousecontentsModel.countCourID(courses.CourseID);
+    // if (index >= courses.Totalcontent) {
+    //     courses.Status = 1;
+    // } else {
+    //     courses.Status = 0;
+    // }
     res.render('viewTeacher/vwCourses/uploadvideincreate', {
         courses: id,
+        Status: courses.Status,
         Totalcontent: courses.Totalcontent
     });
 })
 
-router.post('/uploadvideo_increate', async function(req, res) {
+router.post('/uploadvideo_increate/:id', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
         res.redirect('/');
     }
@@ -282,14 +306,16 @@ router.post('/uploadvideo_increate', async function(req, res) {
         Title: '',
         Video: ''
     }
+    const id = req.params.id;
+    const index = await cousecontentsModel.countCourID(id) + 1;
     const storage = multer.diskStorage({
         destination: function(req, file, cb) {
-            cb(null, `./public/video`)
+            cb(null, `./public/videos/${id}`)
         },
         filename: function(req, file, cb) {
-            cb(null, file.filename + '-' + Date.now() + file.originalname)
-            Courcontent.Title = file.originalname;
-            Courcontent.Video = file.filename + '-' + Date.now() + file.originalname;
+            cb(null, `Content${index}.mp4`)
+            Courcontent.Title = `Content${index}.mp4`;
+            Courcontent.Video = `Content${index}.mp4`;
         }
     });
 
@@ -299,10 +325,18 @@ router.post('/uploadvideo_increate', async function(req, res) {
         Courcontent.CourseID = req.body.CourseID;
         Courcontent.Index = index + 1;
         cousecontentsModel.add(Courcontent);
+        let Status;
+        if (Courcontent.Index >= req.body.Totalcontent) {
+            Status = 1;
+        } else {
+            Status = 0;
+        }
+
         if (err) {} else {
             res.render('viewTeacher/vwCourses/uploadvideincreate', {
                 courses: req.body.CourseID,
                 Totalcontent: req.body.Totalcontent,
+                Status: Status,
                 CurIndex: index
             });
         }

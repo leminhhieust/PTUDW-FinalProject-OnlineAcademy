@@ -115,7 +115,7 @@ module.exports = {
         return rows[0];
     },
 
-    async singleByUser(courseID, userID){
+    async singleByUser(courseID, userID) {
         const sql = `
         SELECT *
         FROM orders o join orderdetails od on o.OrderID = od.OrderID
@@ -211,7 +211,7 @@ module.exports = {
     where cate.CatType=0`
         return db.load(sql);
     },
-    
+
     allwithweb_admin() {
         sql = `select cour.*
     from categories cate join courses cour on cate.CatID=cour.CatID
@@ -231,15 +231,15 @@ module.exports = {
         return db.patch(rows[0], condition, 'count');
     },
 
-    async updateFav(entity, isFav){
+    async updateFav(entity, isFav) {
         const rows = await db.load(`select * from orderdetails where OrderID = ${entity.OrderID} and CourseID = ${entity.CourseID}`);
         rows[0].IsFav = isFav;
-        
+
         const condition = {
             ID: rows[0].ID
         }
 
-        return db.patch(rows[0],condition, 'orderdetails');
+        return db.patch(rows[0], condition, 'orderdetails');
     },
 
     all() {
@@ -303,4 +303,8 @@ module.exports = {
         const condition = { CourseID: entity.CourseID };
         return db.patch(entity, condition, 'count');
     },
+
+    add_count(entity) {
+        return db.add(entity, 'count')
+    }
 };

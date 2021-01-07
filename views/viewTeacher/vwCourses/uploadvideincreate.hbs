@@ -24,7 +24,7 @@
   $('#fuMain').fileinput({
     theme: 'fa',
     dropZoneEnabled: false,
-    allowedFileExtensions: ['png', 'jpg', 'gif'],
+    allowedFileExtensions: ['png', 'jpg', 'gif','webp'],
   });
 </script>
 
@@ -59,8 +59,17 @@
     <div class="card-header">
         Tải video khóa học
     </div>
+    {{#if Status}}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          Đã đủ số chương
+        </div>
+         {{else}}
+      
     <div class="card-body">
-        <form  action="/teacher/uploadvideo_increate" method="POST" enctype="multipart/form-data" id="fromVideo">
+        <form  action="/teacher/uploadvideo_increate/{{courses}}" method="POST" enctype="multipart/form-data" id="fromVideo">
             <input type="hidden" id="txtcourID" name="CourseID" value="{{courses}}">
             <input type="hidden" id="txtTotalcontent" name="Totalcontent" value="{{Totalcontent}}">
             <input type="hidden" id="txtcurindex" name="Curindex" value="{{CurIndex}}">
@@ -77,6 +86,7 @@
                     </a>
     </div>
     </div>
+     {{/if}}
 </div>
 
 

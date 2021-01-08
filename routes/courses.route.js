@@ -2,6 +2,7 @@ const express = require('express');
 const coursesModel = require('../models/courses.model');
 const config = require('../config/default.json');
 const feedbackModel = require('../models/feedback.model');
+const courseContent = require('../models/coursecontents.model');
 const session = require('express-session');
 
 const router = express.Router();
@@ -353,7 +354,40 @@ router.get('/search', async function(req,res){
 })
 
 router.get('/learn', async function(req,res){
-  
-} )
+  const courseID = +req.query.courseID;
+  const index = +req.query.index;
+  const checkRegister = await coursesModel.singleRegister(courseID,req.session.authUser.UserID);
+  const checkExistCourse = await coursesModel.singleid(courseID);
+  const allCourseContent = await courseContent.allwithcourseID(courseID);
+  const currentContent = await courseContent.singleByCourseIDIndex(courseID, index);
+
+  if(checkExistCourse === null){
+    res.redirect('/');
+  }
+
+  if(index > allCourseContent.length){
+    res.redirect(`/courses/detail/${courseID}`);
+  }
+
+  if(checkRegister === null){
+    res.redirect(`/courses/detail/${courseID}`)
+  }
+
+  const Contents = [];
+  for(i = 0; i < allCourseContent.length; ++i){
+    const Content = {
+      content: allCourseContent[i],
+      isActive: allCourseContent[i].Index === index
+    }
+    Contents.push(Content);
+  }
+
+  res.render('vwCourses/learn', {
+    currentContent,
+    Contents,
+    Course: checkExistCourse
+  });
+
+})
 
 module.exports = router;

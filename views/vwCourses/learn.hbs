@@ -1,0 +1,74 @@
+{{#section 'js'}}
+<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+{{/section}}  
+
+{{#section 'css'}}
+<link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+<style>
+    .sidenav {
+  height: 100%;
+  width: 450px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: white;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+  display: block;
+}
+
+.sidenav a:hover {
+    background-color: cornflowerblue;
+}
+</style>
+{{/section}}
+    <div class="mx-4 mt-2" style="width: 1000px">
+        {{#with currentContent}}
+        <div>
+            <h4 class="mb-3">{{Title}}</h4>
+            <video id="my-video" class="video-js" controls preload="auto" width="1000" height="515"
+            poster="/public/images/Courses/{{CourseID}}/Contents/Content{{Index}}.webp" data-setup="{}">
+            <source src="/public/videos/{{CourseID}}/Content{{Index}}.mp4" type="video/mp4"/>
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a
+                web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+            </video>
+        </div>
+        {{/with}}
+        <hr/>
+        {{#with Course}}
+        <div class="border" >
+            <h3 class="p-3">Course Description</h3>
+            <div class="p-3">{{{FullDes}}}</div>
+        </div>
+        {{/with}}
+    </div>
+    
+    <div class="sidenav mt-5 border">
+        <h4 class="text-center">Course content</h4>
+        <hr/>
+        {{#each Contents}}
+        {{#if this.isActive}}
+        <a class="d-flex flex-row bg-info mb-3" href="#">
+            <i class="fa fa-play-circle mt-1 mr-1 text-danger" aria-hidden="true"></i>
+            {{content.Index}}.{{content.Title}}
+        </a>
+        {{else}}
+        <a class="d-flex flex-row mb-3" href="/courses/learn?courseID={{content.CourseID}}&index={{content.Index}}">
+            <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+            {{content.Index}}.{{content.Title}}
+        </a>
+        {{/if}}
+        
+        {{/each}}
+    </div>

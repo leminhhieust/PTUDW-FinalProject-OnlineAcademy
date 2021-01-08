@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const categoryModel = require('../../models/category.model')
 const coursesModel = require('../../models/courses.model');
-const cousecontentsModel = require('../../models/cousecontents.model');
+const cousecontentsModel = require('../../models/coursecontents.model');
 const userModel = require('../../models/user.model')
 
 const bcrypt = require('bcryptjs');

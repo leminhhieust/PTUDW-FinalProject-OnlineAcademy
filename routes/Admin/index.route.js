@@ -195,6 +195,11 @@ router.post('/courses/del', async function(req, res) {
 
     await coursesModel.del(courses);
 
+    const count = await coursesModel.singleid_count_bycourID(CourseID);
+    console.log(count);
+    await coursesModel.del_count(count);
+
+
     const coursescontents = await cousecontentsModel.allwithcourseID(CourseID);
     //console.log(coursescontents);
 

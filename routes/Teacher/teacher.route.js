@@ -82,7 +82,6 @@ router.post('/createcourses', async function(req, res) {
         Price: 0,
         TinyDes: '',
         FullDes: '',
-        IsFav: 0,
         BadgeNew: 1,
         BadgeBestSeller: 0,
         Totalcontent: 0
@@ -137,7 +136,7 @@ router.post('/createcourses', async function(req, res) {
         Cour.TinyDes = req.body.TinyDes;
         Cour.FullDes = req.body.FullDes;
 
-        Cour.IsFav = 0;
+        //Cour.IsFav = 0;
         Cour.BadgeNew = 0;
         Cour.BadgeBestSeller = 0;
 
@@ -304,7 +303,7 @@ router.post('/uploadvideo_increate/:id', async function(req, res) {
         CourseID: '',
         Index: 1,
         Title: '',
-        Video: ''
+        //Video: ''
     }
     const id = req.params.id;
     const index = await cousecontentsModel.countCourID(id) + 1;
@@ -314,8 +313,8 @@ router.post('/uploadvideo_increate/:id', async function(req, res) {
         },
         filename: function(req, file, cb) {
             cb(null, `Content${index}.mp4`)
-            Courcontent.Title = `Content${index}.mp4`;
-            Courcontent.Video = `Content${index}.mp4`;
+            Courcontent.Title = file.originalname;
+            //Courcontent.Video = file.originalname;
         }
     });
 

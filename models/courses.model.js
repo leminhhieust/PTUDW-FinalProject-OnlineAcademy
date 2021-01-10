@@ -267,7 +267,7 @@ module.exports = {
     allcoursesofteacher(UserID) {
         return db.load(`select *
         from ${TBL_COURSES} c 
-        where  c.CourseID=${UserID}`);
+        where  c.TeacherID=${UserID}`);
     },
 
     bestseller() {
@@ -306,5 +306,18 @@ module.exports = {
 
     add_count(entity) {
         return db.add(entity, 'count')
-    }
+    },
+
+    del_count(entity) {
+        const condition = { CountID: entity.CountID };
+        return db.del(condition, 'count');
+    },
+
+    async singleid_count_bycourID(id) {
+        const rows = await db.load(`select * from count where CourseID = ${id}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
 };

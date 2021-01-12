@@ -251,15 +251,17 @@ router.post('/updatecourses/:id', async function(req, res) {
 
     var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
     var arr = req.body.NewVideo;
+    //console.log(req.body.NewVideo);
     for (let index = 0; index < arr.length; index++) {
         Courcontent[index].CourseID = courses.CourseID;
         Courcontent[index].Title = req.body.NewVideo[index];
+        console.log(req.body.NewVideo[index]);
         cousecontentsModel.patch(Courcontent[index]);
     }
 
     coursesModel.patch(courses);
 
-    res.redirect(`/teacher/updatecourses/${id}`);
+    res.redirect(`/teacher/profile`);
 })
 
 router.get('/profile', async function(req, res) {

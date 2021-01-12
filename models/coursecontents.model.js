@@ -17,9 +17,9 @@ module.exports = {
         return db.load(sql);
     },
 
-    async singleByCourseIDIndex(courseID, index){
+    async singleByCourseIDIndex(courseID, index) {
         const rows = await db.load(`select * from ${TBL_COURSECONTENT} c where c.CourseID= ${courseID} and c.Index = ${index}`);
-        if(rows.length === 0)
+        if (rows.length === 0)
             return null;
 
         return rows[0];

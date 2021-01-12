@@ -113,9 +113,10 @@ router.post('/profile/change', async function(req, res) {
 })
 
 
-
 router.get('/categories', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+
+    } else {
         res.redirect('/');
     }
     const categories = await categoryModel.all();

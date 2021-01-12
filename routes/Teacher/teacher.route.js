@@ -59,14 +59,19 @@ router.get('/', async function(req, res) {
 })
 
 router.get('/createcourses', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
+        const categories = await categoryModel.all();
+        res.render('viewTeacher/vwCourses/createcourses', {
+            categories: categories
+        });
+    } else {
         res.redirect('/');
     }
 
-    const categories = await categoryModel.all();
-    res.render('viewTeacher/vwCourses/createcourses', {
-        categories: categories
-    });
+    // const categories = await categoryModel.all();
+    // res.render('viewTeacher/vwCourses/createcourses', {
+    //     categories: categories
+    // });
 
 })
 
@@ -175,31 +180,54 @@ router.post('/createcourses', async function(req, res) {
 })
 
 router.get('/updatecourses/:id', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
+        const id = req.params.id;
+        const courses = await coursesModel.singleid(id);
+        const documents = await cousecontentsModel.singleid(courses.CourseID);
+        let CatName_curr = '';
+        const categories = await categoryModel.all();
+        for (let i = 0; i < categories.length; i++) {
+            if (courses.CatID === categories[i].CatID) {
+                CatName_curr = categories[i].CatName;
+            }
+        }
+        let index = await cousecontentsModel.countCourID(courses.CourseID);
+        if (index >= courses.Totalcontent) {
+            courses.Status = 1;
+        } else {
+            courses.Status = 0;
+        }
+        res.render('viewTeacher/vwCourses/updatecourses', {
+            categories: categories,
+            courses: courses,
+            documents: documents,
+            CatName_curr: CatName_curr
+        });
+    } else {
         res.redirect('/');
     }
-    const id = req.params.id;
-    const courses = await coursesModel.singleid(id);
-    const documents = await cousecontentsModel.singleid(courses.CourseID);
-    let CatName_curr = '';
-    const categories = await categoryModel.all();
-    for (let i = 0; i < categories.length; i++) {
-        if (courses.CatID === categories[i].CatID) {
-            CatName_curr = categories[i].CatName;
-        }
-    }
-    let index = await cousecontentsModel.countCourID(courses.CourseID);
-    if (index >= courses.Totalcontent) {
-        courses.Status = 1;
-    } else {
-        courses.Status = 0;
-    }
-    res.render('viewTeacher/vwCourses/updatecourses', {
-        categories: categories,
-        courses: courses,
-        documents: documents,
-        CatName_curr: CatName_curr
-    });
+    // const id = req.params.id;
+    // const courses = await coursesModel.singleid(id);
+    // const documents = await cousecontentsModel.singleid(courses.CourseID);
+    // let CatName_curr = '';
+    // const categories = await categoryModel.all();
+    // for (let i = 0; i < categories.length; i++) {
+    //     if (courses.CatID === categories[i].CatID) {
+    //         CatName_curr = categories[i].CatName;
+    //     }
+    // }
+    // let index = await cousecontentsModel.countCourID(courses.CourseID);
+    // if (index >= courses.Totalcontent) {
+    //     courses.Status = 1;
+    // } else {
+    //     courses.Status = 0;
+    // }
+    // res.render('viewTeacher/vwCourses/updatecourses', {
+    //     categories: categories,
+    //     courses: courses,
+    //     documents: documents,
+    //     CatName_curr: CatName_curr
+    // });
 })
 
 router.post('/updatecourses/:id', async function(req, res) {
@@ -235,26 +263,44 @@ router.post('/updatecourses/:id', async function(req, res) {
 })
 
 router.get('/profile', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
+        const users = await userModel.single(req.session.authUser.UserID);
+        console.log(users);
+        courses = await coursesModel.allcoursesofteacher(users.UserID);
+        for (let i = 0; i < courses.length; i++) {
+            const index = await cousecontentsModel.countCourID(courses[i].CourseID);
+            if (index >= courses[i].Totalcontent) {
+                courses[i].Status = 1;
+            } else {
+                courses[i].Status = 0;
+            }
+        }
+        const DOB = moment(users.DOB, 'YYYY-MM-DD').format('DD/MM/YYYY');
+        res.render('viewTeacher/vwprofile', {
+            users: users,
+            DOB: DOB,
+            courses: courses
+        });
+    } else {
         res.redirect('/');
     }
-    const users = await userModel.single(req.session.authUser.UserID);
-    console.log(users);
-    courses = await coursesModel.allcoursesofteacher(users.UserID);
-    for (let i = 0; i < courses.length; i++) {
-        const index = await cousecontentsModel.countCourID(courses[i].CourseID);
-        if (index >= courses[i].Totalcontent) {
-            courses[i].Status = 1;
-        } else {
-            courses[i].Status = 0;
-        }
-    }
-    const DOB = moment(users.DOB, 'YYYY-MM-DD').format('DD/MM/YYYY');
-    res.render('viewTeacher/vwprofile', {
-        users: users,
-        DOB: DOB,
-        courses: courses
-    });
+    // const users = await userModel.single(req.session.authUser.UserID);
+    // console.log(users);
+    // courses = await coursesModel.allcoursesofteacher(users.UserID);
+    // for (let i = 0; i < courses.length; i++) {
+    //     const index = await cousecontentsModel.countCourID(courses[i].CourseID);
+    //     if (index >= courses[i].Totalcontent) {
+    //         courses[i].Status = 1;
+    //     } else {
+    //         courses[i].Status = 0;
+    //     }
+    // }
+    // const DOB = moment(users.DOB, 'YYYY-MM-DD').format('DD/MM/YYYY');
+    // res.render('viewTeacher/vwprofile', {
+    //     users: users,
+    //     DOB: DOB,
+    //     courses: courses
+    // });
 
 })
 
@@ -274,24 +320,39 @@ router.post('/profile', async function(req, res) {
 })
 
 router.get('/uploadvideo_increate/:id', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
+        const id = req.params.id;
+        const courses = await coursesModel.singleid(id);
+        //console.log(courses);
+        // const index = await cousecontentsModel.countCourID(courses.CourseID);
+        // if (index >= courses.Totalcontent) {
+        //     courses.Status = 1;
+        // } else {
+        //     courses.Status = 0;
+        // }
+        res.render('viewTeacher/vwCourses/uploadvideincreate', {
+            courses: id,
+            Status: courses.Status,
+            Totalcontent: courses.Totalcontent
+        });
+    } else {
         res.redirect('/');
     }
 
-    const id = req.params.id;
-    const courses = await coursesModel.singleid(id);
-    //console.log(courses);
-    // const index = await cousecontentsModel.countCourID(courses.CourseID);
-    // if (index >= courses.Totalcontent) {
-    //     courses.Status = 1;
-    // } else {
-    //     courses.Status = 0;
-    // }
-    res.render('viewTeacher/vwCourses/uploadvideincreate', {
-        courses: id,
-        Status: courses.Status,
-        Totalcontent: courses.Totalcontent
-    });
+    // const id = req.params.id;
+    // const courses = await coursesModel.singleid(id);
+    // //console.log(courses);
+    // // const index = await cousecontentsModel.countCourID(courses.CourseID);
+    // // if (index >= courses.Totalcontent) {
+    // //     courses.Status = 1;
+    // // } else {
+    // //     courses.Status = 0;
+    // // }
+    // res.render('viewTeacher/vwCourses/uploadvideincreate', {
+    //     courses: id,
+    //     Status: courses.Status,
+    //     Totalcontent: courses.Totalcontent
+    // });
 })
 
 router.post('/uploadvideo_increate/:id', async function(req, res) {

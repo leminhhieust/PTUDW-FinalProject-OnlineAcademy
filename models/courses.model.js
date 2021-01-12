@@ -102,6 +102,11 @@ module.exports = {
         return rows[0].total;
     },
 
+    async countWithByCatID(categories) {
+        const rows = await db.load(`SELECT count(*) as total from courses c join categories ca on c.CatID = ca.CatID where ca.CatID = '${categories}'`);
+        return rows[0].total;
+    },
+
     async single(id) {
         const sql = `
         SELECT c.*, co.*

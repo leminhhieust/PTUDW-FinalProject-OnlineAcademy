@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const multer = require('multer');
 var rimraf = require("rimraf");
-
+const auth = require('../../middlewares/auth.mdw');
 var fs = require('fs');
 // GET home page.
 router.get('/', async function(req, res) {
@@ -58,6 +58,62 @@ router.post('/login', async function(req, res) {
     res.redirect(url);
 })
 
+router.post('/logout', async function(req, res) {
+    req.session.isAuth = false;
+    req.session.authUser = null;
+    res.redirect('/admin');
+})
+
+
+router.get('/profile', auth, async function(req, res) {
+    const userID = req.session.authUser.UserID;
+    const user = await userModel.single(userID);
+    console.log(user);
+    const courseRegister = await coursesModel.allRegister(userID);
+    const courseFav = [];
+
+    for (const course of courseRegister) {
+        if (course.IsFav) {
+            courseFav.push(course);
+        }
+    }
+
+    res.render('vwAdmin/profile', {
+        user: user,
+        courseRegister,
+        emptyRegister: courseRegister.length === 0,
+        emptyFav: courseFav.length === 0,
+        courseFav: courseFav
+    });
+
+})
+
+router.post('/profile/edit', async function(req, res) {
+    const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    const user = req.session.authUser;
+    //console.log(user);
+    user.DOB = dob;
+    user.Name = req.body.Name;
+    user.Email = req.body.Email;
+
+    await userModel.updateUser(user);
+    res.redirect('/admin/profile');
+})
+
+router.post('/profile/change', async function(req, res) {
+    const user = req.session.authUser;
+    console.log(user);
+    const dob = moment(user.DOB, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    user.DOB = dob;
+    const hash = bcrypt.hashSync(req.body.newPassword, 10);
+    user.Password = hash;
+
+    await userModel.updateUser(user);
+    res.redirect('/admin/profile');
+})
+
+
+
 router.get('/categories', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
         res.redirect('/');
@@ -74,7 +130,7 @@ router.get('/categories', async function(req, res) {
         detail.CatID = categories[index].CatID;
         detail.CatName = categories[index].CatName;
         detail.CatType = categories[index].CatType;
-        detail.count = await coursesModel.countWithByCat(detail.CatName);
+        detail.count = await coursesModel.countWithByCatID(detail.CatID);
         details.push(detail);
     }
     const CatTypes = await coursesModel.allCatType();
@@ -110,7 +166,8 @@ router.post('/categories', async function(req, res) {
         NewCat.CatName = req.body.CatName;
         NewCat.CatType = req.body.CatType;
         if (err) {} else {
-            res.render('vwAdmin/vwCategories');
+            //res.render('vwAdmin/vwCategories');
+            res.redirect('/admin/categories');
         }
 
         categoryModel.add(NewCat);
@@ -123,15 +180,34 @@ router.get('/categories/delete/:id', async function(req, res) {
         res.redirect('/');
     }
 
+    const categories = await categoryModel.all();
+    const details = [];
+    for (let index = 0; index < categories.length; index++) {
+        const detail = {
+            CatID: 0,
+            CatName: '',
+            CatType: 0,
+            count: 0
+        }
+        detail.CatID = categories[index].CatID;
+        detail.CatName = categories[index].CatName;
+        detail.CatType = categories[index].CatType;
+        detail.count = await coursesModel.countWithByCatID(detail.CatID);
+        details.push(detail);
+    }
+    console.log(details);
+    const CatTypes = await coursesModel.allCatType();
+
+
     const id = req.params.id;
     const entity = await categoryModel.single(id);
-    const count = await coursesModel.countWithByCat(entity.CatName);
+    const count = await coursesModel.countWithByCatID(entity.CatID);
     console.log(count);
     if (count === 0) {
         await categoryModel.del(entity);
     } else {
         return res.render('vwAdmin/vwCategories', {
-            err_message: 'Không thể xóa lĩnh vực có khóa học'
+            err_message: 'Không thể xóa lĩnh vực có khóa học',
         });
     }
 
@@ -140,6 +216,10 @@ router.get('/categories/delete/:id', async function(req, res) {
         console.log('File deleted!');
     });
     res.redirect('/admin/categories');
+    // res.render('vwAdmin/vwCategories', {
+    //     categories: details,
+    //     CatTypes: CatTypes
+    // });
 })
 
 router.post('/categories/update', async function(req, res) {
@@ -259,6 +339,7 @@ router.post('/users/remove', async function(req, res) {
 
     res.redirect('/admin/users')
 })
+
 router.post('/users/update', async function(req, res) {
     const hash = bcrypt.hashSync(req.body.Password, 10);
     const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');

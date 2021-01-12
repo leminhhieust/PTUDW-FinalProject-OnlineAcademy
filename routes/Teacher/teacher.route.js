@@ -249,7 +249,7 @@ router.get('/profile', async function(req, res) {
             courses[i].Status = 0;
         }
     }
-    const DOB = moment(users.DOB, 'YYYY-MM-DD').format('MM/DD/YYYY');
+    const DOB = moment(users.DOB, 'YYYY-MM-DD').format('DD/MM/YYYY');
     res.render('viewTeacher/vwprofile', {
         users: users,
         DOB: DOB,
@@ -259,18 +259,17 @@ router.get('/profile', async function(req, res) {
 })
 
 router.post('/profile', async function(req, res) {
-
     const users = await userModel.single(req.body.UserID);
     users.Name = req.body.Name;
     users.Email = req.body.Email;
-    const dob = moment(req.body.DOB, 'MM/DD/YYYY').format('YYYY-MM-DD');
+    const dob = moment(req.body.DOB, 'DD-MM-YYYY').format('YYYY-MM-DD');
     users.DOB = dob;
     users.Des = req.body.Des;
 
     await userModel.patch(users);
 
 
-    res.render('/teacher/uploadvideo_increate');
+    res.redirect('/teacher/profile')
 
 })
 

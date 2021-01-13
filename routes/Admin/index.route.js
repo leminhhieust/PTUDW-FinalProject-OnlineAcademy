@@ -292,6 +292,7 @@ router.post('/courses/del', async function(req, res) {
         //     console.log('File deleted!');
         // });
     }
+    rimraf(`./public/Images/Courses/${CourseID}`, function() { console.log("done_del_image"); });
     rimraf(`./public/Videos/${CourseID}`, function() { console.log("done"); });
     res.redirect('/admin/courses')
 })

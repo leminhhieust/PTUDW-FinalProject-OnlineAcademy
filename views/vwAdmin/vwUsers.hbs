@@ -19,6 +19,81 @@
 </script>
 
 <script>
+  {{#each this.courseRegister}}
+    $(function () {
+      $(`#rateYo{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  {{#each this.courseRegister}}
+    $(function () {
+      $(`#rateYoFav{{CourseID}}`).rateYo({
+        rating: {{AvgStar}},
+        readOnly: true,
+        starWidth: "15px",
+        spacing: "3px"
+      });
+    });
+  {{/each}}
+
+  $(document).ready(function(){
+    $('.CourseCarousel').slick({
+      dots: true,
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      arrows: true
+    });
+  });
+
+  {{!-- $('#txtDOB').datetimepicker({
+    format: 'd/m/Y',
+    timepicker: false,
+    mask: true,
+  }); --}}
+
+  $('#formEdit').on('submit', function (e) {
+    e.preventDefault();
+    const Email = $('#txtEmail').val();
+    $.getJSON(`/account/is-available-email?email=${Email}`, function (data) {
+      if (data === false) {
+        alert('Email already used!');
+      }
+      else{
+      $('#formEdit').off('submit').submit();
+      }
+    });
+  });
+
+  $('#formChange').on('submit', function (e) {
+    e.preventDefault();
+    const password = $('#txtOldPassword').val();
+    
+    $.getJSON(`/account/is-available-password?password=${password}`, function (data) {
+      if (data === false) {
+        alert('Wrong Password!');
+      }
+      else{
+        const NewPassword = $('#txtNewPassword').val();
+        const Confirm = $('#txtConfirm').val();
+        if (NewPassword !== Confirm){
+          alert('Invalid confirm.');
+        }
+        else{
+          $('#formChange').off('submit').submit();
+        }
+      }
+    });
+  });
+</script>
+
+
+<script>
   $('.removeItem').on('click', function () {
     const UserID = $(this).data('id');
     $('#txtProId').val(UserID);
@@ -44,10 +119,48 @@ $('.updateItem').on('click', function () {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 {{/section}}
 
+<div class="modal fade" id="ChangePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change Your Password</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/change" method="POST" id="formChange">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Enter your current password:</label>
+                <input type="password" class="form-control" name="oldPassword" id="txtOldPassword" required>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Enter your new password:</label>
+                <input type="password" class="form-control" name="newPassword" id="txtNewPassword" required>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Repeat your new password</label>
+                <input type="password" class="form-control" id="txtConfirm" required>              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Save</button>
+               </div>
+            </form>
+          </div>
+        </div>
+      </div>
+</div>
 <div class="card">
   <h5 class="card-header">
     Quản lý Account
   </h5>
+  <div>
+    <h3>Account Admin</h3>
+     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ChangePasswordModal">
+          Change your password
+          <i class="fa fa-key" aria-hidden="true"></i>
+        </button>
+  </div>
   <form id="frmRemoveItem" action="/admin/users/remove" method="POST">
     <input type="hidden" name="UserID" id="txtProId">
   </form>

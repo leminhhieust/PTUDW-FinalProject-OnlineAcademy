@@ -1,5 +1,66 @@
+{{#section 'css'}}
+<style>
+    .sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Active/current link */
+.sidebar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+</style>
+
+{{/section}}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow sticky-top">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/teacher">
       <i class="fa fa-home fa-lg"></i>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -9,7 +70,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="/">Online Academy<span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/teacher">Online Academy<span class="sr-only">(current)</span></a>
         </li>
 
         {{!-- <li class="nav-item dropdown">
@@ -47,32 +108,18 @@
       <form id="frmLogout" method="POST" action="/account/logout"></form>
       
       <ul class="navbar-nav ml-auto">
-      {{#if isAuth}}
-      <li class="nav-item mr-3">
-      <a name="" id="" class="btn btn-inline" href="/teacher" role="button">
-         <i class="fa fa-user" aria-hidden="true"></i>
-          Teacher
-        </a>
-        </li>
-      <li class="nav-item mr-3">
-        <a class="nav-link" href="/cart">
-          <i style="font-size:24px" class="fa fa-shopping-cart" aria-hidden="true"></i>
-          {{#if cartSummary}}
-            <span id='lblCartCount' class="badge badge-danger">{{cartSummary}}</span>
-          {{/if}}
-        </a>
-      </li>
+      {{#if isAuth}}      
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-user" aria-hidden="true"></i>
           Welcome, <b>{{authUser.Name}}</b>!
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/account/profile">
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {{!-- <a class="dropdown-item" href="/account/profile">
             <i class="fa fa-user" aria-hidden="true"></i>
             Profile
-          </a>
+          </a> --}}
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="javascript: $('#frmLogout').submit();">
             <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -101,5 +148,8 @@
       </li>
       {{/if}}
     </ul>
-  </div>
+    </div>
 </nav>
+
+
+

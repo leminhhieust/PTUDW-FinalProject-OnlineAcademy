@@ -10,7 +10,7 @@ const coursesModel = require('../models/courses.model');
 
 const router = express.Router();
 
-router.get('/login',unAuth, async function(req, res) {
+router.get('/login', unAuth, async function(req, res) {
     if (req.headers.referer) {
         req.session.retUrl = req.headers.referer;
     }
@@ -44,7 +44,7 @@ router.post('/logout', async function(req, res) {
     res.redirect(req.headers.referer);
 })
 
-router.get('/register',unAuth, async function(req, res) {
+router.get('/register', unAuth, async function(req, res) {
     if (req.headers.referer) {
         req.session.retUrl = req.headers.referer;
     }
@@ -130,10 +130,9 @@ router.get('/is-available-email', async function(req, res) {
     const email = req.query.email;
     const user = await userModel.singleByEmail(email);
 
-    if (req.session.isAuth && email === req.session.authUser.Email){
+    if (req.session.isAuth && email === req.session.authUser.Email) {
         return res.json(true);
-    }
-    else if (user === null) {
+    } else if (user === null) {
         return res.json(true);
     }
 
@@ -144,7 +143,7 @@ router.get('/is-available-password', async function(req, res) {
     const password = req.query.password;
     const ret = bcrypt.compareSync(password, req.session.authUser.Password);
 
-    if (ret){
+    if (ret) {
         return res.json(true);
     }
 
@@ -158,8 +157,8 @@ router.get('/profile', auth, async function(req, res) {
         const courseRegister = await coursesModel.allRegister(userID);
         const courseFav = [];
 
-        for(const course of courseRegister){
-            if(course.IsFav){
+        for (const course of courseRegister) {
+            if (course.IsFav) {
                 courseFav.push(course);
             }
         }
@@ -167,17 +166,16 @@ router.get('/profile', auth, async function(req, res) {
         res.render('vwAccount/profile', {
             user: user,
             courseRegister,
-            emptyRegister: courseRegister.length ===0,
-            emptyFav: courseFav.length ===0,
+            emptyRegister: courseRegister.length === 0,
+            emptyFav: courseFav.length === 0,
             courseFav: courseFav
         });
-    }
-    else {
+    } else {
         res.render('Admin/vwAccount/profile');
     }
 })
 
-router.post('/profile/edit', async function(req,res){
+router.post('/profile/edit', async function(req, res) {
     const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
     const user = req.session.authUser;
     user.DOB = dob;
@@ -188,8 +186,9 @@ router.post('/profile/edit', async function(req,res){
     res.redirect('/account/profile');
 })
 
-router.post('/profile/change', async function(req,res){
+router.post('/profile/change', async function(req, res) {
     const user = req.session.authUser;
+    user.DOB = moment(user.DOB, 'YYYY-MM-DD').format('YYYY-MM-DD');
     const hash = bcrypt.hashSync(req.body.newPassword, 10);
     user.Password = hash;
 

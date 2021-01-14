@@ -62,12 +62,17 @@
     {{> nav}}  
     {{{body}}}
   {{else}}
-    {{#if authUser.Permission}}
-        {{> nav}}  
-      {{{body}}}
+    {{#if (equal authUser.Permission 1)}}
+        {{> teacher_nav}}
+        {{{body}}}
     {{else}}
-      {{> admin_nav}}
-      {{{body}}}
+      {{#if (equal authUser.Permission 2)}}
+          {{> nav}}  
+          {{{body}}}
+      {{else}}
+        {{> admin_nav}}
+        {{{body}}}
+      {{/if}}
     {{/if}}
 
   {{/unless}}

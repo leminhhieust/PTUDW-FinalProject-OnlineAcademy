@@ -31,10 +31,13 @@ module.exports = {
         return db.patch(entity, condition, TBL_COURSECONTENT);
     },
 
-    allwithcourseID(id) {
-        return db.load(`select *
-         from ${TBL_COURSECONTENT} cc 
-         where cc.CourseID=${id} `);
+    allwithcourseID(CourseID, StudentID) {
+        return db.load(`SELECT * FROM ${TBL_COURSECONTENT} cc join learn_progress lp on cc.CourseID = lp.CourseID and cc.Index = lp.Index 
+        where StudentID = ${StudentID} and cc.CourseID = ${CourseID}`);
+    },
+
+    allwithoutProgress(CourseID) {
+        return db.load(`SELECT * FROM ${TBL_COURSECONTENT} where CourseID = ${CourseID}`);
     },
 
     del(entity) {

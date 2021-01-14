@@ -217,7 +217,14 @@
 </div>
 {{/with}}
 
-<h3 class="ml-5">Course content</h3>
+<div class="ml-5 d-flex flex-box">
+<h3 class="mr-1">Course content</h3>
+<h3>({{this.CourseNum}}/</h3>
+{{#with course}}
+  <h3>{{Totalcontent}})</h3>
+{{/with}}
+</div>
+
 <div class="mx-5">
   {{#each coursecontent}} 
   <div class="modal fade" id="VideoModal{{Index}}" tabindex="-1" role="dialog" aria-labelledby="VideoLabel" aria-hidden="true">
@@ -231,8 +238,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
               <video id="my-video" class="video-js" controls preload="auto" width="560" height="315"
-              poster="/public/images/Courses/{{Index}}/Contents/Content{{Index}}.webp" data-setup="{}">
-                <source src="/public/videos/{{Index}}/Content{{Index}}.mp4" type="video/mp4"/>
+              poster="/public/images/Courses/{{CourseID}}/Contents/Content{{Index}}.webp" data-setup="{}">
+                <source src="/public/videos/{{CourseID}}/Content{{Index}}.mp4" type="video/mp4"/>
                 <p class="vjs-no-js">
                   To view this video please enable JavaScript, and consider upgrading to a
                   web browser that
@@ -244,35 +251,40 @@
         </div>
       </div>
   {{/each}}
-{{#if this.isRegister}}
-  {{#each coursecontent}} 
-    <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
-      <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
-      {{Title}}
-    </a>
-  {{/each}}
-{{else}}
-  {{#each coursecontent}}
-    {{#if (equal this.Index 1)}}
+
+  {{#if coursecontent}}
+    {{#if this.isRegister}}
+    {{#each coursecontent}} 
       <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
         <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
         {{Title}}
       </a>
+    {{/each}}
     {{else}}
-      {{#if (equal this.Index 2)}}
-        <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
-          <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
-          {{Title}}
-        </a>
-      {{else}}
-        <p class="card card-body ml-4 d-flex flex-row mt-3">
-          <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
-          {{Title}}
-        </a>
-      {{/if}}
-    {{/if}}
-  {{/each}}
-{{/if}} 
+      {{#each coursecontent}}
+        {{#if (equal this.Index 1)}}
+          <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
+            <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+            {{Title}}
+          </a>
+        {{else}}
+          {{#if (equal this.Index 2)}}
+            <a id="videoBtn" class="card card-body ml-4 d-flex flex-row mt-3" role="button" data-toggle="modal" data-target="#VideoModal{{Index}}">
+              <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+              {{Title}}
+            </a>
+          {{else}}
+            <p class="card card-body ml-4 d-flex flex-row mt-3">
+              <i class="fa fa-play-circle mt-1 mr-1 " aria-hidden="true"></i>
+              {{Title}}
+            </a>
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    {{/if}} 
+  {{else}}
+    <h3>This course has no content</h3>
+  {{/if}}
   
 </div>
 

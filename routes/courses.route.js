@@ -4,6 +4,7 @@ const config = require('../config/default.json');
 const feedbackModel = require('../models/feedback.model');
 const courseContent = require('../models/coursecontents.model');
 const session = require('express-session');
+const auth = require('../middlewares/auth.mdw');
 
 const router = express.Router();
 
@@ -229,7 +230,8 @@ router.get('/detail/:id', async function (req, res) {
     isFav,
     FeedbackID,
     isAddCart: req.session.cart.includes(id),
-    Stars
+    Stars,
+    CourseNum: coursecontent.length
   })
 })
 
@@ -353,12 +355,12 @@ router.get('/search', async function(req,res){
   }
 })
 
-router.get('/learn', async function(req,res){
+router.get('/learn',auth, async function(req,res){
   const courseID = +req.query.courseID;
   const index = +req.query.index;
   const checkRegister = await coursesModel.singleRegister(courseID,req.session.authUser.UserID);
   const checkExistCourse = await coursesModel.singleid(courseID);
-  const allCourseContent = await courseContent.allwithcourseID(courseID);
+  const allCourseContent = await courseContent.allwithcourseID(courseID, req.session.authUser.UserID);
   const currentContent = await courseContent.singleByCourseIDIndex(courseID, index);
 
   if(checkExistCourse === null){
@@ -377,17 +379,43 @@ router.get('/learn', async function(req,res){
   for(i = 0; i < allCourseContent.length; ++i){
     const Content = {
       content: allCourseContent[i],
-      isActive: allCourseContent[i].Index === index
+      isActive: allCourseContent[i].Index === index,
+      isDone: allCourseContent[i].Status === 1
     }
     Contents.push(Content);
+  }
+
+  const allDone = await coursesModel.allDone(req.session.authUser.UserID, courseID);
+  var percent = ((allDone.length / Contents.length)*100).toFixed(0);
+
+  var info = {
+    courseID: courseID,
+    index: index
   }
 
   res.render('vwCourses/learn', {
     currentContent,
     Contents,
-    Course: checkExistCourse
+    Course: checkExistCourse,
+    percent,
+    info
   });
 
+})
+
+router.get('/learn/change-status', async function(req, res){
+  const courseID = req.query.courseID;
+  const index = req.query.index;
+  const status = req.query.status;
+  const progress = await coursesModel.singleProgress(req.session.authUser.UserID, courseID, index)
+
+  if(progress){
+    progress.Status = status;
+    await coursesModel.updateProgressStatus(progress);
+  }
+ 
+
+  return res.json(true);
 })
 
 module.exports = router;

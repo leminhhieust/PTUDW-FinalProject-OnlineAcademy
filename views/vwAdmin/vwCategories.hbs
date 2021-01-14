@@ -45,6 +45,7 @@
 {{else}}
 <div class="card" >
     <div class="card-body">
+        <div class="d-flex justify-content-center">
          <a name="" id="" class="btn btn-primary addItem"  role="button"
          data-toggle="collapse" data-target="#boxnoidung">
              <i class="fa fa-plus" aria-hidden="true">
@@ -91,6 +92,7 @@
                 Update Category
              </i>
          </a>
+         </div>
     <div id="boxupdate" class="card collapse mt-4" style="width: 18rem;">
         <form action="/admin/categories/update" id="frmUpdate" method="POST">
             <input type="hidden" name="CatID" id="txtID">

@@ -153,13 +153,14 @@ router.post('/categories', async function(req, res) {
         CatType: 0
     };
     const categories = await categoryModel.all();
-    NewCat.CatID = categories.length + 1;
+    // NewCat.CatID = categories.length + 1;
+    NewCat.CatID = categories[categories.length - 1].CatID + 1;
     const storage = multer.diskStorage({
         destination: function(req, file, cb) {
             cb(null, './public/Images/Categories')
         },
         filename: function(req, file, cb) {
-            cb(null, String(categories.length + 1) + '.jpg')
+            cb(null, String(NewCat.CatID) + '.jpg')
         }
     });
     const upload = multer({ storage });
@@ -358,5 +359,14 @@ router.post('/users/update', async function(req, res) {
     await userModel.patch(update_teacher);
 
     res.redirect('/admin/users')
+})
+
+router.post('/change', async function(req, res) {
+    const user = req.session.authUser;
+    user.DOB = moment(user.DOB, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    const hash = bcrypt.hashSync(req.body.newPassword, 10);
+    user.Password = hash;
+    await userModel.updateUser(user);
+    res.redirect('/admin/users');
 })
 module.exports = router;

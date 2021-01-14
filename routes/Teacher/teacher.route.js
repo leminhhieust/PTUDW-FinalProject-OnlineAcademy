@@ -52,10 +52,12 @@ router.post('/login', async function(req, res) {
 })
 
 router.get('/', async function(req, res) {
-    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
+        res.render('viewTeacher/vwteacher');
+    } else {
         res.redirect('/teacher/login');
     }
-    res.render('viewTeacher/vwteacher');
+
 })
 
 router.get('/createcourses', async function(req, res) {
@@ -94,7 +96,7 @@ router.post('/createcourses', async function(req, res) {
 
 
     const courses = await coursesModel.all();
-    Cour.CourseID = courses.length + 1;
+    Cour.CourseID = courses[courses.length - 1].CourseID + 1;
 
     const dir = `./public/images/Courses/${Cour.CourseID}`;
 
@@ -142,7 +144,7 @@ router.post('/createcourses', async function(req, res) {
         Cour.FullDes = req.body.FullDes;
 
         //Cour.IsFav = 0;
-        Cour.BadgeNew = 0;
+        Cour.BadgeNew = 1;
         Cour.BadgeBestSeller = 0;
 
         Cour.Totalcontent = req.body.Totalcontent;
@@ -402,5 +404,15 @@ router.post('/uploadvideo_increate/:id', async function(req, res) {
             });
         }
     });
+})
+
+router.post('/profile/change', async function(req, res) {
+    const user = req.session.authUser;
+    user.DOB = moment(user.DOB, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    const hash = bcrypt.hashSync(req.body.newPassword, 10);
+    user.Password = hash;
+
+    await userModel.updateUser(user);
+    res.redirect('/teacher/profile');
 })
 module.exports = router;

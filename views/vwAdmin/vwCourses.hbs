@@ -1,5 +1,52 @@
+{{#section 'js'}}
+<script>
+  $('.cateitem').on('click', function () {
+    $('#txtCatType').val();
+    $('#fromcategory').submit();
+  });
+</script>
+
+<script>
+  $('.teaitem').on('click', function () {
+    $('#txtUserID').val();
+    $('#fromteacher').submit();
+  });
+</script>
+{{/section}}
 <div class="card">
     <div class="card-body">
+        <div class="d-flex justify-content-center m-2">
+            <form action="/admin/courses/categories" method="POST"  id="fromcategory">
+            <div>
+                <label for="">Lĩnh vực</label>
+                <select class="custom-select" name="CatType" id="txtCatType">
+                    <option selected>Chọn lĩnh vực</option>
+                    {{#each categories}}
+                    <option value="{{CatID}}">{{CatName}}</option>
+                    {{/each}}
+                </select>
+            </form>
+                 <a name="" id="" class="btn btn-primary m-2 cateitem" href="javascript:;" role="button">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                    Categories
+                </a>
+            </div>
+            <form action="/admin/courses/teachers" method="POST"  id="fromteacher">
+            <div>
+                <label for="">Giáo viên</label>
+                <select class="custom-select" name="UserID" id="txtUserID">
+                    <option selected>Chọn giáo viên</option>
+                    {{#each teachers}}
+                    <option value="{{UserID}}">{{Name}}</option>
+                    {{/each}}
+                </select>
+                 <a name="" id="" class="btn btn-primary m-2 teaitem" href="javascript:;" role="button">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    Teachers
+                </a>
+            </div>
+            </form>
+        </div>
         <div class="container px-4">
         <h3>Mobile Courses</h3>
         <div class="row gx-5">
@@ -40,10 +87,6 @@
                             <img class="card-img-top" src="../../public/images/Courses/{{CourseID}}/tiny.jpg" alt="Image Courses">
                         <div class="card-body">
                             <h5 class="card-title">{{Name}}</h5>
-                            {{!-- <a  class="btn btn-outline-danger" href="#" role="button">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                Delete
-                            </a> --}}
                             <a   name="" id=""
                              class="btn btn-primary"  role="button"
                              href="/admin/courses/detail/{{CourseID}}">

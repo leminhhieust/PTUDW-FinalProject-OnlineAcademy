@@ -34,20 +34,26 @@ router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
     if (user === null) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Admin'
         });
     }
 
     const ret = bcrypt.compareSync(req.body.password, user.Password);
     if (ret === false) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Admin'
         });
     }
 
     if (user.Permission != 0) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Admin'
         });
     }
 
@@ -116,35 +122,59 @@ router.post('/profile/change', async function(req, res) {
 
 router.get('/categories', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-
-    } else {
-        res.redirect('/');
-    }
-    const categories = await categoryModel.all();
-    const details = [];
-    for (let index = 0; index < categories.length; index++) {
-        const detail = {
-            CatID: 0,
-            CatName: '',
-            CatType: 0,
-            count: 0
+        const categories = await categoryModel.all();
+        const details = [];
+        for (let index = 0; index < categories.length; index++) {
+            const detail = {
+                CatID: 0,
+                CatName: '',
+                CatType: 0,
+                count: 0
+            }
+            detail.CatID = categories[index].CatID;
+            detail.CatName = categories[index].CatName;
+            detail.CatType = categories[index].CatType;
+            detail.count = await coursesModel.countWithByCatID(detail.CatID);
+            details.push(detail);
         }
-        detail.CatID = categories[index].CatID;
-        detail.CatName = categories[index].CatName;
-        detail.CatType = categories[index].CatType;
-        detail.count = await coursesModel.countWithByCatID(detail.CatID);
-        details.push(detail);
-    }
-    const CatTypes = await coursesModel.allCatType();
+        const CatTypes = await coursesModel.allCatType();
 
-    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        res.render('vwAdmin/vwCategories', {
-            categories: details,
-            CatTypes: CatTypes
-        });
+        if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+            res.render('vwAdmin/vwCategories', {
+                categories: details,
+                CatTypes: CatTypes
+            });
+        } else {
+            res.redirect('/');
+        }
     } else {
         res.redirect('/');
     }
+    // const categories = await categoryModel.all();
+    // const details = [];
+    // for (let index = 0; index < categories.length; index++) {
+    //     const detail = {
+    //         CatID: 0,
+    //         CatName: '',
+    //         CatType: 0,
+    //         count: 0
+    //     }
+    //     detail.CatID = categories[index].CatID;
+    //     detail.CatName = categories[index].CatName;
+    //     detail.CatType = categories[index].CatType;
+    //     detail.count = await coursesModel.countWithByCatID(detail.CatID);
+    //     details.push(detail);
+    // }
+    // const CatTypes = await coursesModel.allCatType();
+
+    // if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+    //     res.render('vwAdmin/vwCategories', {
+    //         categories: details,
+    //         CatTypes: CatTypes
+    //     });
+    // } else {
+    //     res.redirect('/');
+    // }
 })
 
 router.post('/categories', async function(req, res) {
@@ -233,66 +263,73 @@ router.post('/categories/update', async function(req, res) {
 })
 
 router.get('/courses', async function(req, res) {
-
-    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        const courses_mobile = await coursesModel.allwithmobile_admin();
+        const courses_web = await coursesModel.allwithweb_admin();
+        const categories = await categoryModel.all();
+        const teachers = await userModel.allteacher();
+        if (req.session.isAuth === true) {
+            res.render('vwAdmin/vwCourses', {
+                courses_mobile: courses_mobile,
+                courses_web: courses_web,
+                categories: categories,
+                teachers: teachers
+            });
+        } else {
+            res.render('vwAccount/login', {
+                layout: false
+            });
+        }
+    } else {
         res.redirect('/');
     }
 
-    const courses_mobile = await coursesModel.allwithmobile_admin();
-    const courses_web = await coursesModel.allwithweb_admin();
 
-    if (req.session.isAuth === true) {
-        res.render('vwAdmin/vwCourses', {
-            courses_mobile: courses_mobile,
-            courses_web: courses_web
-        });
-    } else {
-        res.render('vwAccount/login', {
-            layout: false
-        });
-    }
 
 })
 
 router.get('/courses/detail/:id', async function(req, res) {
 
-    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        const id = req.params.id;
+        console.log(id);
+        const courses = await coursesModel.singleid(id);
+        console.log(courses);
+        const teacher = await userModel.single(courses.TeacherID);
+        res.render('vwAdmin/vwdetailCourses', {
+            courses: courses,
+            teacher: teacher
+        });
+    } else {
         res.redirect('/');
     }
 
-    const id = req.params.id;
-    console.log(id);
-    const courses = await coursesModel.singleid(id);
-    console.log(courses);
-    const teacher = await userModel.single(courses.TeacherID);
-    res.render('vwAdmin/vwdetailCourses', {
-        courses: courses,
-        teacher: teacher
-    });
+    // const id = req.params.id;
+    // console.log(id);
+    // const courses = await coursesModel.singleid(id);
+    // console.log(courses);
+    // const teacher = await userModel.single(courses.TeacherID);
+    // res.render('vwAdmin/vwdetailCourses', {
+    //     courses: courses,
+    //     teacher: teacher
+    // });
 })
 
 router.post('/courses/del', async function(req, res) {
-    console.log(req.body.CourseID);
     const CourseID = req.body.CourseID;
     const courses = await coursesModel.singleid(CourseID);
 
     await coursesModel.del(courses);
 
     const count = await coursesModel.singleid_count_bycourID(CourseID);
-    console.log(count);
     await coursesModel.del_count(count);
 
 
-    const coursescontents = await cousecontentsModel.allwithcourseID(CourseID);
-    //console.log(coursescontents);
+    const coursescontents = await cousecontentsModel.singleid(CourseID);
+    console.log(coursescontents);
 
     for (let index = 0; index < coursescontents.length; index++) {
         await cousecontentsModel.del(coursescontents[index]);
-
-        // fs.unlink(`./public/Videos/Content${CourseID}.mp4`, function(err) {
-        //     if (err) throw err;
-        //     console.log('File deleted!');
-        // });
     }
     rimraf(`./public/Images/Courses/${CourseID}`, function() { console.log("done_del_image"); });
     rimraf(`./public/Videos/${CourseID}`, function() { console.log("done"); });
@@ -301,22 +338,36 @@ router.post('/courses/del', async function(req, res) {
 
 router.get('/users', async function(req, res) {
 
-    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {} else {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        const teachers = await userModel.allteacher();
+        const students = await userModel.allstudent();
+        if (req.session.isAuth === true) {
+            res.render('vwAdmin/vwUsers', {
+                teachers: teachers,
+                students: students
+            });
+        } else {
+            res.render('vwAccount/login', {
+                layout: false
+            });
+        }
+    } else {
         res.redirect('/');
     }
     //const users = await userModel.all();
-    const teachers = await userModel.allteacher();
-    const students = await userModel.allstudent();
-    if (req.session.isAuth === true) {
-        res.render('vwAdmin/vwUsers', {
-            teachers: teachers,
-            students: students
-        });
-    } else {
-        res.render('vwAccount/login', {
-            layout: false
-        });
-    }
+
+    // const teachers = await userModel.allteacher();
+    // const students = await userModel.allstudent();
+    // if (req.session.isAuth === true) {
+    //     res.render('vwAdmin/vwUsers', {
+    //         teachers: teachers,
+    //         students: students
+    //     });
+    // } else {
+    //     res.render('vwAccount/login', {
+    //         layout: false
+    //     });
+    // }
 
 })
 
@@ -415,6 +466,9 @@ router.post('/users/unblock', async function(req, res) {
 
 router.post('/courses/block', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        const Course = await coursesModel.singleid(req.body.CourseID);
+        Course.Status = -1;
+        coursesModel.patch(Course);
         res.redirect('/admin/courses');
     } else {
         res.redirect('/');
@@ -423,7 +477,38 @@ router.post('/courses/block', async function(req, res) {
 
 router.post('/courses/unblock', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        const Course = await coursesModel.singleid(req.body.CourseID);
+        Course.Status = 1;
+        coursesModel.patch(Course);
         res.redirect('/admin/courses');
+    } else {
+        res.redirect('/');
+    }
+})
+
+router.post('/courses/categories', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        console.log(req.body);
+        const findcour = await coursesModel.allcoursesofcate(req.body.CatType);
+        const category = await categoryModel.single(req.body.CatType);
+        res.render('vwAdmin/vwCoursesCategories', {
+            courses: findcour,
+            category: category
+        });
+    } else {
+        res.redirect('/');
+    }
+})
+
+router.post('/courses/teachers', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        console.log(req.body);
+        const findcour = await coursesModel.allcoursesofteacher(req.body.UserID);
+        const teacher = await userModel.single(req.body.UserID);
+        res.render('vwAdmin/vwCoursesTeachers', {
+            courses: findcour,
+            teacher: teacher
+        });
     } else {
         res.redirect('/');
     }

@@ -280,6 +280,12 @@ module.exports = {
         where  c.TeacherID=${UserID}`);
     },
 
+    allcoursesofcate(CatID) {
+        return db.load(`select *
+        from ${TBL_COURSES} c 
+        where  c.CatID=${CatID}`);
+    },
+
     bestseller() {
         sql = `SELECT c.*
         FROM count co join courses c on co.CourseID = c.CourseID
@@ -331,14 +337,14 @@ module.exports = {
         return rows[0];
     },
 
-    allDone(userID, CourseID){
+    allDone(userID, CourseID) {
         const sql = `
         SELECT * FROM learn_progress where StudentID = ${userID} and CourseID = ${CourseID} and Status = 1
         `;
         return db.load(sql);
     },
 
-    async singleProgress(userID, CourseID, Index){
+    async singleProgress(userID, CourseID, Index) {
         const rows = await db.load(` SELECT * FROM learn_progress lp where StudentID = ${userID} and CourseID = ${CourseID} and lp.Index = ${Index}`);
         if (rows.length === 0)
             return null;
@@ -354,4 +360,5 @@ module.exports = {
     addProgress(entity) {
         return db.add(entity, 'learn_progress');
     },
+
 };

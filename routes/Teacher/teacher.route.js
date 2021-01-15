@@ -29,19 +29,25 @@ router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
     if (user === null) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Teacher'
         });
     }
     const ret = bcrypt.compareSync(req.body.password, user.Password);
     if (ret === false) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Teacher'
         });
     }
 
     if (user.Permission != 1) {
         return res.render('vwAdmin/login', {
-            err_message: 'Invalid username or password.'
+            err_message: 'Invalid username or password.',
+            layout: false,
+            Type: 'Teacher'
         });
     }
 

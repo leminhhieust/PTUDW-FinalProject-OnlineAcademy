@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-start">
+            <a class="btn btn-primary mr-2" href="/admin/courses" role="button">
+                        <i class="fa fa-backward" aria-hidden="true"></i>
+                            Back to List
+                    </a>
+        </div>
+        <div class="container px-4">
+        <h3>{{category.CatName}}</h3>
+        <div class="row gx-5">
+            {{#each  courses}}
+            <div class="col m-2">
+            <div class="p-3 border bg-light"  style="height: 400px; width:500px">
+                <div class="card mx-5" style="width: 18rem;">
+                    <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="../../public/images/Courses/{{CourseID}}/tiny.jpg" alt="Image Courses">
+                        <div class="card-body">
+                            <h5 class="card-title">{{Name}}</h5>
+                            <a   name="" id=""
+                             class="btn btn-primary"  role="button"
+                              href="/admin/courses/detail/{{CourseID}}">
+                               <i class="fa fa-eye" aria-hidden="true"></i>
+                                Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            {{/each}}
+        </div>
+        </div>
+    </div>
+</div>

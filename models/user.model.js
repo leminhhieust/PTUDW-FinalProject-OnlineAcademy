@@ -7,14 +7,14 @@ module.exports = {
     allteacher() {
         const sql = `select *
         from users
-        where Permission=1`;
+        where Permission=1 OR Permission=-1`;
         return db.load(sql);
     },
 
     allstudent() {
         const sql = `select *
         from users
-        where Permission=2`;
+        where Permission=2 OR Permission=-2`;
         return db.load(sql);
     },
 
@@ -61,7 +61,7 @@ module.exports = {
         return db.patch(entity, condition, TBL_USERS);
     },
 
-    updateUser(entity){
+    updateUser(entity) {
         const condition = { UserID: entity.UserID };
         return db.patch(entity, condition, TBL_USERS);
     }

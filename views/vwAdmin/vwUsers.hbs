@@ -94,6 +94,21 @@
 
 
 <script>
+  $('.blockItem').on('click', function () {
+    const UserID = $(this).data('id_block');
+    $('#txtProId_block').val(UserID);
+    {{!-- $('#txtPermission_block').val(); --}}
+    $('#frmblockitem').submit();
+  });
+
+  $('.unblockItem').on('click', function () {
+    const UserID = $(this).data('id_unblock');
+    $('#txtProId_unblock').val(UserID);
+    console.log(UserID);
+    {{!-- $('#txtPermission_unblock').val(); --}}
+    $('#frmunblockItem').submit();
+  });
+
   $('.removeItem').on('click', function () {
     const UserID = $(this).data('id');
     $('#txtProId').val(UserID);
@@ -161,6 +176,14 @@ $('.updateItem').on('click', function () {
           <i class="fa fa-key" aria-hidden="true"></i>
         </button>
   </div>
+  <form id="frmblockitem" action="/admin/users/block" method="POST">
+    <input type="hidden" name="UserID" id="txtProId_block">
+    {{!-- <input type="hidden" name="Permission" id="txtPermission_block"> --}}
+  </form>
+  <form id="frmunblockItem" action="/admin/users/unblock" method="POST">
+    <input type="hidden" name="UserID" id="txtProId_unblock">
+     {{!-- <input type="hidden" name="Permission" id="txtPermission_unblock"> --}}
+  </form>
   <form id="frmRemoveItem" action="/admin/users/remove" method="POST">
     <input type="hidden" name="UserID" id="txtProId">
   </form>
@@ -179,7 +202,11 @@ $('.updateItem').on('click', function () {
       <tbody>
          <h3>Students</h3>
         {{#each this.students}}
-            <tr>
+         {{#if (equal Permission -2)}}
+          <tr style="background: red;">
+        {{else}}
+          <tr>
+        {{/if}}
           <td>
             <a >{{Username}}</a>
           </td>
@@ -188,6 +215,16 @@ $('.updateItem').on('click', function () {
           <td>{{Email}}</td>
           <td>{{DOB}}</td>
           <td class="text-right">
+            <a data-id_block="{{UserID}},{{Permission}}"
+               class="btn btn-sm btn-outline-primary blockItem" href="javascript:;" role="button">
+                  {{!-- <i class="fa fa-pencil" aria-hidden="true"></i> --}}
+                  <i class="fa fa-lock" aria-hidden="true"></i>
+              </a>
+              <a data-id_unblock="{{UserID}},{{Permission}}"
+               class="btn btn-sm btn-outline-primary unblockItem" href="javascript:;" role="button">
+                  {{!-- <i class="fa fa-pencil" aria-hidden="true"></i> --}}
+                  <i class="fa fa-key" aria-hidden="true"></i>
+              </a>
             <a data-id="{{UserID}}" class="btn btn-sm btn-outline-danger removeItem" href="javascript:;" role="button"
               title="Remove Item">
               <i class="fa fa-trash" aria-hidden="true"></i>
@@ -222,7 +259,11 @@ $('.updateItem').on('click', function () {
       <tbody>
           <h3>Teacher</h3>
         {{#each this.teachers}}
-            <tr>
+        {{#if (equal Permission -1)}}
+          <tr style="background: red;">
+        {{else}}
+          <tr>
+        {{/if}}
           <td>
             <a >{{Username}}</a>
           </td>
@@ -233,6 +274,16 @@ $('.updateItem').on('click', function () {
           
         
           <td class="text-right">
+            <a data-id_block="{{UserID}},{{Permission}}"
+               class="btn btn-sm btn-outline-primary blockItem" href="javascript:;" role="button">
+                  {{!-- <i class="fa fa-pencil" aria-hidden="true"></i> --}}
+                  <i class="fa fa-lock" aria-hidden="true"></i>
+              </a>
+              <a data-id_unblock="{{UserID}},{{Permission}}"
+               class="btn btn-sm btn-outline-primary unblockItem" href="javascript:;" role="button">
+                  {{!-- <i class="fa fa-pencil" aria-hidden="true"></i> --}}
+                  <i class="fa fa-key" aria-hidden="true"></i>
+              </a>
               <a data-id_update="{{UserID}}"
                class="btn btn-sm btn-outline-primary updateItem" href="javascript:;" role="button">
                   <i class="fa fa-pencil" aria-hidden="true"></i>

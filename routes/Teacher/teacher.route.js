@@ -11,6 +11,7 @@ const moment = require('moment');
 const multer = require('multer');
 var fs = require('fs');
 const { patch } = require('../../models/category.model');
+const e = require('express');
 
 
 router.get('/login', async function(req, res) {
@@ -18,7 +19,8 @@ router.get('/login', async function(req, res) {
         res.redirect('/teacher');
     } else {
         res.render('vwAdmin/login', {
-            layout: false
+            layout: false,
+            Type: 'Teacher'
         });
     }
 })
@@ -296,19 +298,38 @@ router.post('/updatecourses/:id', async function(req, res) {
     courses.Price = req.body.Price;
     courses.TinyDes = req.body.TinyDes;
     courses.FullDes = req.body.FullDes;
-
-    var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
-    var arr = req.body.NewVideo;
-    //console.log(req.body.NewVideo);
-    for (let index = 0; index < arr.length; index++) {
-        Courcontent[index].CourseID = courses.CourseID;
-        Courcontent[index].Title = req.body.NewVideo[index];
-        console.log(req.body.NewVideo[index]);
-        cousecontentsModel.patch(Courcontent[index]);
+    if (+req.body.Totalcontent >= courses.Totalcontent) {
+        courses.Totalcontent = +req.body.Totalcontent
     }
 
-    coursesModel.patch(courses);
+    var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
+    console.log(Courcontent);
+    var arr = req.body.NewVideo;
+    if (typeof arr === 'string') {
+        console.log(1);
+        var Courcontent_temp = Courcontent[0];
+        Courcontent_temp.CourseID = courses.CourseID;
+        Courcontent_temp.Title = req.body.NewVideo;
+        console.log(Courcontent_temp);
+        cousecontentsModel.patch(Courcontent_temp);
+    } else {
+        console.log(2);
+        for (let index = 0; index < arr.length; index++) {
+            Courcontent[index].CourseID = courses.CourseID;
+            Courcontent[index].Title = req.body.NewVideo[index];
+            console.log(req.body.NewVideo[index]);
+            cousecontentsModel.patch(Courcontent[index]);
+        }
+    }
+    // console.log(req.body.NewVideo);
+    // for (let index = 0; index < arr.length; index++) {
+    //     Courcontent[index].CourseID = courses.CourseID;
+    //     Courcontent[index].Title = req.body.NewVideo[index];
+    //     console.log(Courcontent[index]);
+    //     cousecontentsModel.patch(Courcontent[index]);
+    // }
 
+    coursesModel.patch(courses);
     res.redirect(`/teacher/profile`);
 })
 

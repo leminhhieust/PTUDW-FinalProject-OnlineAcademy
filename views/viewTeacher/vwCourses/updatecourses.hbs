@@ -95,7 +95,7 @@
           {{!-- <span class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span> --}}
         {{/if}}
         <input type="hidden" id="DocChapters" name="Video">
-            <div class="card-body">
+            <div class="card-body p-1">
                         <div class="card" style="background:wheat;" >
                           <div class=" d-flex justify-content-center">
                             <h3>Ảnh đại diện cho khóa học</h3>
@@ -109,9 +109,9 @@
                             </div>
                             </div>
                         </div> 
-            <div class="card">
+            <div class="card mb-3 p-3">
                     <label for="">Tên khóa học</label>
-                    <input type="text" id="txtname" name="Name"  value="{{courses.Name}}">
+                    <input class="form-control form-control-lg" type="text" id="txtname" name="Name"  value="{{courses.Name}}">
                     <label for="">Lĩnh vực</label>
                     <select class="custom-select" name="CatType" id="txtCatType">
                         <option value="{{courses.CatID}}"> {{CatName_curr}}</option>
@@ -120,23 +120,23 @@
                         {{/each}}
                     </select>
                     <label for="">Mô tả ngắn gọn khóa học</label>
-                    <input type="text" id="txttinydes" name="TinyDes"  value="{{courses.TinyDes}}">
+                    <input class="form-control form-control-lg" type="text" id="txttinydes" name="TinyDes"  value="{{courses.TinyDes}}">
                     <div class="form-group">
                         <label for="txtFullDes">Mô tả chi tiết khóa học</label>
                         <textarea class="form-control" name="FullDes" id="txtFullDes" cols="30" rows="10">{{courses.FullDes}}</textarea>
                     </div>
                     <label for="">Học phí</label>
-                    <input type="text" id="txtprice" name="Price" value="{{courses.Price}}" >
+                    <input class="form-control form-control-lg" type="text" id="txtprice" name="Price" value="{{courses.Price}}" >
                     <label for="">Tổng số chương</label>
-                    <input type="text" id="txttotalcontent" name="Totalcontent" value="{{courses.Totalcontent}}">
-                    <div style="background: whitesmoke;"  >
+                    <input class="form-control form-control-lg" type="text" id="txttotalcontent" name="Totalcontent" value="{{courses.Totalcontent}}">
                     <label for="" >Tài liệu</label>
+                    <div class=" p-2" style="background: whitesmoke;"  >
                     {{#each documents}}
                         <div class="input-group mb-3">
                             <label for="">Tài liệu chương {{Index}}</label>
                         </div>
                         <div class="input-group mb-3">
-                            <input name="NewVideo" id="txtvideo" value="{{Title}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
+                            <input class="form-control form-control-lg" name="NewVideo" id="txtvideo" value="{{Title}}" type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">    
                         </div>
                     {{/each}}
                     </div>

@@ -24,7 +24,8 @@ router.get('/login', async function(req, res) {
         res.redirect('/admin');
     } else {
         res.render('vwAdmin/login', {
-            layout: false
+            layout: false,
+            Type: 'Admin'
         });
     }
 })
@@ -368,5 +369,63 @@ router.post('/change', async function(req, res) {
     user.Password = hash;
     await userModel.updateUser(user);
     res.redirect('/admin/users');
+})
+
+router.post('/users/block', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        console.log(req.body);
+        var object = req.body.UserID.split(",");
+        console.log(object[0]);
+        console.log(object[1]);
+        const UserID = object[0];
+        const User = await userModel.single(UserID);
+        if (User.Permission === 1) {
+            User.Permission = -1;
+        } else {
+            User.Permission = -2;
+        }
+        await userModel.patch(User);
+        res.redirect('/admin/users');
+    } else {
+        res.redirect('/');
+    }
+
+
+})
+
+router.post('/users/unblock', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        console.log(req.body);
+        var object = req.body.UserID.split(",");
+        console.log(object[0]);
+        console.log(object[1]);
+        const UserID = object[0];
+        const User = await userModel.single(UserID);
+        if (User.Permission === -1) {
+            User.Permission = 1;
+        } else {
+            User.Permission = 2;
+        }
+        await userModel.patch(User);
+        res.redirect('/admin/users');
+    } else {
+        res.redirect('/');
+    }
+})
+
+router.post('/courses/block', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        res.redirect('/admin/courses');
+    } else {
+        res.redirect('/');
+    }
+})
+
+router.post('/courses/unblock', async function(req, res) {
+    if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
+        res.redirect('/admin/courses');
+    } else {
+        res.redirect('/');
+    }
 })
 module.exports = router;

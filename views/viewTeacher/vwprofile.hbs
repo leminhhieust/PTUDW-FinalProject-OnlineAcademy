@@ -132,55 +132,55 @@
         </div>
       </div>
 </div>
-<div class="card">
+<div class="card " >
     <div class="card-header">
         <h2 class="d-flex justify-content-center">Thông tin cá nhân giáo viên</h2>
     </div>
-    <div class="card-body " style="font-size: x-large;">
+    <div class="card-body" style="font-size: x-large;">
         <form action="/teacher/profile" id="updateprofileteacher" method="POST" >
         <input type="hidden" name="UserID" id="txtUserID">
-            <div class="card d-flex justify-content-center">
+            <div class="card d-flex justify-content-center p-2 m-2">
                 <label for="">Họ và tên giáo viên</label>
-                <input type="text" name="Name" id="txtName" value="{{users.Name}}">
+                <input class="form-control form-control-lg" type="text" name="Name" id="txtName" value="{{users.Name}}">
                 <label for="">Thông tin liên lạc (Email) </label>
-                <input type="email" name="Email" id="txtEmail" value="{{users.Email}}">
+                <input class="form-control form-control-lg" type="email" name="Email" id="txtEmail" value="{{users.Email}}">
                 <label for="">Ngày tháng năm sinh</label>
-                <input type="text" name="DOB"  id="txtDOB" value="{{DOB}}">
+                <input class="form-control form-control-lg" type="text" name="DOB"  id="txtDOB" value="{{DOB}}">
                 <label for="">Giới thiệu bản thân</label>
              <textarea type="text"  name="Des" id="txtDes">{{users.Des}}</textarea>
             </div>
         </form>
     </div>
     <div class="card-body " style="font-size: x-large;">
-        <div class="card-body " >Danh sách khóa học đã đăng</div>
-        <div class="m-1 ">
+        <div class="card-body" >Danh sách khóa học đã đăng</div>
+        <div class="ml-2 ">
         {{#each courses}}
-           <div class="card mb-3 " >
-                <div >Tên khóa học: {{Name}}</div>
-                <div class="d-flex justify-content-end m-3">
-                {{#if Status}}
-                    <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right ">Hoàn thành</span>
-                {{else}}
-                    <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right mr-1">Chưa hoàn thành</span>
-                {{/if}}
-                <div>
-                <a style="font-size: x-large;"  name="" id="" class="btn btn-primary" href="/teacher/updatecourses/{{CourseID}}" role="button">
-                    <i class="fa fa-wrench" aria-hidden="true"></i>
-                    Chỉnh sửa
-                </a></div>
+           <div class="card mb-3 p-3 d-flex justify-content-between" >
+                <div class= >Tên khóa học: {{Name}}</div>
+                <div class=" m-3">
+                 {{#if Status}}
+                     <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right ">Hoàn thành</span>
+                 {{else}}
+                      <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right mr-1">Chưa hoàn thành</span>
+                  {{/if}}
+               
+                   <a style="font-size: x-large;"  name="" id="" class="btn btn-primary" href="/teacher/updatecourses/{{CourseID}}" role="button">
+                     <i class="fa fa-wrench" aria-hidden="true"></i>
+                      Chỉnh sửa
+                  </a>
                 </div>
            </div>
         {{/each}}
         </div>
     </div>
 </div>
-<div class="card-footer" >
-                    <a data-id="{{users.UserID}}" class="btn btn-primary updateprofile" href="#" role="button">
+<div class="card-footer d-flex justify-content-end" >
+                    <a data-id="{{users.UserID}}" class="btn btn-primary m-1 updateprofile" href="#" role="button">
                       <i style="font-size: x-large;" class="fa fa-check" aria-hidden="true"></i>
                        Save
                     </a>
 
-         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ChangePasswordModal">
+         <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#ChangePasswordModal">
           Change your password
           <i class="fa fa-key" aria-hidden="true"></i>
         </button> 

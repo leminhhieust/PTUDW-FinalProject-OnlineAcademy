@@ -26,6 +26,9 @@ module.exports = function (app) {
       equal(val1, val2){
         return (val1 === val2);
       },
+      notEqual(val1, val2){
+        return (val1 !== val2);
+      },
     }
   }));
   app.set('view engine', 'hbs');

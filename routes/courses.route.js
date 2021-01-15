@@ -4,6 +4,7 @@ const config = require('../config/default.json');
 const feedbackModel = require('../models/feedback.model');
 const courseContent = require('../models/coursecontents.model');
 const session = require('express-session');
+const auth = require('../middlewares/auth.mdw');
 
 const router = express.Router();
 
@@ -215,8 +216,6 @@ router.get('/detail/:id', async function(req, res) {
         return res.redirect('/');
     }
 
-    console.log(coursecontent);
-
     res.render('vwCourses/detail', {
         course: course,
         coursecontent: coursecontent,
@@ -228,9 +227,11 @@ router.get('/detail/:id', async function(req, res) {
         isFav,
         FeedbackID,
         isAddCart: req.session.cart.includes(id),
-        Stars
-    })
+        Stars,
+        CourseNum: coursecontent.length
+      })
 })
+
 
 router.get('/changeFav', async function(req, res) {
     const isFav = +req.query.isFav;
@@ -352,41 +353,62 @@ router.get('/search', async function(req, res) {
     }
 })
 
-router.get('/learn', async function(req, res) {
-    const courseID = +req.query.courseID;
-    const index = +req.query.index;
-    const checkRegister = await coursesModel.singleRegister(courseID, req.session.authUser.UserID);
-    const checkExistCourse = await coursesModel.singleid(courseID);
-    const allCourseContent = await courseContent.allwithcourseID(courseID);
-    const currentContent = await courseContent.singleByCourseIDIndex(courseID, index);
+router.get('/learn',auth, async function(req,res){
+  const courseID = +req.query.courseID;
+  const index = +req.query.index;
+  const checkRegister = await coursesModel.singleRegister(courseID,req.session.authUser.UserID);
+  const checkExistCourse = await coursesModel.singleid(courseID);
+  const allCourseContent = await courseContent.allwithcourseID(courseID, req.session.authUser.UserID);
+  const currentContent = await courseContent.singleByCourseIDIndex(courseID, index);
 
-    if (checkExistCourse === null) {
-        res.redirect('/');
+  if(checkExistCourse === null){
+    res.redirect('/');
+  }
+
+  if(index > allCourseContent.length){
+    res.redirect(`/courses/detail/${courseID}`);
+  }
+
+  if(checkRegister === null){
+    res.redirect(`/courses/detail/${courseID}`)
+  }
+
+  const Contents = [];
+  for(i = 0; i < allCourseContent.length; ++i){
+    const Content = {
+      content: allCourseContent[i],
+      isActive: allCourseContent[i].Index === index,
+      isDone: allCourseContent[i].Status === 1
     }
+    Contents.push(Content);
+  }
 
-    if (index > allCourseContent.length) {
-        res.redirect(`/courses/detail/${courseID}`);
-    }
+  const allDone = await coursesModel.allDone(req.session.authUser.UserID, courseID);
+  var percent = ((allDone.length / Contents.length)*100).toFixed(0);
 
-    if (checkRegister === null) {
-        res.redirect(`/courses/detail/${courseID}`)
-    }
+  res.render('vwCourses/learn', {
+    currentContent,
+    Contents,
+    Course: checkExistCourse,
+    percent,
+    index
+  });
 
-    const Contents = [];
-    for (i = 0; i < allCourseContent.length; ++i) {
-        const Content = {
-            content: allCourseContent[i],
-            isActive: allCourseContent[i].Index === index
-        }
-        Contents.push(Content);
-    }
+})
 
-    res.render('vwCourses/learn', {
-        currentContent,
-        Contents,
-        Course: checkExistCourse
-    });
+router.get('/learn/change-status', async function(req, res){
+  const courseID = req.query.courseID;
+  const index = req.query.index;
+  const status = req.query.status;
+  const progress = await coursesModel.singleProgress(req.session.authUser.UserID, courseID, index)
 
+  if(progress){
+    progress.Status = status;
+    await coursesModel.updateProgressStatus(progress);
+  }
+ 
+
+  return res.json(true);
 })
 
 module.exports = router;

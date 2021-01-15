@@ -244,6 +244,10 @@
               </div>
               <p class="card-text text-danger font-weight-bold">{{format1 Price}}</p>
               <a class="stretched-link" href="/courses/detail/{{CourseID}}"></a>
+              <div class="progress">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: {{Percent}}%" aria-valuenow="{{Percent}}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <p>{{Percent}}% Complete</p>
             </div>
         </div>
       {{/each}}

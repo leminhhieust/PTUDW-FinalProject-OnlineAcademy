@@ -175,6 +175,11 @@ module.exports = {
         on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
     },
 
+    allRegisterWithProgress(userID) {
+        return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
+    },
+
     bySearch(key, cat, sort_type, offset) {
         var sql;
         if (sort_type == "most-relevant") {
@@ -324,5 +329,29 @@ module.exports = {
             return null;
 
         return rows[0];
+    },
+
+    allDone(userID, CourseID){
+        const sql = `
+        SELECT * FROM learn_progress where StudentID = ${userID} and CourseID = ${CourseID} and Status = 1
+        `;
+        return db.load(sql);
+    },
+
+    async singleProgress(userID, CourseID, Index){
+        const rows = await db.load(` SELECT * FROM learn_progress lp where StudentID = ${userID} and CourseID = ${CourseID} and lp.Index = ${Index}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
+    updateProgressStatus(entity) {
+        const condition = { ID: entity.ID };
+        return db.patch(entity, condition, 'learn_progress');
+    },
+
+    addProgress(entity) {
+        return db.add(entity, 'learn_progress');
     },
 };

@@ -4,6 +4,8 @@ const cartModel = require('../models/cart.model');
 const courseModel = require('../models/courses.model');
 const orderModel = require('../models/order.model');
 const orderDetailModel = require('../models/order-detail.model');
+const courseContentModel = require('../models/coursecontents.model');
+const coursecontentsModel = require('../models/coursecontents.model');
 
 const router = express.Router();
 
@@ -40,6 +42,17 @@ router.post('/checkout', async function (req, res) {
   for (const courseID of req.session.cart) {
     const course = await courseModel.single(courseID);
     await courseModel.updateStudentCount(courseID);
+    const courseContent = await coursecontentsModel.allwithoutProgress(courseID);
+    for(i = 0; i < courseContent.length; i++){
+      const progress = {
+        CourseID: courseContent[i].CourseID,
+        Index: courseContent[i].Index,
+        StudentID: req.session.authUser.UserID,
+        Status: 0
+      }
+      await courseModel.addProgress(progress);
+    }
+
     total += course.Price;
 
     details.push({
@@ -49,9 +62,9 @@ router.post('/checkout', async function (req, res) {
     });
   }
 
-  const course_bestseller = await coursesModel.bestseller();
+  const course_bestseller = await courseModel.bestseller();
   for(i = 0; i < course_bestseller.length; ++i){
-    await coursesModel.updateBestSeller(course_bestseller[i]);
+    await courseModel.updateBestSeller(course_bestseller[i]);
   }
 
   const order = {

@@ -175,6 +175,11 @@ module.exports = {
         on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
     },
 
+    allRegisterWithProgress(userID) {
+        return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
+    },
+
     bySearch(key, cat, sort_type, offset) {
         var sql;
         if (sort_type == "most-relevant") {

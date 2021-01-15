@@ -7,6 +7,7 @@ const userModel = require('../models/user.model');
 const auth = require('../middlewares/auth.mdw');
 const unAuth = require('../middlewares/unAuth.mdw');
 const coursesModel = require('../models/courses.model');
+const courseContent = require('../models/coursecontents.model')
 
 const router = express.Router();
 
@@ -161,6 +162,10 @@ router.get('/profile', auth, async function(req, res) {
             if (course.IsFav) {
                 courseFav.push(course);
             }
+            const allCourseContent = await courseContent.allwithcourseID(course.CourseID, req.session.authUser.UserID);
+            const allDone = await coursesModel.allDone(req.session.authUser.UserID, course.CourseID);
+            var percent = ((allDone.length / allCourseContent.length)*100).toFixed(0);
+            course.Percent = percent;
         }
 
         res.render('vwAccount/profile', {

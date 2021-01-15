@@ -386,17 +386,12 @@ router.get('/learn',auth, async function(req,res){
   const allDone = await coursesModel.allDone(req.session.authUser.UserID, courseID);
   var percent = ((allDone.length / Contents.length)*100).toFixed(0);
 
-  var info = {
-    courseID: courseID,
-    index: index
-  }
-
   res.render('vwCourses/learn', {
     currentContent,
     Contents,
     Course: checkExistCourse,
     percent,
-    info
+    index
   });
 
 })

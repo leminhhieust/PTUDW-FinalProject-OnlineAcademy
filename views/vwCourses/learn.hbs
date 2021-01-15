@@ -9,7 +9,7 @@
             var totalCheckboxes = $('input:checkbox').length;
             var percent = ((numberOfChecked / totalCheckboxes)*100).toFixed(0);
 
-            $("#txtPercent").text(`(${percent}%)`);
+            $("#txtPercent").text(`(${percent}% Complete)`);
             $("#progress-bar").css('width', `${percent}%`);
             if(this.checked) {
                 $.getJSON(`/courses/learn/change-status?courseID={{content.CourseID}}&index={{content.Index}}&status=1`, function (data) {
@@ -23,11 +23,23 @@
         });
     })
 {{/each}}
-
+    {{#with currentContent}}
     var myPlayer = videojs('my-video');
     myPlayer.on('timeupdate', function() {
-        console.log(this.currentTime());
+        if(this.currentTime() >= (2/3)*this.duration()){
+            $(`#checkbox{{Index}}`).prop('checked', true);
+            var numberOfChecked = $('input:checkbox:checked').length;
+            var totalCheckboxes = $('input:checkbox').length;
+            var percent = ((numberOfChecked / totalCheckboxes)*100).toFixed(0);
+
+            $("#txtPercent").text(`(${percent}% Complete)`);
+            $("#progress-bar").css('width', `${percent}%`);
+
+            $.getJSON(`/courses/learn/change-status?courseID={{CourseID}}&index={{Index}}&status=1`, function (data) {
+            })
+        }
     });
+    {{/with}}
 </script>
 {{/section}}  
 

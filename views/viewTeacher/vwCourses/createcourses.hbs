@@ -70,7 +70,7 @@
         $('#txtstatus').val();
         $('#txtname').val();
         $('#txtCatType').val();
-        $('#TinyDes').val();
+        $('#txttinydes').val();
         $('#txtFullDes').val();
         $('#txtprice').val();
         $('#fromCreatecourses').submit();
@@ -85,10 +85,6 @@
           <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
     </div>
 <form action="/teacher/createcourses" method="POST" enctype="multipart/form-data" id="fromCreatecourses">
-
-{{!-- <form action="" method="POST" id="fromCreatecourses"> --}}
-  <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
-  <input type="hidden" id="DocChapters" name="Video">
     <div class="card-body" style="font-size: x-large;">
                 <div class="card">
                      <h3>Chọn hình ảnh đại diện cho khóa học</h3>
@@ -119,21 +115,11 @@
              <label for="">Tổng số chương</label>
              <div class="input-group mb-3">
                 <input type="text" class="form-control"  id="txtTotal"name="Totalcontent">
-            </div>
-            {{!-- <label for="">Tài liệu chương</label>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Số chương" id="txtquantity" value="1" name="quantity">
-            </div>
-            <label for="">Link bài giảng</label>
-            <div class="input-group mb-3">
-                 <input type="text" class="form-control" placeholder="Bài giảng" id="txtDocChapter"  name="">
-                <a data-index="1" id="txtindex" class="btn btn-outline-primary AddChapter" href="javascript:;" role="button">
-                     <i class="fa fa-plus" aria-hidden="true"></i>
-                </a>
-           </div> --}}
-           
+            </div>   
       </div> 
     </div>
+      <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
+  <input type="hidden" id="DocChapters" name="Video">
 </form>
      <div class="card-footer">
                     <a name="" id="" class="btn btn-primary createcourses" href="#" role="button">

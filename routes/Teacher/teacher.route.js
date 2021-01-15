@@ -105,80 +105,126 @@ router.post('/createcourses', async function(req, res) {
             recursive: true
         });
         console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
-    });
 
-    const dir_video = `./public/videos/${Cour.CourseID}`;
-    fs.access(dir_video, (err) => {
-        fs.mkdirSync(dir_video, {
-            recursive: true
-        });
-        console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
-    });
-
-    const storage = multer.diskStorage({
-        destination: function(req, file, cb) {
-            cb(null, `./public/images/Courses/${Cour.CourseID}`)
-        },
-        filename: function(req, file, cb) {
-            cb(null, 'tiny.jpg')
-        }
-    });
-
-    const upload = multer({ storage });
-    upload.single('fuMain')(req, res, function(err) {
-        console.log(req.body);
-
-        Cour.Name = req.body.Name;
-        Cour.CatID = req.body.CatType;
-        Cour.TeacherID = req.session.authUser.UserID;
-        if (req.body.Status === "Hoàn thành") {
-            Cour.Status = 1;
-        } else {
-            Cour.Status = 0;
-        }
-        const dob = moment(new Date(), 'MM/DD/YYYY').format('YYYY-MM-DD');
-        Cour.DateCreate = dob;
-        Cour.DateUpdate = ('0000-00-00');
-        Cour.Price = req.body.Price;
-        Cour.TinyDes = req.body.TinyDes;
-        Cour.FullDes = req.body.FullDes;
-
-        //Cour.IsFav = 0;
-        Cour.BadgeNew = 1;
-        Cour.BadgeBestSeller = 0;
-
-        Cour.Totalcontent = req.body.Totalcontent;
-        // const k = req.body.Video;
-        // var arr = k.split(",");
-
-        // for (let index = 0; index < arr.length; index++) {
-        //     var Courcontent = {
-        //         CourseID: '',
-        //         Title: '',
-        //         Video: ''
-        //     }
-        //     Courcontent.CourseID = Cour.CourseID;
-        //     Courcontent.Title = index + 1;
-        //     Courcontent.Video = arr[index]
-        //     cousecontentsModel.add(Courcontent);
-        // }
-        coursesModel.add(Cour);
-        const count = {
-            CourseID: Cour.CourseID,
-            ViewCount: 0,
-            AvgStar: 0,
-            StudentCount: 0,
-            Ratings: 0
-        }
-        coursesModel.add_count(count);
-        if (err) {} else {
-            res.render('viewTeacher/vwCourses/uploadvideincreate', {
-                courses: Cour.CourseID,
-                Totalcontent: Cour.Totalcontent,
-                CurIndex: 0
+        const dir_video = `./public/videos/${Cour.CourseID}`;
+        fs.access(dir_video, (err) => {
+            fs.mkdirSync(dir_video, {
+                recursive: true
             });
-        }
+            console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
+        });
+        const storage = multer.diskStorage({
+            destination: function(req, file, cb) {
+                cb(null, `./public/images/Courses/${Cour.CourseID}`)
+            },
+            filename: function(req, file, cb) {
+                cb(null, 'tiny.jpg')
+            }
+        });
+
+        const upload = multer({ storage });
+        upload.single('fuMain')(req, res, function(err) {
+
+            console.log(req.body);
+
+            Cour.Name = req.body.Name;
+            Cour.CatID = req.body.CatType;
+            Cour.TeacherID = req.session.authUser.UserID;
+            if (req.body.Status === "Hoàn thành") {
+                Cour.Status = 1;
+            } else {
+                Cour.Status = 0;
+            }
+            const dob = moment(new Date(), 'MM/DD/YYYY').format('YYYY-MM-DD');
+            Cour.DateCreate = dob;
+            Cour.DateUpdate = ('0000-00-00');
+            Cour.Price = req.body.Price;
+            Cour.TinyDes = req.body.TinyDes;
+            Cour.FullDes = req.body.FullDes;
+
+            //Cour.IsFav = 0;
+            Cour.BadgeNew = 1;
+            Cour.BadgeBestSeller = 0;
+
+            Cour.Totalcontent = req.body.Totalcontent;
+            coursesModel.add(Cour);
+            const count = {
+                CourseID: Cour.CourseID,
+                ViewCount: 0,
+                AvgStar: 0,
+                StudentCount: 0,
+                Ratings: 0
+            }
+            coursesModel.add_count(count);
+            if (err) {} else {
+                res.render('viewTeacher/vwCourses/uploadvideincreate', {
+                    courses: Cour.CourseID,
+                    Totalcontent: Cour.Totalcontent,
+                    CurIndex: 0
+                });
+            }
+        });
+
     });
+
+    // const dir_video = `./public/videos/${Cour.CourseID}`;
+    // fs.access(dir_video, (err) => {
+    //     fs.mkdirSync(dir_video, {
+    //         recursive: true
+    //     });
+    //     console.log(`Directory ${err ? 'does not exist' : 'exists'}`);
+    // });
+    // const storage = multer.diskStorage({
+    //     destination: function(req, file, cb) {
+    //         cb(null, `./public/images/Courses/${Cour.CourseID}`)
+    //     },
+    //     filename: function(req, file, cb) {
+    //         cb(null, 'tiny.jpg')
+    //     }
+    // });
+
+    // const upload = multer({ storage });
+    // upload.single('fuMain')(req, res, function(err) {
+
+    //     console.log(req.body);
+
+    //     Cour.Name = req.body.Name;
+    //     Cour.CatID = req.body.CatType;
+    //     Cour.TeacherID = req.session.authUser.UserID;
+    //     if (req.body.Status === "Hoàn thành") {
+    //         Cour.Status = 1;
+    //     } else {
+    //         Cour.Status = 0;
+    //     }
+    //     const dob = moment(new Date(), 'MM/DD/YYYY').format('YYYY-MM-DD');
+    //     Cour.DateCreate = dob;
+    //     Cour.DateUpdate = ('0000-00-00');
+    //     Cour.Price = req.body.Price;
+    //     Cour.TinyDes = req.body.TinyDes;
+    //     Cour.FullDes = req.body.FullDes;
+
+    //     //Cour.IsFav = 0;
+    //     Cour.BadgeNew = 1;
+    //     Cour.BadgeBestSeller = 0;
+
+    //     Cour.Totalcontent = req.body.Totalcontent;
+    //     coursesModel.add(Cour);
+    //     const count = {
+    //         CourseID: Cour.CourseID,
+    //         ViewCount: 0,
+    //         AvgStar: 0,
+    //         StudentCount: 0,
+    //         Ratings: 0
+    //     }
+    //     coursesModel.add_count(count);
+    //     if (err) {} else {
+    //         res.render('viewTeacher/vwCourses/uploadvideincreate', {
+    //             courses: Cour.CourseID,
+    //             Totalcontent: Cour.Totalcontent,
+    //             CurIndex: 0
+    //         });
+    //     }
+    // });
 })
 
 router.get('/updatecourses/:id', async function(req, res) {

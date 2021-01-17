@@ -23,7 +23,7 @@ router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
     const ret = bcrypt.compareSync(req.body.password, user.Password);
 
-    if (user === null || user.Permission === 0 || ret === false) {
+    if (user === null || user.Permission !== 2 || ret === false) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });

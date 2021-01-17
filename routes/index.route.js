@@ -1,10 +1,11 @@
 const express = require('express');
 const coursesModel = require('../models/courses.model');
 const categoryModel = require('../models/category.model');
+const prevent = require('../middlewares//prevent.mdw');
 const router = express.Router();
 
 // GET home page.
-router.get('/', async function(req, res) {
+router.get('/',prevent, async function(req, res) {
   const courses_new = await coursesModel.allWithNew();
   const courses_view = await coursesModel.allWithView();
   const courses_outstanding = await coursesModel.allWithOutstanding();

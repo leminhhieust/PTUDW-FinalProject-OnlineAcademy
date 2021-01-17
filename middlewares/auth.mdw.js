@@ -4,5 +4,11 @@ module.exports = function auth(req, res, next) {
     return res.redirect('/account/login');
   }
 
+  if(req.session.isAuth && req.session.authUser.Permission !== 2){
+    req.session.isAuth = false;
+    req.session.authUser = null;
+    return res.redirect('/');
+  }
+
   next();
 }

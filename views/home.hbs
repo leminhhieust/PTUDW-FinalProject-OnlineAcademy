@@ -100,7 +100,7 @@
 </div>
 
 <div class="container-fluid mt-5">
-  <h5 class="text-danger mt-5">Outstanding Courses</h5>
+  <h3 class="text-danger mt-5 text-center mb-4">Outstanding Courses</h3>
     <div class="d-flex flex-row">
       {{#each this.courses_outstanding}}
         <div class="card mx-5" style="width: 18rem;">
@@ -121,7 +121,7 @@
       {{/each}}
     </div>
 
-    <h5 class="text-danger mt-5">New Courses</h5>
+  <h3 class="text-danger mt-5 text-center mb-4">New Courses</h3>
     <div class="d-flex flex-row CourseCarousel">
       {{#each this.courses_new}}
         <div class="card mx-5" style="width: 18rem;">
@@ -142,7 +142,7 @@
       {{/each}}
     </div>
 
-    <h5 class="text-danger mt-5">Popular Courses</h5>
+  <h3 class="text-danger mt-5 text-center mb-4">Popular Courses</h3>
     <div class="d-flex flex-row CourseCarousel">
       {{#each this.courses_view}}
         <div class="card mx-5" style="width: 18rem;">
@@ -163,7 +163,7 @@
       {{/each}}
     </div>
 
-    <h5 class="text-danger mt-5">Top categories</h5>
+  <h3 class="text-danger mt-5 text-center mb-4">Top Categories</h3>
     <div class="card-columns mx-5" >
       {{#each this.categories_top}}
       <div class="card">

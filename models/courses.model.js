@@ -13,6 +13,7 @@ module.exports = {
       select c.*, co.*, u.Name as TeacherName, ca.CatName
       from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID
       where Datediff(CURRENT_DATE(), c.DateCreate) <=31
+      order by c.DateCreate desc
     `;
         return db.load(sql);
     },

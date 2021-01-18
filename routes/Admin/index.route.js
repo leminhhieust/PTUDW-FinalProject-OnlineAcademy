@@ -292,9 +292,9 @@ router.get('/courses/detail/:id', async function(req, res) {
 
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         const id = req.params.id;
-        console.log(id);
+        //console.log(id);
         const courses = await coursesModel.singleid(id);
-        console.log(courses);
+        //console.log(courses);
         const teacher = await userModel.single(courses.TeacherID);
         res.render('vwAdmin/vwdetailCourses', {
             courses: courses,
@@ -424,10 +424,10 @@ router.post('/change', async function(req, res) {
 
 router.post('/users/block', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        console.log(req.body);
+        //console.log(req.body);
         var object = req.body.UserID.split(",");
-        console.log(object[0]);
-        console.log(object[1]);
+        //console.log(object[0]);
+        //console.log(object[1]);
         const UserID = object[0];
         const User = await userModel.single(UserID);
         if (User.Permission === 1) {
@@ -446,10 +446,10 @@ router.post('/users/block', async function(req, res) {
 
 router.post('/users/unblock', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        console.log(req.body);
+        //console.log(req.body);
         var object = req.body.UserID.split(",");
-        console.log(object[0]);
-        console.log(object[1]);
+        //console.log(object[0]);
+        //console.log(object[1]);
         const UserID = object[0];
         const User = await userModel.single(UserID);
         if (User.Permission === -1) {
@@ -467,7 +467,11 @@ router.post('/users/unblock', async function(req, res) {
 router.post('/courses/block', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         const Course = await coursesModel.singleid(req.body.CourseID);
-        Course.Status = -1;
+        if (Course.Status === 1) {
+            Course.Status = -1;
+        } else {
+            Course.Status = -2;
+        }
         coursesModel.patch(Course);
         res.redirect('/admin/courses');
     } else {
@@ -478,7 +482,11 @@ router.post('/courses/block', async function(req, res) {
 router.post('/courses/unblock', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         const Course = await coursesModel.singleid(req.body.CourseID);
-        Course.Status = 1;
+        if (Course.Status === -1) {
+            Course.Status = 1;
+        } else {
+            Course.Status = 0;
+        }
         coursesModel.patch(Course);
         res.redirect('/admin/courses');
     } else {
@@ -488,7 +496,7 @@ router.post('/courses/unblock', async function(req, res) {
 
 router.post('/courses/categories', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        console.log(req.body);
+        //console.log(req.body);
         const findcour = await coursesModel.allcoursesofcate(req.body.CatType);
         const category = await categoryModel.single(req.body.CatType);
         res.render('vwAdmin/vwCoursesCategories', {
@@ -502,7 +510,7 @@ router.post('/courses/categories', async function(req, res) {
 
 router.post('/courses/teachers', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        console.log(req.body);
+        //console.log(req.body);
         const findcour = await coursesModel.allcoursesofteacher(req.body.UserID);
         const teacher = await userModel.single(req.body.UserID);
         res.render('vwAdmin/vwCoursesTeachers', {
@@ -512,5 +520,16 @@ router.post('/courses/teachers', async function(req, res) {
     } else {
         res.redirect('/');
     }
+})
+
+router.get('/is-available-password', async function(req, res) {
+    const password = req.query.password;
+    const ret = bcrypt.compareSync(password, req.session.authUser.Password);
+
+    if (ret) {
+        return res.json(true);
+    }
+
+    res.json(false);
 })
 module.exports = router;

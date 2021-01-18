@@ -84,8 +84,8 @@
           <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
         {{/if}}
     </div>
-    <div class="card-body" style="font-size:x-large;">
-        <form action="/teacher/updatecourses/{{courses.CourseID}}" method="POST"  id="fromCreatecourses">
+    <div class="card-body card-body d-flex justify-content-center" style="font-size:x-large;">
+        <form action="/teacher/updatecourses/{{courses.CourseID}}" method="POST"  id="fromCreatecourses" style="width: 70%;">
         {{!-- <form action="/teacher/updatecourses/{{courses.CourseID}}" enctype="multipart/form-data" method="POST" id="fromCreatecourses"> --}}
         {{#if courses.Status}}
           <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Hoàn thành" >
@@ -154,7 +154,7 @@
                 
             </div> 
             </div>
-            <div class="card-footer">
+            <div class="card-footer d-flex justify-content-between">
               <a name="" id="" class="btn btn-primary updatecourses" href="/teacher/uploadvideo_increate/{{courses.CourseID}}" role="button">
                 <i class="fa fa-check" aria-hidden="true"></i>
                     Thêm chương mới

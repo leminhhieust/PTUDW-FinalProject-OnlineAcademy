@@ -133,7 +133,7 @@ router.post('/createcourses', async function(req, res) {
         const upload = multer({ storage });
         upload.single('fuMain')(req, res, function(err) {
 
-            console.log(req.body);
+            //console.log(req.body);
 
             Cour.Name = req.body.Name;
             Cour.CatID = req.body.CatType;
@@ -290,7 +290,7 @@ router.post('/updatecourses/:id', async function(req, res) {
     console.log(req.body);
     const id = req.params.id;
     const courses = await coursesModel.singleid(id);
-    console.log(courses);
+    //console.log(courses);
 
     courses.Name = req.body.Name;
     courses.CatID = +req.body.CatType;
@@ -309,17 +309,17 @@ router.post('/updatecourses/:id', async function(req, res) {
     }
 
     var Courcontent = await cousecontentsModel.singleid(courses.CourseID);
-    console.log(Courcontent);
+    //console.log(Courcontent);
     var arr = req.body.NewVideo;
     if (typeof arr === 'string') {
-        console.log(1);
+        //console.log(1);
         var Courcontent_temp = Courcontent[0];
         Courcontent_temp.CourseID = courses.CourseID;
         Courcontent_temp.Title = req.body.NewVideo;
         console.log(Courcontent_temp);
         cousecontentsModel.patch(Courcontent_temp);
     } else {
-        console.log(2);
+        //console.log(2);
         for (let index = 0; index < arr.length; index++) {
             Courcontent[index].CourseID = courses.CourseID;
             Courcontent[index].Title = req.body.NewVideo[index];
@@ -342,7 +342,7 @@ router.post('/updatecourses/:id', async function(req, res) {
 router.get('/profile', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 1) {
         const users = await userModel.single(req.session.authUser.UserID);
-        console.log(users);
+        // console.log(users);
         courses = await coursesModel.allcoursesofteacher(users.UserID);
         for (let i = 0; i < courses.length; i++) {
             const index = await cousecontentsModel.countCourID(courses[i].CourseID);
@@ -481,11 +481,22 @@ router.post('/uploadvideo_increate/:id', async function(req, res) {
 
 router.post('/profile/change', async function(req, res) {
     const user = req.session.authUser;
+    console.log(user);
     user.DOB = moment(user.DOB, 'YYYY-MM-DD').format('YYYY-MM-DD');
     const hash = bcrypt.hashSync(req.body.newPassword, 10);
     user.Password = hash;
-
     await userModel.updateUser(user);
     res.redirect('/teacher/profile');
+})
+
+router.get('/is-available-password', async function(req, res) {
+    const password = req.query.password;
+    const ret = bcrypt.compareSync(password, req.session.authUser.Password);
+
+    if (ret) {
+        return res.json(true);
+    }
+
+    res.json(false);
 })
 module.exports = router;

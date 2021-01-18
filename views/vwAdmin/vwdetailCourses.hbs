@@ -24,17 +24,26 @@
   <form id="frmunblockItem" action="/admin/courses/unblock" method="POST">
     <input type="hidden" name="CourseID" id="txtProId_unblock">
   </form>
+   <div class="d-flex justify-content-center" style="font-size:x-large;">
+    {{#if (equal courses.Status -1)}}
+      <span class="badge badge-pill badge-danger float-right">Khóa học đã bị khóa</span>
+    {{/if}}
+    {{#if (equal courses.Status -2)}}
+      <span class="badge badge-pill badge-danger float-right">Khóa học đã bị khóa</span>
+    {{/if}}
+    </div>
   <div class="d-flex justify-content-between" style="font-size:x-large;">
   <h5 class="card-header">
     {{courses.Name}}
   </h5>
-    {{#if (equal courses.Status -1)}}
-      <span class="badge badge-pill badge-danger float-right">Khóa học đã bị khóa</span>
-    {{/if}}
-   {{#if courses.Status}}
+   {{#if (equal courses.Status 1)}}
       <span class="badge badge-pill badge-danger float-right">Hoàn thành</span>
     {{else}}
-         <span class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
+    {{#if (equal courses.Status -1)}}
+      <span class="badge badge-pill badge-danger float-right">Hoàn thành</span>
+    {{else}}
+      <span class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
+    {{/if}}
    {{/if}}
    </div>
   <div class="card-body" style="font-size: x-large;" >
@@ -68,12 +77,30 @@
                  Unblock
             </a>
             {{else}}
+            {{#if (equal courses.Status -2)}}
+               <a data-id_unblock="{{courses.CourseID}}"
+             class="btn btn-primary mr-2 unblockItem" role="button">
+                 <i class="fa fa-key" aria-hidden="true"></i>
+                 Unblock
+            </a>
+            {{else}}
               <a data-id_block="{{courses.CourseID}}"
              class="btn btn-primary mr-2 blockItem"  role="button">
                  <i class="fa fa-lock" aria-hidden="true"></i>
                  Block
             </a>
             {{/if}}
+            {{/if}}
+             {{!-- <a data-id_block="{{courses.CourseID}}"
+             class="btn btn-primary mr-2 blockItem"  role="button">
+                 <i class="fa fa-lock" aria-hidden="true"></i>
+                 Block
+            </a>
+             <a data-id_unblock="{{courses.CourseID}}"
+             class="btn btn-primary mr-2 unblockItem" role="button">
+                 <i class="fa fa-key" aria-hidden="true"></i>
+                 Unblock
+            </a> --}}
             {{!-- <a data-id_block="{{courses.CourseID}}"
              class="btn btn-primary mr-2 blockItem"  role="button">
                  <i class="fa fa-lock" aria-hidden="true"></i>

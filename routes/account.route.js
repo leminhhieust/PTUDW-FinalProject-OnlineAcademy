@@ -164,7 +164,7 @@ router.get('/profile', auth, async function(req, res) {
             }
             const allCourseContent = await courseContent.allwithcourseID(course.CourseID, req.session.authUser.UserID);
             const allDone = await coursesModel.allDone(req.session.authUser.UserID, course.CourseID);
-            var percent = ((allDone.length / allCourseContent.length)*100).toFixed(0);
+            var percent = ((allDone.length / allCourseContent.length) * 100).toFixed(0);
             course.Percent = percent;
         }
 

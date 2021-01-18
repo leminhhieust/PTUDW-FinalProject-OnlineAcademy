@@ -1,6 +1,6 @@
 {{#section 'js'}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script>
   {{#each this.courseRegister}}
@@ -57,8 +57,8 @@
   $('#formChange').on('submit', function (e) {
     e.preventDefault();
     const password = $('#txtOldPassword').val();
-    
-    $.getJSON(`/account/is-available-password?password=${password}`, function (data) {
+    console.log(password);
+    $.getJSON(`/teacher/is-available-password?password=${password}`, function (data) {
       if (data === false) {
         alert('Wrong Password!');
       }
@@ -100,6 +100,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 {{/section}}
 
+
+
 <div style="padding-left: 200px;">
 <div class="modal fade" id="ChangePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -136,8 +138,8 @@
     <div class="card-header">
         <h2 class="d-flex justify-content-center">Thông tin cá nhân giáo viên</h2>
     </div>
-    <div class="card-body" style="font-size: x-large;">
-        <form action="/teacher/profile" id="updateprofileteacher" method="POST" >
+    <div class="card-body d-flex justify-content-center" style="font-size: x-large;">
+        <form action="/teacher/profile" id="updateprofileteacher" method="POST" style="width: 70%;">
         <input type="hidden" name="UserID" id="txtUserID">
             <div class="card d-flex justify-content-center p-2 m-2">
                 <label for="">Họ và tên giáo viên</label>
@@ -151,19 +153,19 @@
             </div>
         </form>
     </div>
-    <div class="card-body " style="font-size: x-large;">
-        <div class="card-body" >Danh sách khóa học đã đăng</div>
-        <div class="ml-2 ">
+    <div class="card-body d-flex justify-content-center" style="font-size: x-large;">
+      <div style="width: 70%;">
+        <div class="card-body d-flex justify-content-center" >Danh sách khóa học đã đăng</div>
+        <div class="ml-2" >
         {{#each courses}}
-           <div class="card mb-3 p-3 d-flex justify-content-between" >
-                <div class= >Tên khóa học: {{Name}}</div>
-                <div class=" m-3">
+           <div class="card mb-3 m-2 "  style="background: rgb(183, 233, 226);  "  >
+                <div class=" m-2" >Tên khóa học: {{Name}}</div>
+                <div class=" m-2">
                  {{#if Status}}
                      <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right ">Hoàn thành</span>
                  {{else}}
                       <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right mr-1">Chưa hoàn thành</span>
                   {{/if}}
-               
                    <a style="font-size: x-large;"  name="" id="" class="btn btn-primary" href="/teacher/updatecourses/{{CourseID}}" role="button">
                      <i class="fa fa-wrench" aria-hidden="true"></i>
                       Chỉnh sửa
@@ -171,6 +173,7 @@
                 </div>
            </div>
         {{/each}}
+        </div>
         </div>
     </div>
 </div>

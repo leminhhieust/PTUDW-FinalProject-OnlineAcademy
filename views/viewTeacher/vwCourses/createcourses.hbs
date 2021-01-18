@@ -84,8 +84,10 @@
         <h2 class="d-flex justify-content-center">Tạo khóa học</h2>
           <span style="font-size: x-large;" class="badge badge-pill badge-danger float-right">Chưa hoàn thành</span>
     </div>
-<form action="/teacher/createcourses" method="POST" enctype="multipart/form-data" id="fromCreatecourses">
+<div class="card-body d-flex justify-content-center">
+<form  action="/teacher/createcourses" method="POST" enctype="multipart/form-data" id="fromCreatecourses" style="width: 70%;">
     <div class="card-body" style="font-size: x-large;">
+      <div>
                 <div class="card m-2">
                      <h3>Chọn hình ảnh đại diện cho khóa học</h3>
                     <div class="card-body">
@@ -117,10 +119,12 @@
                 <input class="form-control form-control-lg" type="text" class="form-control"  id="txtTotal"name="Totalcontent">
             </div>   
       </div> 
+      </div>
     </div>
       <input type="hidden" class="form-control badge-danger" id="txtstatus" name="Status" value="Chưa hoàn thành" >
   <input type="hidden" id="DocChapters" name="Video">
 </form>
+</div>
      <div class="card-footer d-flex justify-content-end  ">
                     <a name="" id="" class="mr-5 btn btn-primary createcourses" href="#" role="button">
                       <i class="fa fa-check" aria-hidden="true"></i>

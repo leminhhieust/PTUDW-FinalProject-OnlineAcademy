@@ -74,7 +74,7 @@
     e.preventDefault();
     const password = $('#txtOldPassword').val();
     
-    $.getJSON(`/account/is-available-password?password=${password}`, function (data) {
+    $.getJSON(`/admin/is-available-password?password=${password}`, function (data) {
       if (data === false) {
         alert('Wrong Password!');
       }

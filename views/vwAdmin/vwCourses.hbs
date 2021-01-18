@@ -15,7 +15,8 @@
 {{/section}}
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-center m-2">
+        <div class="d-flex justify-content-center">
+            <div class="mr-2">
             <form action="/admin/courses/categories" method="POST"  id="fromcategory">
             <div>
                 <label for="">Lĩnh vực</label>
@@ -26,11 +27,15 @@
                     {{/each}}
                 </select>
             </form>
-                 <a name="" id="" class="btn btn-primary m-2 cateitem" href="javascript:;" role="button">
+            
+            
+                 <a  name="" id="" class="btn btn-primary m-2 cateitem" href="javascript:;" role="button">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
                     Categories
                 </a>
             </div>
+            </div>
+            <div class="mr-2">
             <form action="/admin/courses/teachers" method="POST"  id="fromteacher">
             <div>
                 <label for="">Giáo viên</label>
@@ -40,12 +45,15 @@
                     <option value="{{UserID}}">{{Name}}</option>
                     {{/each}}
                 </select>
+                 
                  <a name="" id="" class="btn btn-primary m-2 teaitem" href="javascript:;" role="button">
                     <i class="fa fa-pencil" aria-hidden="true"></i>
                     Teachers
                 </a>
+                
             </div>
             </form>
+            </div>
         </div>
         <div class="container px-4">
         <h3>Mobile Courses</h3>

@@ -121,6 +121,17 @@
 {{#section 'css'}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
 <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+<style>
+  #courseinfo {
+    position: relative
+  }
+
+  #coursebtn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+  }
+</style>
 {{/section}}
 
 <div class="bg-dark d-flex flex-row p-5" style="width: 100%">
@@ -138,7 +149,7 @@
     </video>
   </div>
   {{/with}}
-  <div class="pt-4">
+  <div class="pt-4" id="courseinfo">
     {{#with course}}
     <h2 class="text-white font-weight-bold">{{Name}}</h2>
     <h5 class="text-light font-weight-normal" >{{TinyDes}}</h5>
@@ -154,7 +165,7 @@
       </p>
     <h3 class="card-text text-danger font-weight-bold">{{format1 Price}}</h3>
     {{/with}}
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row pt-auto" id="coursebtn">
       {{#if isAuth}}
         {{#if this.isRegister}}
           {{#with course}}
@@ -321,16 +332,16 @@
   </div>
 
   <div class="mx-3">
-    <div id="rateYoRate5" class="mb-3"></div>
-    <div id="rateYoRate4" class="mb-3"></div>
-    <div id="rateYoRate3" class="mb-3"></div>
-    <div id="rateYoRate2" class="mb-3"></div>
+    <div id="rateYoRate5" style="margin-bottom: 17px"></div>
+    <div id="rateYoRate4" style="margin-bottom: 17px"></div>
+    <div id="rateYoRate3" style="margin-bottom: 17px"></div>
+    <div id="rateYoRate2" style="margin-bottom: 17px"></div>
     <div id="rateYoRate1"></div>
   </div>
 
   <div>
     {{#each Stars}}
-    <div class="mb-1">{{Star}}%</div>
+    <div style="margin-bottom: 11px; margin-top:-3px;">{{Star}}%</div>
     {{/each}}
   </div>
 </div>
@@ -355,6 +366,9 @@
   {{/if}}
 {{/if}}
 
+{{#if this.emptyFb}}
+  <h5 class="mx-5 px-5 text-danger"><i>There is no review here!</i></h5>
+{{else}}
 {{#each feedback}}
  {{#if (equal this.FeedbackID ../FeedbackID)}}
   <div class="mx-5 border p-3 mt-3">
@@ -387,6 +401,7 @@
   </div>
   {{/if}}
 {{/each}}
+{{/if}}
 
 <h3 class="m-5">Student also bought</h3>
 {{#each this.courseRelate}}

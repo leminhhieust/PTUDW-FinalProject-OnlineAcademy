@@ -74,6 +74,9 @@ router.get('/verification', async function(req, res) {
     const code = Math.floor(Math.random() * (999999 - 100000)) + 100000;
 
     var transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, 
         service: 'gmail',
         auth: {
             user: 'onlineacademyvn@gmail.com',

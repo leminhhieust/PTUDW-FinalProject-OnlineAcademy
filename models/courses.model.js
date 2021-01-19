@@ -159,6 +159,7 @@ module.exports = {
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
         WHERE ca.CatType = ${rows[0].CatType} and c.CourseID != ${id}
         order by co.StudentCount DESC
+        limit 5
         `;
         return db.load(sql);
     },

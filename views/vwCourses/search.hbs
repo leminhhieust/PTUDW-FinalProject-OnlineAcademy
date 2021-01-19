@@ -19,7 +19,6 @@
       $('#filter-form').attr('action', `/courses/search?key={{this.key}}&page={{this.current_page}}&sort=${value}`).submit();
     })
   {{/each}}
- 
 
 </script>
 {{/section}}  
@@ -28,12 +27,22 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<style>
+    {{#if this.empty}}
+    .footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  {{/if}}
+</style>
 {{/section}}
 
 {{#if this.empty}}
   <div class="mt-5 mx-5 mb-5">
     <h1>Sorry, we couldn't find any results for</h1>
-    <h1>"{{this.key}}"</h1>
+    <h1 class="text-danger">"{{this.key}}"</h1>
     <br>
     <h2>Try adjusting your search. Here are some ideas:</h2>
     <ul>
@@ -44,7 +53,10 @@
   </div>
 {{else}}
   <div class="container-fluid mt-5">
-    <h1 class="text-center mb-5">{{this.res_count}} results for "{{this.key}}"</h1>
+    <div class="mb-5 d-flex flex-row justify-content-center">
+      <h1 class="mr-2">{{this.res_count}} results for </h1>
+      <h1 class="text-danger">"{{this.key}}"</h1>
+    </div>
     <form id="filter-form" method="POST"></form>
     <select id="select-sort" class="custom-select mb-5" style="width: 10rem;" form="filter-form">
       <option value disabled>Sort</option>

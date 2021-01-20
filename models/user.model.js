@@ -27,6 +27,10 @@ module.exports = {
         return db.load(`select * from ${TBL_USERS}`);
     },
 
+    allSortByUserID() {
+        return db.load(`select * from ${TBL_USERS} order by UserID`);
+    },
+
     async single(id) {
         const rows = await db.load(`select * from ${TBL_USERS} where UserID = ${id}`);
         if (rows.length === 0)

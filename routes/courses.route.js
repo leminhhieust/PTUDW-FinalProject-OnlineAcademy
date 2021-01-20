@@ -251,7 +251,7 @@ router.get('/changeFav', async function(req, res) {
 router.post('/search', async function(req, res) {
     const keyword = req.query.key || " ";
     const sort_type = req.query.sort || "most-relevant";
-    if (keyword == " ") {
+    if (keyword == " " || keyword[0] == " " || keyword[keyword.length-1] == " ") {
         res.redirect('/');
     } else {
         const keycat = keyword.split(" ");

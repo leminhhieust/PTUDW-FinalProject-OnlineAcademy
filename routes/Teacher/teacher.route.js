@@ -319,13 +319,15 @@ router.post('/updatecourses/:id', async function(req, res) {
         console.log(Courcontent_temp);
         cousecontentsModel.patch(Courcontent_temp);
     } else {
-        //console.log(2);
-        for (let index = 0; index < arr.length; index++) {
-            Courcontent[index].CourseID = courses.CourseID;
-            Courcontent[index].Title = req.body.NewVideo[index];
-            console.log(req.body.NewVideo[index]);
-            cousecontentsModel.patch(Courcontent[index]);
+        if (arr != null) {
+            for (let index = 0; index < arr.length; index++) {
+                Courcontent[index].CourseID = courses.CourseID;
+                Courcontent[index].Title = req.body.NewVideo[index];
+                console.log(req.body.NewVideo[index]);
+                cousecontentsModel.patch(Courcontent[index]);
+            }
         }
+        //console.log(2);
     }
     // console.log(req.body.NewVideo);
     // for (let index = 0; index < arr.length; index++) {

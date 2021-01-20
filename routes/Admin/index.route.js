@@ -264,8 +264,8 @@ router.post('/categories/update', async function(req, res) {
 
 router.get('/courses', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        const courses_mobile = await coursesModel.allwithmobile_admin();
-        const courses_web = await coursesModel.allwithweb_admin();
+        const courses_mobile = await coursesModel.allwithmobile_admin2();
+        const courses_web = await coursesModel.allwithweb_admin2();
         const categories = await categoryModel.all();
         const teachers = await userModel.allteacher();
         if (req.session.isAuth === true) {
@@ -293,7 +293,7 @@ router.get('/courses/detail/:id', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         const id = req.params.id;
         //console.log(id);
-        const courses = await coursesModel.singleid(id);
+        const courses = await coursesModel.singleid2(id);
         //console.log(courses);
         const teacher = await userModel.single(courses.TeacherID);
         res.render('vwAdmin/vwdetailCourses', {
@@ -481,7 +481,7 @@ router.post('/courses/block', async function(req, res) {
 
 router.post('/courses/unblock', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
-        const Course = await coursesModel.singleid(req.body.CourseID);
+        const Course = await coursesModel.singleid2(req.body.CourseID);
         if (Course.Status === -1) {
             Course.Status = 1;
         } else {
@@ -497,7 +497,7 @@ router.post('/courses/unblock', async function(req, res) {
 router.post('/courses/categories', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         //console.log(req.body);
-        const findcour = await coursesModel.allcoursesofcate(req.body.CatType);
+        const findcour = await coursesModel.allcoursesofcate_full(req.body.CatType);
         const category = await categoryModel.single(req.body.CatType);
         res.render('vwAdmin/vwCoursesCategories', {
             courses: findcour,
@@ -511,7 +511,7 @@ router.post('/courses/categories', async function(req, res) {
 router.post('/courses/teachers', async function(req, res) {
     if (req.session.isAuth === true && req.session.authUser.Permission === 0) {
         //console.log(req.body);
-        const findcour = await coursesModel.allcoursesofteacher(req.body.UserID);
+        const findcour = await coursesModel.allcoursesofteacher_full(req.body.UserID);
         const teacher = await userModel.single(req.body.UserID);
         res.render('vwAdmin/vwCoursesTeachers', {
             courses: findcour,

@@ -178,7 +178,7 @@ module.exports = {
 
     allRegister(userID) {
         return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
-        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID} and c.Status >= 0`) ;
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID} and c.Status >= 0`);
     },
 
     allRegisterWithProgress(userID) {
@@ -217,14 +217,14 @@ module.exports = {
 
     async countWithSearch(key, cat) {
         const rows = await db.load(`select count(*) as total FROM courses c left join categories ca on c.CatID = ca.CatID
-    WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0`) ;
+    WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0`);
         return rows[0].total;
     },
 
     allwithmobile_admin() {
         sql = `select c.*
     from categories cate join courses c on cate.CatID = c.CatID
-    where cate.CatType=0 and c.Status >= 0` 
+    where cate.CatType=0 and c.Status >= 0`
         return db.load(sql);
     },
 
@@ -232,6 +232,20 @@ module.exports = {
         sql = `select cour.*
     from categories cate join courses cour on cate.CatID=cour.CatID
     where cate.CatType=1 and cour.Status >= 0`
+        return db.load(sql);
+    },
+
+    allwithmobile_admin2() {
+        sql = `select c.*
+    from categories cate join courses c on cate.CatID = c.CatID
+    where cate.CatType=0 `
+        return db.load(sql);
+    },
+
+    allwithweb_admin2() {
+        sql = `select cour.*
+    from categories cate join courses cour on cate.CatID=cour.CatID
+    where cate.CatType=1`
         return db.load(sql);
     },
 
@@ -274,6 +288,14 @@ module.exports = {
         return rows[0];
     },
 
+    async singleid2(id) {
+        const rows = await db.load(`select * from ${TBL_COURSES} where CourseID = ${id}`);
+        if (rows.length === 0)
+            return null;
+
+        return rows[0];
+    },
+
     patch(entity) {
         const condition = { CourseID: entity.CourseID };
         delete entity.CourseID;
@@ -286,10 +308,22 @@ module.exports = {
         where  c.TeacherID=${UserID} and c.Status >= 0`);
     },
 
+    allcoursesofteacher_full(UserID) {
+        return db.load(`select *
+        from ${TBL_COURSES} c 
+        where  c.TeacherID=${UserID}`);
+    },
+
     allcoursesofcate(CatID) {
         return db.load(`select *
         from ${TBL_COURSES} c 
         where  c.CatID=${CatID} and c.Status >= 0`);
+    },
+
+    allcoursesofcate_full(CatID) {
+        return db.load(`select *
+        from ${TBL_COURSES} c 
+        where  c.CatID=${CatID}`);
     },
 
     bestseller() {

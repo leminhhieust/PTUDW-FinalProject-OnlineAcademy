@@ -21,21 +21,29 @@ router.get('/login', unAuth, async function(req, res) {
 
 router.post('/login', async function(req, res) {
     const user = await userModel.singleByUserName(req.body.username);
-    const ret = bcrypt.compareSync(req.body.password, user.Password);
 
-    if (user === null || user.Permission !== 2 || ret === false) {
+    if (user === null) {
         return res.render('vwAccount/login', {
             err_message: 'Invalid username or password.'
         });
     }
-
-    req.session.isAuth = true;
-    req.session.authUser = user;
-    let url = req.session.retUrl || '/';
-    if (url === "http://localhost:3000/account/register") {
-        url = '/';
+    else{
+        const ret = bcrypt.compareSync(req.body.password, user.Password);
+        if(user.Permission !== 2 || ret === false){
+            return res.render('vwAccount/login', {
+                err_message: 'Invalid username or password.'
+            });
+        }
+        else{
+            req.session.isAuth = true;
+            req.session.authUser = user;
+            let url = req.session.retUrl || '/';
+            if (url === "http://localhost:3000/account/register") {
+                url = '/';
+            }
+            res.redirect(url);
+        }
     }
-    res.redirect(url);
 })
 
 router.post('/logout', async function(req, res) {

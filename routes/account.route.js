@@ -66,7 +66,9 @@ router.get('/register', unAuth, async function(req, res) {
 router.post('/register', async function(req, res) {
     const hash = bcrypt.hashSync(req.body.Password, 10);
     const dob = moment(req.body.DOB, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    const userNum = await userModel.allSortByUserID();
     const user = {
+        UserID: userNum[userNum.length-1].UserID + 1,
         Username: req.body.Username,
         Password: hash,
         DOB: dob,

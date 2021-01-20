@@ -12,14 +12,14 @@ module.exports = {
         const sql = `
       select c.*, co.*, u.Name as TeacherName, ca.CatName
       from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID
-      where Datediff(CURRENT_DATE(), c.DateCreate) <=31
+      where Datediff(CURRENT_DATE(), c.DateCreate) <=31 and c.Status >= 0
       order by c.DateCreate desc
     `;
         return db.load(sql);
     },
 
     allWithOld() {
-        return db.load(`select * from courses where Datediff(CURRENT_DATE(), DateCreate) > 31`);
+        return db.load(`select * from courses where Datediff(CURRENT_DATE(), DateCreate) > 31 and Status >= 0`);
     },
 
     updateOldCourses(entity) {
@@ -32,6 +32,7 @@ module.exports = {
         const sql = `
       select c.*, co.*, u.Name as TeacherName, ca.CatName
       from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID
+      where c.Status >= 0
       order by co.ViewCount DESC
       limit 10
     `;
@@ -42,6 +43,7 @@ module.exports = {
         const sql = `
       select c.*, co.*, u.Name as TeacherName, ca.CatName
       from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID
+      where c.Status >= 0
       order by co.Ratings DESC
       limit 4
     `;
@@ -51,13 +53,15 @@ module.exports = {
     allWithCat(offset) {
         const sql = `
       select c.*, co.*, u.Name as TeacherName, ca.CatName
-      from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID limit ${config.pagination.limit} offset ${offset}
+      from courses c join count co on c.CourseID = co.CourseID join users u on u.UserID = c.TeacherID join categories ca on ca.CatID = c.CatID
+      where c.Status >= 0
+      limit ${config.pagination.limit} offset ${offset}
     `;
         return db.load(sql);
     },
 
     async countWithCat() {
-        const rows = await db.load(`select count(*) as total from courses`);
+        const rows = await db.load(`select count(*) as total from courses where Status >= 0`);
         return rows[0].total;
     },
 
@@ -65,13 +69,13 @@ module.exports = {
         const sql = `
     SELECT c.*, co.*, u.Name as TeacherName, ca.CatName
     from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
-    where ca.CatType = 1 limit ${config.pagination.limit} offset ${offset}
+    where c.Status >= 0 and ca.CatType = 1 limit ${config.pagination.limit} offset ${offset}
     `;
         return db.load(sql);
     },
 
     async countWithWeb() {
-        const rows = await db.load(`select count(*) as total from courses c join categories ca on c.CatID = ca.CatID where CatType = 1`);
+        const rows = await db.load(`select count(*) as total from courses c join categories ca on c.CatID = ca.CatID where CatType = 1 and c.Status >= 0`);
         return rows[0].total;
     },
 
@@ -79,13 +83,13 @@ module.exports = {
         const sql = `
     SELECT c.*, co.*, u.Name as TeacherName, ca.CatName
     from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
-    where ca.CatType = 0 limit ${config.pagination.limit} offset ${offset}
+    where ca.CatType = 0 and c.Status >= 0 limit ${config.pagination.limit} offset ${offset}
     `;
         return db.load(sql);
     },
 
     async countWithMobile() {
-        const rows = await db.load(`select count(*) as total from courses c join categories ca on c.CatID = ca.CatID where CatType = 0`);
+        const rows = await db.load(`select count(*) as total from courses c join categories ca on c.CatID = ca.CatID where CatType = 0 and c.Status >= 0`);
         return rows[0].total;
     },
 
@@ -93,18 +97,18 @@ module.exports = {
         const sql = `
     SELECT c.*, co.*, u.Name as TeacherName, ca.CatName
     from courses c join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID
-    where ca.CatName = '${categories}' limit ${config.pagination.limit} offset ${offset}
+    where ca.CatName = '${categories}' and c.Status >= 0 limit ${config.pagination.limit} offset ${offset}
     `;
         return db.load(sql);
     },
 
     async countWithByCat(categories) {
-        const rows = await db.load(`SELECT count(*) as total from courses c join categories ca on c.CatID = ca.CatID where ca.CatName = '${categories}'`);
+        const rows = await db.load(`SELECT count(*) as total from courses c join categories ca on c.CatID = ca.CatID where ca.CatName = '${categories}' and c.Status >= 0`);
         return rows[0].total;
     },
 
     async countWithByCatID(categories) {
-        const rows = await db.load(`SELECT count(*) as total from courses c join categories ca on c.CatID = ca.CatID where ca.CatID = '${categories}'`);
+        const rows = await db.load(`SELECT count(*) as total from courses c join categories ca on c.CatID = ca.CatID where ca.CatID = '${categories}' and c.Status >= 0`);
         return rows[0].total;
     },
 
@@ -112,7 +116,7 @@ module.exports = {
         const sql = `
         SELECT c.*, co.*
         from courses c join count co on co.CourseID = c.CourseID
-        where c.CourseID = ${id}
+        where c.CourseID = ${id} and c.Status >= 0
       `;
         const rows = await db.load(sql);
         if (rows.length === 0) {
@@ -137,7 +141,7 @@ module.exports = {
         const sql = `
         SELECT u.*, AVG(co.AvgStar) as Rating, SUM(StudentCount) as Students, SUM(Ratings) as Reviews, Count(c.CourseID) Courses 
         from users u join courses c on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID
-        where u.UserID = ${teacherID}
+        where u.UserID = ${teacherID} and c.Status >= 0
         `;
         const rowteacher = await db.load(sql);
         return rowteacher[0];
@@ -147,7 +151,7 @@ module.exports = {
         const sql = `
         SELECT cc.*
         from courses c join coursecontent cc on c.CourseID = cc.CourseID
-        where c.CourseID = ${id}
+        where c.CourseID = ${id} and c.Status >= 0
         `;
         return db.load(sql);
     },
@@ -157,7 +161,7 @@ module.exports = {
         const sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
-        WHERE ca.CatType = ${rows[0].CatType} and c.CourseID != ${id}
+        WHERE ca.CatType = ${rows[0].CatType} and c.CourseID != ${id} and c.Status >= 0
         order by co.StudentCount DESC
         limit 5
         `;
@@ -174,12 +178,12 @@ module.exports = {
 
     allRegister(userID) {
         return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
-        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID} and c.Status >= 0`) ;
     },
 
     allRegisterWithProgress(userID) {
         return db.load(`SELECT c.*,u.Name as TeacherName,co.*,od.IsFav FROM orders o join orderdetails od on o.OrderID = od.OrderID join courses c 
-        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID}`);
+        on c.CourseID = od.CourseID join users u on u.UserID = c.TeacherID join count co on co.CourseID = c.CourseID where o.UserID = ${userID} and c.Status >= 0`);
     },
 
     bySearch(key, cat, sort_type, offset) {
@@ -188,14 +192,14 @@ module.exports = {
             sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
-        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
+        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0
         limit ${config.pagination.limit} offset ${offset}
       `;
         } else if (sort_type == "highest-rated") {
             sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
-        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
+        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0
         order by co.AvgStar DESC
         limit ${config.pagination.limit} offset ${offset}
       `;
@@ -203,7 +207,7 @@ module.exports = {
             sql = `
         SELECT c.*, co.*,u.Name as TeacherName, ca.CatName
         FROM courses c left join categories ca on c.CatID = ca.CatID join count co on co.CourseID = c.CourseID join users u on u.UserID = c.TeacherID 
-        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)
+        WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0
         order by c.Price ASC
         limit ${config.pagination.limit} offset ${offset}
       `;
@@ -213,21 +217,21 @@ module.exports = {
 
     async countWithSearch(key, cat) {
         const rows = await db.load(`select count(*) as total FROM courses c left join categories ca on c.CatID = ca.CatID
-    WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE)`);
+    WHERE MATCH(c.Name) AGAINST('${key}' IN BOOLEAN MODE) OR MATCH(ca.CatName) AGAINST('${cat}' IN BOOLEAN MODE) and c.Status >= 0`) ;
         return rows[0].total;
     },
 
     allwithmobile_admin() {
-        sql = `select cour.*
-    from categories cate join courses cour on cate.CatID=cour.CatID
-    where cate.CatType=0`
+        sql = `select c.*
+    from categories cate join courses c on cate.CatID = c.CatID
+    where cate.CatType=0 and c.Status >= 0` 
         return db.load(sql);
     },
 
     allwithweb_admin() {
         sql = `select cour.*
     from categories cate join courses cour on cate.CatID=cour.CatID
-    where cate.CatType=1`
+    where cate.CatType=1 and cour.Status >= 0`
         return db.load(sql);
     },
 
@@ -263,7 +267,7 @@ module.exports = {
     },
 
     async singleid(id) {
-        const rows = await db.load(`select * from ${TBL_COURSES} where CourseID = ${id}`);
+        const rows = await db.load(`select * from ${TBL_COURSES} where CourseID = ${id} and Status >= 0`);
         if (rows.length === 0)
             return null;
 
@@ -279,18 +283,19 @@ module.exports = {
     allcoursesofteacher(UserID) {
         return db.load(`select *
         from ${TBL_COURSES} c 
-        where  c.TeacherID=${UserID}`);
+        where  c.TeacherID=${UserID} and c.Status >= 0`);
     },
 
     allcoursesofcate(CatID) {
         return db.load(`select *
         from ${TBL_COURSES} c 
-        where  c.CatID=${CatID}`);
+        where  c.CatID=${CatID} and c.Status >= 0`);
     },
 
     bestseller() {
         sql = `SELECT c.*
         FROM count co join courses c on co.CourseID = c.CourseID
+        where c.Status >= 0
         order by StudentCount DESC
         limit 5`
         return db.load(sql);
